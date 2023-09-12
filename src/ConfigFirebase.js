@@ -5,12 +5,12 @@ import {getAuth ,indexedDBLocalPersistence} from "firebase/auth";
 import {getFirestore, initializeFirestore,persistentSingleTabManager, persistentLocalCache,  CACHE_SIZE_UNLIMITED } from "firebase/firestore"
 import { getStorage, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
 const firebaseConfig = {
-  apiKey: "AIzaSyBbKSKZeaGWwvE7CjV8Ghum84e4Cey6wyk",
-  authDomain: "aprendiz-sena-arleyherran.firebaseapp.com",
-  projectId: "aprendiz-sena-arleyherran",
-  storageBucket: "aprendiz-sena-arleyherran.appspot.com",
-  messagingSenderId: "751498340784",
-  appId: "1:751498340784:web:03774b728579349c750e75"
+  apiKey: "AIzaSyCst8aj8MmrZxOm6xXSrdOYiYW8QnJNHiY",
+  authDomain: "ipuc-connet.firebaseapp.com",
+  projectId: "ipuc-connet",
+  storageBucket: "ipuc-connet.appspot.com",
+  messagingSenderId: "565330644497",
+  appId: "1:565330644497:web:55a51dee248c7180e4ebb0"
 };
 
 // Initialize Firebase
