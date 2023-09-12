@@ -7,7 +7,8 @@
   
       <v-main>
         <!--  -->
-        <h1>Hola Mundo</h1>
+        
+        <slot></slot>
       </v-main>
     </v-app>
   </template>
