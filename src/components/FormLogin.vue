@@ -15,8 +15,6 @@
                   :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                   :type="showPassword ? 'text' : 'password'"
                   @click:append="showPassword = !showPassword"
-                
-
                   required
                 ></v-text-field>
                 <v-alert v-if="error" type="error" class="mb-5">{{ error }}</v-alert>

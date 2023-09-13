@@ -10,50 +10,32 @@ const routes = [
        {
         path: '',
         name: 'Dashboard',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Dashboard.vue'),
+        component: () => import('@/views/Dashboard.vue'),
       },
       {
         path: '/Miembros',
         name: 'Miembros',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Miembros.vue'),
+        component: () => import( '@/views/Miembros.vue'),
       },
       {
         path: '/Consultas',
         name: 'Consultas',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Consultas.vue'),
+        component: () => import('@/views/Consultas.vue'),
       },
       {
         path: '/Certificados',
         name: 'Certificados',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Certificados.vue'),
+        component: () => import('@/views/Certificados.vue'),
       },
       {
-        path: '/Cumpleaños',
-        name: 'Cumpleaños',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Cumpleaños.vue'),
+        path: '/Birthday',
+        name: 'Birthday',
+        component: () => import( '@/views/Birthday.vue'),
       },
       {
         path: '/Login',
         name: 'Login',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Login.vue'),
+        component: () => import('@/views/Login.vue'),
       },
     ],
   },

@@ -93,7 +93,7 @@
       color_ico: "#79b5ff",
       icon: "mdi-balloon",
       title: "Cumpleaños",
-      value: "Cumpleaños",
+      value: "Birthday",
       active: true,
     },
     

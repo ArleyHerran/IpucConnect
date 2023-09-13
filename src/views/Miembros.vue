@@ -1,7 +1,8 @@
 <template>
-    <PanelControl><h1>Miembros</h1></PanelControl>
+    <PanelControl><tabla-miembros/></PanelControl>
    </template>
    
    <script setup>
      import PanelControl from '@/layouts/PanelControl.vue'
+     import TablaMiembros from '@/components/TablaMiembros.vue';
    </script>
