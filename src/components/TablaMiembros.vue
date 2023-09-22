@@ -19,33 +19,42 @@
       style="max-width: 550px; color:aqua"
       
     />
-    <v-btn color="primary" class="mb-5 "  fab dark @click="estados.FormmMiembros.display=true" >
+    
+    <v-btn color="primary" class="mb-5 "  fab dark @click="estados.formMiembros={display:true,mode:'add',id:''}">
       <v-icon>mdi-plus</v-icon>
-     Nuevo registro
+      Agregar miembro
     </v-btn>
     <!-- Agregar el diálogo/modal -->
-   <form-miembros></form-miembros>
+    
 
     <v-table dense  :sort-by="'Codigo'" :sort-desc="false" theme="dark" style="border: 1px solid #767575;">
       <thead>
         <tr>
-          <th class="text-left">No</th>
+          <th class="text-left">No.</th>
           <th class="text-left">Documento</th>
           <th class="text-left">Nombre</th>
+       
           <th class="text-left">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in displayedItems" :key="index">
-          <td>{{ item.codigo }}</td>
-          <td>{{ item.nombre }}</td>
-          <td>{{ item.labs }}</td>
+          <td>{{ index+1 }}</td>
+           <td>{{ item.numeroDocumento }}</td>
+          <td> 
+            {{
+    item.nombre.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+  }}
+      {{
+    item.apellido.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+  }}
+          </td>
+          
          
           <td>
-            <v-icon class="mr-2" color="green" @click="estados.opnenFormProduto({display:true,f:2,},item)"
-              >mdi-pencil</v-icon
-            >
-            <v-icon color="red" @click="estados.eliminarProducto(item.codigo)">mdi-delete</v-icon>
+            <v-icon class="mr-2" color="blue" title="Editar" style="cursor: pointer;" @click="estados.formMiembros={display:true,mode:'edit',id:item.id}" >mdi-pencil</v-icon>
+            <v-icon class="mr-2" color="green" title="Ver" style="cursor: pointer;"  @click="estados.formMiembros={display:true,mode:'view',id:item.id}">mdi-eye</v-icon>
+            <v-icon color="red" title="Eliminar" style="cursor: pointer;" >mdi-delete</v-icon>
           </td>
         </tr>
       </tbody>
@@ -65,27 +74,26 @@
 </template>
 
 <script setup>
+
 import { ref, computed, watch} from 'vue';
 import { useAppStore } from "../store/app";
-import FormMiembros from './FormMiembros.vue';
 //import { useRouter } from "vue-router";
 
-const estados = useAppStore();
-//import Formulario from "@/components/FormProduct.vue";
 
+
+
+const estados = useAppStore();
 const currentPage = ref(1);
 const itemsPerPage = ref(20);
 const search = ref('');
-const desserts = ref();
+const desserts = ref(estados.miembros);
 
-
-/*
 const sortedItems = computed(() => {
   return filteredDesserts.value.sort((a, b) => {
-    if (a.codigo < b.codigo) {
+    if (a.numeroDocumento < b.numeroDocumento) {
       return -1;
     }
-    if (a.codigo > b.codigo) {
+    if (a.numeroDocumento > b.numeroDocumento) {
       return 1;
     }
     return 0;
@@ -96,7 +104,7 @@ const sortedItems = computed(() => {
 const filteredDesserts = computed(() => {
   currentPage.value = 1;
   const regex = new RegExp(search.value, "i");
-  return desserts.value.filter(item => regex.test(item.nombre) || regex.test(item.codigo));
+  return desserts.value.filter(item => regex.test(item.nombre) || regex.test(item.numeroDocumento));
 });
 
 
@@ -117,7 +125,11 @@ function changePage(page) {
 
 
 
-watch(() => estados.productos, (newVal, oldVal) => {
+watch(() => estados.miembros, (newVal, oldVal) => {
   desserts.value = newVal;
-});*/
+});
+
+
+
+
 </script>

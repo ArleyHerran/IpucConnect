@@ -17,13 +17,14 @@
                   @click:append="showPassword = !showPassword"
                   required
                 ></v-text-field>
-                <v-alert v-if="error" type="error" class="mb-5">{{ error }}</v-alert>
+                <v-alert v-if="errorl" type="error" class="mb-5">{{ errorl }} </v-alert>
+                <v-alert v-if="ms" type="success" class="mb-5">{{ ms }} </v-alert>
                 <v-btn type="submit" color="primary"  class="mx-auto" >Ingresar</v-btn>
               </v-form>
               
              
               <v-divider class="mb-4 mt-4"></v-divider>
-            <h4>Olvido la contraseña?</h4>
+            <h4 >Olvido la contraseña?</h4>
             </v-card-text>
           </v-card>
         </v-col>
@@ -33,30 +34,63 @@
   
   <script setup>
   import { ref } from 'vue';
+  import { signInWithEmailAndPassword } from "firebase/auth";
+  import { auth} from "../ConfigFirebase";
+  import { useRouter } from "vue-router";
+  const router = useRouter();
+  
   
   const email = ref('');
   const password = ref('');
   const showPassword = ref(false);
-  const error = ref();
+  const errorl = ref();
+  const ms = ref();
+
+  
   
   const login = () => {
-    // Implementa la lógica para iniciar sesión con Firebase o la plataforma de autenticación que prefieras.
-    // Maneja los errores devueltos por Firebase.
-    // Si se produce un error, asigna el mensaje de error a la variable "error".
-    // Por ejemplo:
-    /*
-    firebase.auth().signInWithEmailAndPassword(email.value, password.value)
-      .then(() => {
-        // Inicio de sesión exitoso
-      })
-      .catch((e) => {
-        error.value = e.message;
-      });
-    */
+errorl.value=""
+signInWithEmailAndPassword(auth, email.value, password.value)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    ms.value="Acceso exitoso"
+    setTimeout(function() {
+      router.push('/');
+}, 600);
+ 
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    errorl.value=traducirErrorFirebase(errorCode);
+  });
   };
   
   const forgotPassword = () => {
     // Implementa la lógica para el restablecimiento de contraseña.
   };
+
+
+  ////Lib
+
+  function traducirErrorFirebase(codigoError) {
+  switch (codigoError) {
+    case "auth/user-not-found":
+      return "Usuario no encontrado. Verifica que el correo electrónico es correcto o regístrate si eres nuevo.";
+    case "auth/wrong-password":
+      return "Contraseña incorrecta. Verifica la contraseña e inténtalo de nuevo.";
+    case "auth/invalid-email":
+      return "Correo electrónico no válido. Asegúrate de que el formato del correo sea correcto.";
+    case "auth/email-already-in-use":
+      return "El correo electrónico ya está en uso. Prueba con otro correo electrónico.";
+    case "auth/weak-password":
+      return "Contraseña débil. La contraseña debe tener al menos 6 caracteres.";
+    case "auth/network-request-failed":
+      return "Error de red. Comprueba tu conexión a Internet.";
+    default:
+      return "Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.";
+  }
+}
   </script>
   
