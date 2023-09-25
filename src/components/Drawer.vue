@@ -5,7 +5,8 @@
       app
       hide-overlay
       no-scrollbar
-      style="background: #292929; color: aliceblue"
+      style="background: #292929; color: aliceblue ;max-height: 100vh;"
+      
     >
       <div class="no-scrollbar">
         <!-- contenido de drawer aquí -->
@@ -17,7 +18,7 @@
 
         ></v-list-item>
         <v-divider></v-divider>
-        <v-list density="compact" nav class="menu-list">
+        <v-list density="compact" nav class="menu-list" style="background: red;">
           <v-list-item
             v-for="item in menuItems"
             :key="item.value"
@@ -99,6 +100,22 @@
       value: "Birthday",
       active: true,
     },
+    {
+      color_ico: "#79b5ff",
+      icon: "mdi-message-alert",
+      title: "Solicitudes",
+      value: "Birthday",
+      active: true,
+    },
+    /*
+    {
+      color_ico: "#79b5ff",
+      icon: "mdi-lightbulb-on",
+      title: "Sugerencias",
+      value: "Birthday",
+      active: true,
+    },
+    */
     
   ];
   

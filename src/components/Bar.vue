@@ -1,5 +1,7 @@
 <template>
+    
     <v-app-bar
+    
       color="teal-darken-4"
       image="https://picsum.photos/1920/1080?random"
     >
@@ -29,6 +31,7 @@
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-app-bar>
+
 </template>
 
 <script setup>

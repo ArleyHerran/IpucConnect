@@ -9,7 +9,7 @@
             : estados.formMiembros.mode == "edit"
             ? "Editar Miembro"
             : estados.formMiembros.mode == "view"
-            ? "Ver Miembro"
+            ? "Vista"
             : "Texto por defecto"
         }}
       </v-card-title>
@@ -20,7 +20,7 @@
           <v-select
             v-model="formData.tipoDocumento"
             :items="[
-              'Cedudla de Ciudadania',
+              'Cedula de Ciudadania',
               'Targeta de identidad',
               'Registro Civil',
               'Cedula Extrangera',
@@ -234,20 +234,18 @@ const saveMember = async () => {
   const miembro = { ...dataDefault, ...formData };
   console.log(JSON.parse(JSON.stringify(miembro)));
   if (!validateForm(miembro)) return;
-if(estados.formMiembros.mode==="add"){
-  guardarRegistro(miembro);
-}else{
-  editar();
-}
-
- 
+  if (estados.formMiembros.mode === "add") {
+    guardarRegistro(miembro);
+  } else {
+    editar();
+  }
 };
 
 //Permite guardar el registro por primera vez en firebase
-async function guardarRegistro(d){
+async function guardarRegistro(d) {
   const docRef = await addDoc(collection(db, "Membresia"), d);
   clearFormFields();
-  estados.formMiembros={display:false,mode:'',id:""}
+  estados.formMiembros = { display: false, mode: "", id: "" };
   console.log("Document written with ID: ", docRef.id);
 }
 
@@ -255,7 +253,7 @@ async function editar() {
   const miembro = doc(db, "Membresia", estados.formMiembros.id);
   await updateDoc(miembro, formData);
   clearFormFields();
-  estados.formMiembros={display:false,mode:'',id:""}
+  estados.formMiembros = { display: false, mode: "", id: "" };
 }
 
 //FUNCIONES

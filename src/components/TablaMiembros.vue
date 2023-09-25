@@ -26,7 +26,9 @@
     </v-btn>
     <!-- Agregar el diálogo/modal -->
     
-    <button @click="exportDataToExcel">Exportar a Excel</button>
+    <v-btn @click="exportDataToExcel" color="success"  class="mb-5 ml-5 ">
+      <v-icon left>mdi-file-excel</v-icon> Exportar a Excel
+    </v-btn>
     <v-table dense  :sort-by="'Codigo'" :sort-desc="false" theme="dark" style="border: 1px solid #767575;">
       <thead>
         <tr>
