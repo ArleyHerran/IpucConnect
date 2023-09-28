@@ -106,7 +106,8 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-btn
-                    :disabled="formData.solicitudTraslado != null"
+                  v-if="formData.sede.id !== estados.data.id"
+                    :disabled="fil(formData.numeroDocumento)"
                     @click="load"
                     :loading="loading"
                     class="flex-grow-1"
@@ -121,9 +122,9 @@
                     <template v-slot:activator="{ on }">
                       <span
                         v-on="on"
-                        v-if="formData.tipoDocumento === '314'"
+                        v-if="fil(formData.numeroDocumento)"
                         style="color: rgb(240, 103, 103)"
-                        >El botón se desactivó porque ya tiene una
+                        >El botón se desactivó porque ya le envio una
                         solicitud</span
                       >
                     </template>
@@ -142,11 +143,19 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { useAppStore } from "../store/app";
+import { collection, query, where, getDocs,addDoc } from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
+
+const estados = useAppStore();
+
+const idM=ref("");
 const loading = ref(false);
 const loadingb = ref(false);
 const searchNumber = ref("");
+
+ const miembro= ref("");
+
 const documentTypes = [
   "Cedula de Ciudadania",
   "Targeta de identidad",
@@ -169,16 +178,20 @@ const formData = reactive({
   fechaBautismo: "2010-06-20",
   nombrePastorBautismo: "Pastor Juan",
   referenciaPastoral: "Iglesia de la Comunidad",
-  solicitudTraslado:null,
+  sede:{}
 });
 
 function load() {
   loading.value = true;
-  setTimeout(() => (loading.value = false), 2000);
+ 
+  setTimeout(() => {
+    enviarSolicitud();
+  }, 1500);
 }
+
+
 function buscar() {
     formData.numeroDocumento="";
-  
   loadingb.value = true;
   setTimeout(() => {
     getFirebase();
@@ -196,9 +209,10 @@ async function getFirebase() {
   let documentoEncontrado = false;
   querySnapshot.forEach((doc) => {
     documentoEncontrado = true; // Se encontró al menos un documento
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
+   
     const docData = doc.data();
+    docData.idDoc=doc.id;
+    miembro.value=docData;
     for (const key in formData) {
   if (docData.hasOwnProperty(key)) {
     formData[key] = docData[key]; // Asigna el valor de doc.data() a formData si existe el campo correspondiente
@@ -217,8 +231,31 @@ if (!documentoEncontrado) {
 loadingb.value = false;
 
 
+}
+
+async function enviarSolicitud(){
+  const docRef = await addDoc(collection(db, "Solicitudes"),{
+    miembro:miembro.value,
+    idR:miembro.value.sede.id,
+    idE:estados.data.id,
+    sede:estados.data,
+    fecha: new Date().toISOString().split("T")[0],
+    Hora: new Date().toTimeString().split(" ")[0],
+  });
+  loading.value =false;
+ 
+  console.log("Document written with ID: ", docRef.id);
+}
 
 
+function fil(n){
+  for (let i = 0; i < estados.solicitudes.length; i++) {
+    const objeto = estados.solicitudes[i];
+    if (objeto.miembro.numeroDocumento  === n) {
+      return true;
+    }
+  }
+  return false;
 
 }
 </script>

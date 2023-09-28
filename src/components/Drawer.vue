@@ -86,13 +86,7 @@
       value: "Consultas",
       active: true,
     },
-    {
-      color_ico: "#79b5ff",
-      icon: "mdi-file-document",
-      title: "Certificados",
-      value: "Certificados",
-      active: true,
-    },
+   
     {
       color_ico: "#79b5ff",
       icon: "mdi-balloon",
@@ -104,18 +98,27 @@
       color_ico: "#79b5ff",
       icon: "mdi-message-alert",
       title: "Solicitudes",
-      value: "Birthday",
+      value: "Solicitudes",
       active: true,
     },
-    /*
+  
     {
       color_ico: "#79b5ff",
       icon: "mdi-lightbulb-on",
       title: "Sugerencias",
-      value: "Birthday",
+      value: "Sugerencias",
       active: true,
     },
-    */
+
+    {
+      color_ico: "#79b5ff",
+      icon: "mdi-information",
+      title: "Acerca de..",
+      value: "informacion",
+      active: true,
+    },
+    
+    
     
   ];
   
@@ -131,7 +134,8 @@
 
 signOut(auth).then(() => {
   // Sign-out successful.
-  router.push('/Login');
+  //router.push('/Login');
+  location.reload();
 }).catch((error) => {
   // An error happened.
  alert(error);

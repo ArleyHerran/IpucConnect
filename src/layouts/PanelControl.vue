@@ -5,7 +5,7 @@
       <Bar></Bar>
      
   
-      <v-main style="min-height: calc(100vh - 64px);max-height: calc(100vh); overflow-y: auto; background: rgb(78, 78, 78);padding: 80px 10px 20px 10px; ">
+      <v-main style="min-height: calc(100vh - 64px);max-height: calc(100vh); overflow-y: auto; background: rgb(244, 243, 243);padding: 80px 10px 20px 10px; ">
         <!--  -->
         <slot></slot>
       </v-main>

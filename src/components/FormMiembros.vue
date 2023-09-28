@@ -30,6 +30,7 @@
 
           <!-- Número de documento -->
           <v-text-field
+          :disabled="estados.formMiembros.mode == 'edit'"
             v-model="formData.numeroDocumento"
             label="Número de documento"
             type="number"
@@ -146,7 +147,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted } from "vue";
 import { useAppStore } from "../store/app";
-import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc,query,getDocs,where,serverTimestamp} from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
 
 const estados = useAppStore();
@@ -155,19 +156,15 @@ const dialog = ref(false);
 const editMode = ref(false);
 
 const dataDefault = reactive({
-  idSedeCongregacion: null,
-  distrito: null,
-  zona: null,
-  municipio: null,
-  solicitudTraslado: null,
+  sede:{},
   datosRegistro: {
-    fecha: new Date().toISOString().split("T")[0],
-    Hora: new Date().toTimeString().split(" ")[0],
-    sede: null,
-    pastor: null,
+    timestamp: serverTimestamp(),
+    sede: {}
   },
   historiaTraslados: [],
 });
+
+
 const formData = reactive({
   tipoDocumento: "",
   numeroDocumento: "",
@@ -209,17 +206,17 @@ watch(
           formData[prop] = objet1[prop];
         }
       }
+    }else{
+      clearFormFields();
+
     }
   }
 );
 const actualizarFormData = (newData) => {
   if (newData) {
-    dataDefault.idSedeCongregacion = newData.id;
-    dataDefault.distrito = newData.distrito;
-    dataDefault.zona = newData.zona;
-    dataDefault.municipio = newData.municipio;
-    dataDefault.datosRegistro.sede = newData.id;
-    dataDefault.datosRegistro.pastor = newData.ministro;
+    dataDefault.sede=newData;
+    dataDefault.datosRegistro.sede = newData;
+  
     // También puedes actualizar otras propiedades aquí si es necesario
   }
 };
@@ -232,9 +229,12 @@ onMounted(() => {
 
 const saveMember = async () => {
   const miembro = { ...dataDefault, ...formData };
-  console.log(JSON.parse(JSON.stringify(miembro)));
+  //console.log(JSON.parse(JSON.stringify(miembro)));
   if (!validateForm(miembro)) return;
+ 
   if (estados.formMiembros.mode === "add") {
+    const resultado = await buscarV(miembro.numeroDocumento);
+    if(resultado)return;
     guardarRegistro(miembro);
   } else {
     editar();
@@ -243,6 +243,7 @@ const saveMember = async () => {
 
 //Permite guardar el registro por primera vez en firebase
 async function guardarRegistro(d) {
+
   const docRef = await addDoc(collection(db, "Membresia"), d);
   clearFormFields();
   estados.formMiembros = { display: false, mode: "", id: "" };
@@ -276,44 +277,28 @@ function clearFormFields() {
 }
 
 function validateForm(d) {
-  if (d.idSedeCongregacion == "" || d.idSedeCongregacion == null) {
-    alert("Error desconocido");
+  if (d.sede.id == "" || d.sede.id == null) {
+    alert("Error desconocido 1");
     return false;
   }
-  if (d.distrito == "" || d.distrito == null) {
-    alert("Error desconocido");
+  if (d.sede.distrito == "" || d.sede.distrito == null) {
+    alert("Error desconocido 2");
     return false;
   }
-  if (d.zona == "" || d.zona == null) {
-    alert("Error desconocido");
+  if (d.sede.zona == "" || d.sede.zona == null) {
+    alert("Error desconocido 3");
     return false;
   }
-  if (d.municipio == "" || d.municipio == null) {
-    alert("Error desconocido");
+  if (d.sede.municipio == "" || d.sede.municipio == null) {
+    alert("Error desconocido 4 ");
     return false;
   }
-  if (d.distrito == "" || d.distrito == null) {
-    alert("Error desconocido");
+  if (d.sede.distrito == "" || d.sede.distrito == null) {
+    alert("Error desconocido 5");
     return false;
   }
-  if (
-    d.datosRegistro.pastor == "" ||
-    d.datosRegistro.pastor == null ||
-    d.datosRegistro.sede == "" ||
-    d.datosRegistro.sede == null
-  ) {
-    alert("Error desconocido");
-    return false;
-  }
-  if (
-    d.datosRegistro.pastor == "" ||
-    d.datosRegistro.pastor == null ||
-    d.datosRegistro.sede == "" ||
-    d.datosRegistro.sede == null
-  ) {
-    alert("Error desconocido");
-    return false;
-  }
+  
+
 
   if (d.tipoDocumento == "" || d.tipoDocumento.length > 30) {
     alert("El campo Tipo de documento no puede quedar vacio");
@@ -403,6 +388,23 @@ function validateForm(d) {
 
   return true;
 }
+
+
+async function buscarV(n) {
+  const q = query(
+    collection(db, "Membresia"),
+    where("numeroDocumento", "==", n)
+  );
+  const querySnapshot = await getDocs(q);
+  // Verifica si se encontró algún documento
+  if (querySnapshot.empty) {
+    return false; // No se encontraron documentos
+  } else {
+    alert("Ya existe un registro con este número de documento");
+    return true; // Se encontró al menos un documento
+  }
+}
+
 </script>
 
 <style scoped>

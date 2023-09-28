@@ -75,9 +75,9 @@
         items.value[7].value++; // Adultos mayores
       }
 
-      if (miembro.estadoCivil === 'Casado') {
+      if (miembro.estadoCivil === 'Casado/a') {
         items.value[8].value++; // Hombres
-      } else if (miembro.estadoCivil === 'Soltero') {
+      } else if (miembro.estadoCivil === 'Soltero/a') {
         items.value[9].value++; // Mujeres
       }
     });

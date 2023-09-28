@@ -26,16 +26,23 @@ const routes = [
         component: () => import('@/views/Consultas.vue'),
         meta:{auth:true}
       },
-      {
-        path: '/Certificados',
-        name: 'Certificados',
-        component: () => import('@/views/Certificados.vue'),
-        meta:{auth:true}
-      },
+     
       {
         path: '/Birthday',
         name: 'Birthday',
         component: () => import( '@/views/Birthday.vue'),
+        meta:{auth:true}
+      },
+      {
+        path: '/Solicitudes',
+        name: 'Solicitudes',
+        component: () => import('@/views/Solicitudes.vue'),
+        meta:{auth:true}
+      },
+      {
+        path: '/Sugerencias',
+        name: 'Sugerencias',
+        component: () => import('@/views/Sugerencias.vue'),
         meta:{auth:true}
       },
       {

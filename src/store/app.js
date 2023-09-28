@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
-import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
+import { doc, onSnapshot, collection, query, where,or } from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
 
 export const useAppStore = defineStore("app", {
@@ -11,6 +11,7 @@ export const useAppStore = defineStore("app", {
     data: null,
     miembros: [],
     birthday:[],
+    solicitudes:[],
   }),
   actions: {
     //TRAE LOS DATOS DEL USUARIO EN SESION.
@@ -23,15 +24,15 @@ export const useAppStore = defineStore("app", {
         //console.log(this.data);
       
         this.getMiembros(id.uid);
+        this.getSolicitudes(id.uid);
       });
     },
     //ME TRAE LA LISTA DE MIEMBROS DE CADA CONGREGACION 
     async getMiembros(id) {
    
-      console.log("doc.data()");
       const q = query(
         collection(db, "Membresia"),
-        where("idSedeCongregacion", "==", id)
+        where("sede.id", "==", id)
       );
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const miembros = [];
@@ -45,10 +46,39 @@ export const useAppStore = defineStore("app", {
           miembros.push(data);
          
         });
-
-        if (miembros.length<1) return;
         this.miembros = miembros;
         this.birthday=cumple;
+        
+      
+      });
+    },
+    //ME TRAE LA LISTA DE SOLICITUDES ENVIADAS Y RECIVIDAS
+    async getSolicitudes(id) {
+      const q = query(
+        collection(db, "Solicitudes"),
+        or(
+          where("idE", "==",id),
+          where("idR", "==", id)
+        )
+      );
+     
+      
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const solicitudes= [];
+      
+        querySnapshot.forEach((doc) => {
+
+          const data = doc.data();
+          data.docId=doc.id;
+          solicitudes.push(data);
+      
+         
+        });
+
+      
+        this.solicitudes =solicitudes;
+      
+     
         
       
       });

@@ -16,7 +16,7 @@
       variant="outlined"
       append-inner-icon="mdi-magnify"
       density="compact"
-      style="max-width: 550px; color:aqua"
+      style="max-width: 550px; color:rgb(5, 5, 5)"
       
     />
     
@@ -68,7 +68,7 @@
       @input="changePage"
       prev-icon="mdi-menu-left"
       next-icon="mdi-menu-right"
-      style="border: 1px solid #767575; color: aqua;"
+      style="border: 1px solid #767575; color: rgb(0, 0, 0);"
     />
   </div>
 </template>
@@ -203,7 +203,7 @@ const exportDataToExcel = () => {
   worksheet.columns = propertiesToInclude.map((prop, index) => ({
     header: customHeaders[index], // Nombre del encabezado personalizado
     key: prop, // Propiedad de los datos
-    width: 15, // Ancho de la columna
+    width: 20, // Ancho de la columna
   }));
 
   // Mapea los datos de prueba para incluir solo las propiedades deseadas
