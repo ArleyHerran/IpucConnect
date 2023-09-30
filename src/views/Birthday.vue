@@ -1,6 +1,6 @@
 <template>
     <PanelControl>
-      <h1>Cumpleaños</h1>
+
       <CardsCumple />
     </PanelControl>
     

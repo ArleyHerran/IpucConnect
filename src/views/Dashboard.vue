@@ -1,6 +1,5 @@
 <template>
     <PanelControl>
-      <h1>Dashboard</h1>
       <TargetasGeneral/>
     </PanelControl>
    </template>

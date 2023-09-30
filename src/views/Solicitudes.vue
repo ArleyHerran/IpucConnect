@@ -1,6 +1,5 @@
 <template>
     <PanelControl>
-      <h1>Solicitudes</h1>
       <TablaSolicitudes/>
     </PanelControl>
    </template>

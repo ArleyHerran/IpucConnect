@@ -12,6 +12,7 @@ export const useAppStore = defineStore("app", {
     miembros: [],
     birthday:[],
     solicitudes:[],
+    notificaciones:{value:0,solicitudes:0,informacion:0},
   }),
   actions: {
     //TRAE LOS DATOS DEL USUARIO EN SESION.
@@ -65,16 +66,16 @@ export const useAppStore = defineStore("app", {
       
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const solicitudes= [];
-      
+        this.notificaciones.solicitudes=0
         querySnapshot.forEach((doc) => {
 
           const data = doc.data();
           data.docId=doc.id;
           solicitudes.push(data);
-      
+          if(data.idE!==this.data.id){this.notificaciones.solicitudes++;}
          
         });
-
+        this.notificaciones.value=this.notificaciones.solicitudes+this.notificaciones.informacion;
       
         this.solicitudes =solicitudes;
       

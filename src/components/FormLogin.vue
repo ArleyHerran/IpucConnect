@@ -8,7 +8,7 @@
             </v-card-title>
             <v-card-text>
               <v-form @submit.prevent="login">
-                <v-text-field v-model="email" label="Correo electrónico" required></v-text-field>
+                <v-text-field v-model="email" label="Usuario" type="number" ></v-text-field>
                 <v-text-field
                   v-model="password"
                   label="Contraseña"
@@ -50,7 +50,9 @@
   
   const login = () => {
 errorl.value=""
-signInWithEmailAndPassword(auth, email.value, password.value)
+
+const emails= email.value+"@jahd.com"
+signInWithEmailAndPassword(auth, emails, password.value)
   .then((userCredential) => {
     const user = userCredential.user;
     ms.value="Acceso exitoso"

@@ -6,6 +6,7 @@
 .v-icon.green--text {
   color: rgb(97, 187, 97);
 }
+ 
 </style>
 
 <template>
@@ -29,6 +30,8 @@
     <v-btn @click="exportDataToExcel" color="success"  class="mb-5 ml-5 ">
       <v-icon left>mdi-file-excel</v-icon> Exportar a Excel
     </v-btn>
+    
+
     <v-table dense  :sort-by="'Codigo'" :sort-desc="false" theme="dark" style="border: 1px solid #767575;">
       <thead>
         <tr>
@@ -54,7 +57,7 @@
           <td>
             <v-icon class="mr-2" color="blue" title="Editar" style="cursor: pointer;" @click="estados.formMiembros={display:true,mode:'edit',id:item.id}" >mdi-pencil</v-icon>
             <v-icon class="mr-2" color="green" title="Ver" style="cursor: pointer;"  @click="estados.formMiembros={display:true,mode:'view',id:item.id}">mdi-eye</v-icon>
-            <v-icon color="red" title="Eliminar" style="cursor: pointer;" >mdi-delete</v-icon>
+            <v-icon color="red" title="Eliminar" style="cursor: pointer;" @click="eliminarM(item)">mdi-delete</v-icon>
           </td>
         </tr>
       </tbody>
@@ -77,8 +80,11 @@
 
 import { ref, computed, watch} from 'vue';
 import { useAppStore } from "../store/app";
+import { doc, deleteDoc,setDoc,runTransaction} from "firebase/firestore";
+import { auth, db } from "../ConfigFirebase";
 import ExcelJS from 'exceljs';
 import  {saveAs} from 'file-saver';
+import swal from 'sweetalert';
 //import { useRouter } from "vue-router";
 
 
@@ -106,7 +112,7 @@ const sortedItems = computed(() => {
 const filteredDesserts = computed(() => {
   currentPage.value = 1;
   const regex = new RegExp(search.value, "i");
-  return desserts.value.filter(item => regex.test(item.nombre) || regex.test(item.numeroDocumento));
+  return desserts.value.filter(item => regex.test(item.nombre) || regex.test(item.numeroDocumento) || regex.test(item.apellido));
 });
 
 
@@ -131,7 +137,20 @@ watch(() => estados.miembros, (newVal, oldVal) => {
   desserts.value = newVal;
 });
 
-const exportDataToExcel = () => {
+const exportDataToExcel = async () => {
+
+  const exportA= await swal({
+  title:"¿ Estás seguro ?",
+  text: "Esto exportara a excel la lista de todos los miembros de la congregacion",
+  icon:"info",
+  
+  buttons: true,
+  dangerMode: true,
+});
+
+
+if(!exportA)return;
+
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Miembros');
 
@@ -260,6 +279,28 @@ const headerRow = worksheet.addRow(customHeaders);
   });
 };
 
+async function eliminarM(m){
+if(!confirm("Seguro que desea eliminar este registro?"))return;
 
+try {
+  await runTransaction(db, async (transaction) => {
+await setDoc(doc(db, "PapeleraMiembros", m.id), m);
+await deleteDoc(doc(db, "Membresia", m.id));
+
+  });
+
+  alert("Eliminacion exitosa");
+
+} catch (e) {
+
+  alert("Ocurrio un Error ", e);
+}
+
+
+
+}
 
 </script>
+
+
+

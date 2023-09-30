@@ -46,6 +46,12 @@ const routes = [
         meta:{auth:true}
       },
       {
+        path: '/Informacion',
+        name: 'Informacion',
+        component: () => import('@/views/Informacion.vue'),
+        meta:{auth:true}
+      },
+      {
         path: '/Login',
         name: 'Login',
         component: () => import('@/views/Login.vue'),

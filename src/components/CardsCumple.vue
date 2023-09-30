@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div >
      
       <v-carousel v-model="model">
       <v-carousel-item

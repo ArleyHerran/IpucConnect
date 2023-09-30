@@ -1,8 +1,8 @@
 <template>
     <v-navigation-drawer
       v-model="estados.drawerDisplay"
-      temporary
-      app
+  
+     
       hide-overlay
       no-scrollbar
       style="background: #292929; color: aliceblue ;max-height: 100vh;"
@@ -18,7 +18,7 @@
 
         ></v-list-item>
         <v-divider></v-divider>
-        <v-list density="compact" nav class="menu-list" style="background: red;">
+        <v-list density="compact" nav class="menu-list" >
           <v-list-item
             v-for="item in menuItems"
             :key="item.value"
@@ -26,8 +26,11 @@
             :title="item.title"
             :value="item.value"
             @click="navigateTo(item)"
-            v-bind:class="{ active: item.active }"
-            style="display: flex"
+            :active="item.value === $route.name ? true : false"
+          
+         
+            style="display: flex;background:red,"
+         
           >
             <template v-slot:prepend>
               <v-icon
@@ -45,7 +48,7 @@
       </div>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block @click="cerrarSecion()" color="primary">
+          <v-btn block @click=" cerrarSesion()" color="primary">
             Cerrar sesion
           </v-btn>
         </div>
@@ -59,6 +62,7 @@
   import { onMounted } from "vue";
   import {  signOut } from "firebase/auth";
   import { auth} from "../ConfigFirebase";
+  import swal from 'sweetalert';
   //import config from '@/components/Config.vue'
   
   const estados = useAppStore();
@@ -77,16 +81,16 @@
       icon: "mdi-account-group",
       title: "Miembros",
       value: "Miembros",
-      active: true,
+      active: false,
     },
     {
       color_ico: "#79b5ff",
       icon: "mdi-magnify",
       title: "Consultas",
       value: "Consultas",
-      active: true,
+      active: false,
     },
-   
+   /*
     {
       color_ico: "#79b5ff",
       icon: "mdi-balloon",
@@ -94,12 +98,13 @@
       value: "Birthday",
       active: true,
     },
+    */
     {
       color_ico: "#79b5ff",
       icon: "mdi-message-alert",
       title: "Solicitudes",
       value: "Solicitudes",
-      active: true,
+      active: false,
     },
   
     {
@@ -107,15 +112,15 @@
       icon: "mdi-lightbulb-on",
       title: "Sugerencias",
       value: "Sugerencias",
-      active: true,
+      active: false,
     },
 
     {
       color_ico: "#79b5ff",
       icon: "mdi-information",
       title: "Acerca de..",
-      value: "informacion",
-      active: true,
+      value: "Informacion",
+      active: false,
     },
     
     
@@ -128,19 +133,33 @@
     router.push({ name: item.value });
   }
 
-  function cerrarSecion(){
-  
+  function cerrarSesion() {
+  swal({
+    title: "¿Seguro que desea cerrar sesión?",
+    text: "Se cerrará su sesión actual.",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willLogout) => {
+    if (willLogout) {
+      // Cerrar sesión utilizando Firebase Authentication
+      signOut(auth)
+        .then(() => {
+          // Sign-out exitoso.
+          // Recargar la página actual para redirigir al usuario a la página de inicio de sesión.
+          location.reload();
+        })
+        .catch((error) => {
+          // Si ocurrió un error durante el cierre de sesión, mostrar una alerta con el error.
+          alert(error);
+        });
+    } else {
+      // El usuario canceló la acción, no se hace nada.
+    }
+  });
+}
 
-
-signOut(auth).then(() => {
-  // Sign-out successful.
-  //router.push('/Login');
-  location.reload();
-}).catch((error) => {
-  // An error happened.
- alert(error);
-});
-  }
   
   onMounted(async () => {
     await estados.getDataUser();
@@ -152,7 +171,7 @@ signOut(auth).then(() => {
   
   <style>
   .active {
-    background-color: #eee;
+    background-color: #b81818;
   }
   </style>
   

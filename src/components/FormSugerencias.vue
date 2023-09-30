@@ -50,7 +50,7 @@ import { useAppStore } from "../store/app";
 import { useRouter } from "vue-router";
 import { collection, addDoc, serverTimestamp,} from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
-
+import swal from 'sweetalert';
 const estados = useAppStore();
 const router = useRouter();
 
@@ -141,30 +141,36 @@ onUnmounted(() => {
 });
 
 
-async  function enviarSugerenciadb(){
-  const d={
-    tipo: tipoFeedback.value,
-    ms:sugerencia.value,
-    user:estados.data,
-    timestamp: serverTimestamp(),
+async function enviarSugerenciadb() {
+  try {
+    const d = {
+      tipo: tipoFeedback.value,
+      ms: sugerencia.value,
+      user: estados.data,
+      timestamp: serverTimestamp(),
+    };
 
+    const docRef = await addDoc(collection(db, "Sugerencias"), d);
+    localStorage.setItem('ultimaMarcaDeTiempo', Date.now().toString());
+    ultimaMarcaDeTiempo = localStorage.getItem('ultimaMarcaDeTiempo');
+    var tiempoTranscurrido = ref(calcularTiempoTranscurrido(ultimaMarcaDeTiempo));
+    var puedeEnviar = ref(tiempoTranscurrido.value >= limiteDeTiempo);
+    
+    tiempoRestante = ref(calcularTiempoRestante());
+    tiempoRestanteFormateado = ref(
+      formatearTiempo(tiempoRestante.value)
+    );
+    const intervalId = iniciarActualizacionDeContador();
+
+    // Si se envió la sugerencia con éxito, muestra un mensaje de éxito
+    swal("Exito!", "Sugerencia enviada con éxito.", "success");
+  } catch (error) {
+    // Si ocurrió un error, muestra un mensaje de error
+    swal("Error", "Hubo un problema al enviar la sugerencia.", "error");
+    console.error("Error al enviar la sugerencia: ", error);
   }
-  
-  const docRef = await addDoc(collection(db, "Sugerencias"), d);
-  localStorage.setItem('ultimaMarcaDeTiempo', Date.now().toString());
-  ultimaMarcaDeTiempo = localStorage.getItem('ultimaMarcaDeTiempo');
-  var tiempoTranscurrido = ref(calcularTiempoTranscurrido(ultimaMarcaDeTiempo));
-var puedeEnviar = ref(tiempoTranscurrido.value >= limiteDeTiempo);
- 
-  
- tiempoRestante = ref(calcularTiempoRestante());
-  tiempoRestanteFormateado = ref(
-  formatearTiempo(tiempoRestante.value)
-);
-const intervalId = iniciarActualizacionDeContador();
-  alert("Sugerencia enviada");
- 
 }
+
 </script>
 
   

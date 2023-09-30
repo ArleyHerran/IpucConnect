@@ -1,8 +1,8 @@
 <template>
   <!-- Diálogo de Registro/Edit -->
-  <v-dialog v-model="estados.formMiembros.display" max-width="600">
+  <v-dialog v-model="estados.formMiembros.display" max-width="600" :persistent="true">
     <v-card>
-      <v-card-title>
+      <v-card-title class="dialog-title">
         {{
           estados.formMiembros.mode == "add"
             ? "Registrar Miembro"
@@ -12,7 +12,10 @@
             ? "Vista"
             : "Texto por defecto"
         }}
+
       </v-card-title>
+
+     
       <v-card-text>
         <v-form ref="form" @submit="saveMember">
           <!-- Campos del formulario -->
@@ -125,7 +128,9 @@
           ></v-textarea>
         </v-form>
       </v-card-text>
-      <v-card-actions>
+     
+      <v-card-actions class="dialog-actions">
+        <v-spacer/>
         <v-btn @click="estados.formMiembros.display = false">
           {{
             estados.formMiembros.mode === "view" ? "Cerrar" : "Cancelar"
@@ -149,7 +154,7 @@ import { ref, reactive, watch, onMounted } from "vue";
 import { useAppStore } from "../store/app";
 import { collection, addDoc, doc, updateDoc,query,getDocs,where,serverTimestamp} from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
-
+import swal from 'sweetalert';
 const estados = useAppStore();
 
 const dialog = ref(false);
@@ -243,19 +248,34 @@ const saveMember = async () => {
 
 //Permite guardar el registro por primera vez en firebase
 async function guardarRegistro(d) {
-
-  const docRef = await addDoc(collection(db, "Membresia"), d);
-  clearFormFields();
-  estados.formMiembros = { display: false, mode: "", id: "" };
-  console.log("Document written with ID: ", docRef.id);
+  try {
+    const docRef = await addDoc(collection(db, "Membresia"), d);
+    clearFormFields();
+    estados.formMiembros = { display: false, mode: "", id: "" };
+    // Muestra un mensaje de confirmación si se guardó correctamente
+    swal("Éxito!", "El registro se ha guardado correctamente.", "success");
+  } catch (error) {
+    // Muestra un mensaje de error si hubo un problema al guardar
+   
+    swal("Error!", "Hubo un problema al guardar el registro en Firebase."+error, "error");
+  }
 }
-
+//Permite guardar modificacion de cualquier miembro
 async function editar() {
-  const miembro = doc(db, "Membresia", estados.formMiembros.id);
-  await updateDoc(miembro, formData);
-  clearFormFields();
-  estados.formMiembros = { display: false, mode: "", id: "" };
+  try {
+    const miembro = doc(db, "Membresia", estados.formMiembros.id);
+    await updateDoc(miembro, formData);
+    clearFormFields();
+    estados.formMiembros = { display: false, mode: "", id: "" };
+    // Muestra un mensaje de confirmación si se actualizó correctamente
+    swal("Éxito!", "El registro se ha actualizado correctamente.", "success");
+  } catch (error) {
+    // Muestra un mensaje de error si hubo un problema al actualizar
+    
+    swal("Error!", "Hubo un problema al actualizar el registro en Firebase.", "error");
+  }
 }
+
 
 //FUNCIONES
 
@@ -277,118 +297,91 @@ function clearFormFields() {
 }
 
 function validateForm(d) {
-  if (d.sede.id == "" || d.sede.id == null) {
-    alert("Error desconocido 1");
+  const showError = (message) => {
+    swal("Error!", message, "error");
     return false;
-  }
-  if (d.sede.distrito == "" || d.sede.distrito == null) {
-    alert("Error desconocido 2");
-    return false;
-  }
-  if (d.sede.zona == "" || d.sede.zona == null) {
-    alert("Error desconocido 3");
-    return false;
-  }
-  if (d.sede.municipio == "" || d.sede.municipio == null) {
-    alert("Error desconocido 4 ");
-    return false;
-  }
-  if (d.sede.distrito == "" || d.sede.distrito == null) {
-    alert("Error desconocido 5");
-    return false;
-  }
-  
+  };
 
+  const showWarning = (message) => {
+    swal("Informacion!", message, "warning");
+    return false;
+  };
 
-  if (d.tipoDocumento == "" || d.tipoDocumento.length > 30) {
-    alert("El campo Tipo de documento no puede quedar vacio");
-    return false;
-  }
-  if (d.numeroDocumento == "" || d.numeroDocumento.length > 30) {
-    alert(
-      "El campo numero de documento no puede quedar vacio ni tener mas de 30 caracteres"
-    );
-    return false;
+  if (!d.sede.id || !d.sede.distrito || !d.sede.zona || !d.sede.municipio || !d.sede.distrito) {
+    return showError("Error desconocido.");
   }
 
-  if (d.nombre == "" || d.nombre.length > 40) {
-    alert(
-      "El campo nombre no puede quedar vacio ni tener mas de 40 caracteres"
-    );
-    return false;
+  if (!d.tipoDocumento || d.tipoDocumento.length > 30) {
+    return showWarning("El campo Tipo de documento no puede quedar vacío o tener más de 30 caracteres.");
   }
 
-  if (d.apellido == "" || d.apellido.length > 40) {
-    alert(
-      "El campo apellido no puede quedar vacio ni tener mas de 40 caracteres"
-    );
-    return false;
+  if (!d.numeroDocumento || d.numeroDocumento.length > 30) {
+    return showWarning("El campo número de documento no puede quedar vacío o tener más de 30 caracteres.");
   }
 
-  if (d.rol == "" || d.rol.length > 40) {
-    alert("El campo rol no puede quedar vacio");
-    return false;
-  }
-  if (d.fechaNacimiento == "" || d.fechaNacimiento == null) {
-    alert("El campo fecha de nacimiento no puede quedar vacio");
-    return false;
-  }
-  if (d.celular == "" || d.celular == null || d.celular.length > 16) {
-    alert(
-      "El campo celular  no puede quedar vacio,ni tener mas de 16 caracteres"
-    );
-    return false;
+  if (!d.nombre || d.nombre.length > 40) {
+    return showWarning("El campo nombre no puede quedar vacío o tener más de 40 caracteres.");
   }
 
-  if (d.direccionr == "" || d.direccion == null || d.direccion.length > 60) {
-    alert(
-      "El campo direccion no puede quedar vacio,ni tener mas de 60 caracteres"
-    );
-    return false;
-  }
-  if (d.direccion == "" || d.direccion == null || d.direccion.length > 60) {
-    alert(
-      "El campo direccion no puede quedar vacio,ni tener mas de 60 caracteres"
-    );
-    return false;
-  }
-  if (d.sexo == "" || d.sexo == null) {
-    alert("El campo sexo no puede quedar vacio");
-    return false;
+  if (!d.apellido || d.apellido.length > 40) {
+    return showWarning("El campo apellido no puede quedar vacío o tener más de 40 caracteres.");
   }
 
-  if (d.estadoCivil == "" || d.estadoCivil == null) {
-    alert("El campo estado civil no puede quedar vacio");
-    return false;
-  }
-  if (d.esBautizado == "" || d.esBautizado == null) {
-    alert("El campo ¿Es usted bautizado? no puede quedar vacio");
-    return false;
+  if (!d.rol || d.rol.length > 40) {
+    return showWarning("El campo rol no puede quedar vacío.");
   }
 
-  if (d.esBautizado == "Sí") {
-    if (d.fechaBautismo == "" || d.fechaBautismo == null) {
-      alert("El campo fecha bautizmo no puede quedar vacio");
-      return false;
+  if (!d.fechaNacimiento) {
+    return showWarning("El campo fecha de nacimiento no puede quedar vacío.");
+  }
+
+  if (!d.celular || d.celular.length > 16) {
+    return showWarning("El campo celular no puede quedar vacío o tener más de 16 caracteres.");
+  }
+
+  if (!d.direccion || d.direccion.length > 60) {
+    return showWarning("El campo dirección no puede quedar vacío o tener más de 60 caracteres.");
+  }
+
+  if (!d.sexo) {
+    return showWarning("El campo sexo no puede quedar vacío.");
+  }
+
+  if (!d.estadoCivil) {
+    return showWarning("El campo estado civil no puede quedar vacío.");
+  }
+
+  if (!d.esBautizado) {
+    return showWarning("El campo ¿Es usted bautizado? no puede quedar vacío.");
+  }
+
+  if (d.esBautizado === "Sí") {
+    if (!d.fechaBautismo) {
+      return showWarning("El campo fecha bautismo no puede quedar vacío.");
     }
-    if (
-      d.nombrePastorBautismo == "" ||
-      d.nombrePastorBautismo == null ||
-      d.nombrePastorBautismo.length > 50
-    ) {
-      alert(
-        "El campo nombre del pastor que le bautizo no puede quedar vacio ni tener mas de 50 caracteres"
-      );
-      return false;
+
+    if (!d.nombrePastorBautismo || d.nombrePastorBautismo.length > 50) {
+      return showWarning("El campo nombre del pastor que le bautizó no puede quedar vacío o tener más de 50 caracteres.");
     }
-  } else {
-    formData.fechaBautismo = "";
-    formData.nombrePastorBautismo = "";
+  }else{
+    d.fechaBautismo=""
+    d.nombrePastorBautismo=""
   }
 
   return true;
 }
 
+watch(
+  () => formData.esBautizado,
+  (newData) => {
+
+    if (newData=="No") {
+      formData.fechaBautismo=""
+      formData.nombrePastorBautismo=""
+    } 
+    
+  }
+);
 
 async function buscarV(n) {
   const q = query(
@@ -400,7 +393,10 @@ async function buscarV(n) {
   if (querySnapshot.empty) {
     return false; // No se encontraron documentos
   } else {
-    alert("Ya existe un registro con este número de documento");
+    
+    swal("Error!", "Ya existe un registro con este número de documento!", "error");
+   
+
     return true; // Se encontró al menos un documento
   }
 }
@@ -429,5 +425,26 @@ async function buscarV(n) {
   border: 1px solid #ccc; /* Color de borde igual a otros campos */
   border-radius: 4px; /* Borde redondeado igual a otros campos */
   padding: 6px 8px; /* Espaciado igual a otros campos */
+}
+
+
+.dialog-title {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1; /* Asegura que los botones estén por encima del contenido */
+}
+
+
+.dialog-actions {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 1; /* Asegura que los botones estén por encima del contenido */
+}
+
+
+.dialog-button {
+  margin-right: 16px; /* Espaciado entre los botones */
 }
 </style>

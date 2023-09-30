@@ -1,6 +1,5 @@
 <template>
     <PanelControl>
-      <h1>Sugerencias</h1>
       <FormSugerencias/>
     </PanelControl>
    </template>

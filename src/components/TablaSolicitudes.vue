@@ -6,30 +6,32 @@
 .v-icon.green--text {
   color: rgb(97, 187, 97);
 }
+
+.option-content {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.option-content h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+
 </style>
 
 <template>
   <div>
-    <v-text-field
-      v-model="search"
-      label="Buscar por nombre o código"
-      variant="outlined"
-      append-inner-icon="mdi-magnify"
-      density="compact"
-      style="max-width: 550px; color: aqua"
-    />
 
-    <v-btn
-      color="primary"
-      class="mb-5"
-      fab
-      dark
-      @click="estados.formMiembros = { display: true, mode: 'add', id: '' }"
-    >
-      <v-icon>mdi-plus</v-icon>
-      Agregar miembro
-    </v-btn>
-    <!-- Agregar el diálogo/modal -->
+
+  <v-select  v-model="modo" label="Modo" :items="['Recibidas','Enviadas']" item-title="name">
+  
+  </v-select>
+
 
     <v-table
       dense
@@ -88,7 +90,7 @@
               v-if="item.idE !== estados.data.id"
               color="#F35656"
               class="ml-1"
-              @click="cancelarSolicitud(item.docId)"
+              @click="rechazarSolicitud(item.docId)"
               >Rechazar</v-btn
             >
           </td>
@@ -121,12 +123,16 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
+import swal from 'sweetalert';
 //import { useRouter } from "vue-router";
 
 const estados = useAppStore();
+
+const selectedOption=ref( 'recibidas') // Inicialmente seleccionada "Recibidas"
 const currentPage = ref(1);
 const itemsPerPage = ref(20);
 const search = ref("");
+const modo = ref("Recibidas");
 const desserts = ref(estados.solicitudes);
 
 const sortedItems = computed(() => {
@@ -143,9 +149,17 @@ const sortedItems = computed(() => {
 
 const filteredDesserts = computed(() => {
   currentPage.value = 1;
-  const regex = new RegExp(search.value, "i");
+  const regex = modo.value;
+
+
+  if(regex==="Recibidas"){
+    return desserts.value.filter(
+    (item) => item.idR ===estados.data.id
+  );
+
+  }
   return desserts.value.filter(
-    (item) => regex.test(item.idE) || regex.test(item.idR)
+    (item) => item.idE ===estados.data.id
   );
 });
 
@@ -172,51 +186,99 @@ watch(
 );
 
 async function cancelarSolicitud(id) {
-  if (!confirm("Seguro que desea cancelar la Solicitud?")) return;
-  await deleteDoc(doc(db, "Solicitudes", id));
+  const willCancel = await swal({
+    title: "¿Seguro que desea cancelar la Solicitud?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  });
+
+  if (willCancel) {
+    await deleteDoc(doc(db, "Solicitudes", id));
+    swal("Solicitud Cancelada", "La solicitud ha sido cancelada con éxito.", "success");
+  } else {
+    swal("Operación Cancelada", "La solicitud no ha sido cancelada.", "info");
+  }
 }
+
 async function rechazarSolicitud(id) {
-  if (!confirm("Seguro que desea rechazar la Solicitud?")) return;
-  await deleteDoc(doc(db, "Solicitudes", id));
+  const willReject = await swal({
+    title: "¿Seguro que desea rechazar la Solicitud?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  });
+
+  if (willReject) {
+    await deleteDoc(doc(db, "Solicitudes", id));
+    swal("Solicitud Rechazada", "La solicitud ha sido rechazada con éxito.", "success");
+  } else {
+    swal("Operación Cancelada", "La solicitud no ha sido rechazada.", "info");
+  }
 }
+
 
 async function eliminarSolicitud(id) {
-
-  await deleteDoc(doc(db, "Solicitudes", id));
+  return await deleteDoc(doc(db, "Solicitudes", id));
 }
 //id hace referencia al id del comento miembro,
 //ide Hace referencia alide del emisor de la solicitud
 //ids hace referencia al id de la solicitud para luego borrrarla
 //sede es la solicitante y sus datos
-async function aceptarSolicitud(id, ide, ids,sede) {
-  if (!confirm("Seguro que desea aceptar esta Solicitud?")) return;
-  const docRef = doc(db, "Membresia", id);
-  const docSnap = await getDoc(docRef);
+async function aceptarSolicitud(id, ide, ids, sede) {
+  // Mostrar un mensaje de confirmación con SweetAlert
+  const willAccept = await swal({
+    title: "¿Seguro que desea aceptar esta Solicitud?",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  });
 
-  if (docSnap.exists()) {
-    await runTransaction(db, async (transaction) => {
-      const historia = docSnap.data().historiaTraslados;
-      historia.push({
-        sede: estados.data,
-        fecha: new Date().toISOString().split("T")[0],
-        Hora: new Date().toTimeString().split(" ")[0],
+  // Si el usuario confirmó la acción
+  if (willAccept) {
+    // Obtener una referencia al documento de la membresía
+    const docRef = doc(db, "Membresia", id);
+
+    // Obtener un snapshot del documento
+    const docSnap = await getDoc(docRef);
+
+    // Si el documento existe
+    if (docSnap.exists()) {
+      // Ejecutar una transacción en Firestore
+      await runTransaction(db, async (transaction) => {
+        // Obtener el historial de traslados del miembro
+        const historia = docSnap.data().historiaTraslados;
+
+        // Agregar un registro al historial
+        historia.push({
+          sede: estados.data,
+          fecha: new Date().toISOString().split("T")[0],
+          Hora: new Date().toTimeString().split(" ")[0],
+        });
+
+        // Actualizar los datos del miembro en Firestore
+        await updateDoc(docRef, {
+          sede: sede,
+          historiaTraslados: historia,
+          direccion: "",
+          timestamp: serverTimestamp(),
+        });
+
+        // Eliminar la solicitud
+        await eliminarSolicitud(ids);
       });
 
-      const docRef = doc(db, "Membresia", id);
-
-      // Set the "capital" field of the city 'DC'
-      await updateDoc(docRef, {
-       sede:sede,
-        historiaTraslados: historia,
-        direccion:"",
-        timestamp: serverTimestamp(),
-      });
-
-      await eliminarSolicitud(ids);
-    });
+      // Mostrar un mensaje de éxito con SweetAlert
+      swal("Solicitud Aceptada", "La solicitud ha sido aceptada con éxito.", "success");
+    } else {
+      // Si el documento no existe, mostrar un mensaje de error con SweetAlert
+      swal("Error", "No se encontró el documento.", "error");
+      console.log("No such document!");
+    }
   } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
+    // Si el usuario canceló la acción, mostrar un mensaje informativo con SweetAlert
+    swal("Operación Cancelada", "La solicitud no ha sido aceptada.", "info");
   }
 }
+
 </script>
