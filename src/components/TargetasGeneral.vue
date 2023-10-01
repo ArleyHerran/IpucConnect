@@ -15,27 +15,31 @@
             <v-icon
              
               class="ma-3"
-              size="60"
+              size="50"
               rounded="0"
               >{{ item.icon }}</v-icon
             >
             <div>
-              <v-card-title class="text-h4">
+              <v-card-title class="text-h5">
                 {{ item.title }}
               </v-card-title>
 
-              <v-card-subtitle class="text-h5">{{ item.value }}</v-card-subtitle>
+              <v-card-subtitle class="text-h5">{{ item.value }}    <span style="font-size: 12px; right: 0px;font-weight: bold;">({{ item.char }}%)</span> </v-card-subtitle>
             </div>
           </div>
         </v-card>
       </v-col>
     </v-row>
+   
+    
   </v-container>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useAppStore } from "../store/app";
+
+
 const estados = useAppStore();
 
 // Define un mapeo de categorías a clases de iconos y nombres de iconos
@@ -48,16 +52,16 @@ function getIconClass(category) {
 
 
 const items = ref([
-  { title: "Total", color: "blue", value: 0, icon:"mdi-account-group"},
-  { title: "Hombres", color: "#385F73", value: 0,icon:"mdi-gender-male"},
-  { title: "Mujeres", color: "pink", value: 0 ,icon:"mdi-gender-female"},
-  { title: "Niños", color: "green", value: 0,icon:"mdi-human-child" },
-  { title: "Adolescentes", color: "#952175", value: 0,icon:"mdi-human-male"},
-  { title: "Jóvenes", color: "#FF5722", value: 0,icon:"mdi-human-male-female" },
-  { title: "Adultos", color: "#8C9EFF", value: 0,icon:"mdi-human-male-female" },
-  { title: "Adultos mayores", color: "brown", value: 0,icon:"mdi-human-gold" },
-  { title: "Casados", color: "#385F73", value: 0,icon:"mdi-account-heart" },
-  { title: "Solteros", color: "#1F7087", value: 0,icon:"mdi-heart-broken" },
+  { title: "Total", color: "blue", value: 0, char:100,icon:"mdi-account-group"},
+  { title: "Hombres", color: "#385F73", value: 0,char:0,icon:"mdi-gender-male"},
+  { title: "Mujeres", color: "pink", value: 0 ,char:0,icon:"mdi-gender-female"},
+  { title: "Niños", color: "green", value: 0,char:0,icon:"mdi-human-child" },
+  { title: "Adolescentes", color: "#952175", char:0,value: 0,icon:"mdi-human-male"},
+  { title: "Jóvenes", color: "#FF5722", value: 0,char:0,icon:"mdi-human-male-female" },
+  { title: "Adultos", color: "#8C9EFF", value: 0,char:0,icon:"mdi-human-male-female" },
+  { title: "Adultos mayores", color: "brown", char:0,value: 0,icon:"mdi-human-cane" },
+  { title: "Casados", color: "#385F73", value: 0,char:0,icon:"mdi-account-heart" },
+  { title: "Solteros", color: "#1F7087", value: 0,char:0,icon:"mdi-heart-broken" },
 ]);
 
 watch(
@@ -109,5 +113,16 @@ function getData(data) {
       items.value[9].value++; // Mujeres
     }
   });
+  for (let i = 1; i <= 9; i++) {
+  items.value[i].char = ((items.value[i].value / items.value[0].value) * 100).toFixed(1);
 }
+ // (7 / 10) * 100 = 70%
+}
+
+
+
 </script>
+
+
+
+

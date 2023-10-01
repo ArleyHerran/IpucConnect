@@ -1,7 +1,7 @@
 <template>
     <v-container>
       <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="7">
+        <v-col cols="12" sm="8" md="4">
           <v-card>
             <v-card-title class="text-center">
               <span class="headline">Iniciar sesión</span>
@@ -79,11 +79,11 @@ signInWithEmailAndPassword(auth, emails, password.value)
   function traducirErrorFirebase(codigoError) {
   switch (codigoError) {
     case "auth/user-not-found":
-      return "Usuario no encontrado. Verifica que el correo electrónico es correcto o regístrate si eres nuevo.";
+      return "Usuario no encontrado. Verifica que el numero de usuario sea correcto o solicite un usuario.";
     case "auth/wrong-password":
       return "Contraseña incorrecta. Verifica la contraseña e inténtalo de nuevo.";
     case "auth/invalid-email":
-      return "Correo electrónico no válido. Asegúrate de que el formato del correo sea correcto.";
+      return "Usuario no válido. Asegúrate de que el formato del usuario sea correcto.";
     case "auth/email-already-in-use":
       return "El correo electrónico ya está en uso. Prueba con otro correo electrónico.";
     case "auth/weak-password":

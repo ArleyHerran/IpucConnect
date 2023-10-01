@@ -13,7 +13,7 @@
   <div>
     <v-text-field
       v-model="search"
-      label="Buscar por nombre o código"
+      label="Buscar por nombre o numero de documento"
       variant="outlined"
       append-inner-icon="mdi-magnify"
       density="compact"
@@ -154,27 +154,7 @@ if(!exportA)return;
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Miembros');
 
-  // Datos de prueba
-  const dataDePrueba = [
-    {
-      tipoDocumento: 'Cédula de Ciudadanía',
-      numeroDocumento: '123456789',
-      nombre: 'Juan',
-      apellido: 'Pérez',
-      rol: 'Miembro',
-      fechaNacimiento: '1990-01-15',
-      celular: '123-456-7890',
-      direccion: 'Calle 123',
-      sexo: 'Hombre',
-      estadoCivil: 'Casado',
-      esBautizado: 'Sí',
-      fechaBautismo: '2022-05-20',
-      nombrePastorBautismo: 'Pastor Smith',
-      referenciaPastoral: 'Iglesia XYZ',
-    },
-    // Agrega más datos de prueba aquí...
-  ];
-
+  
   // Define las propiedades (columnas) que deseas incluir en la exportación
   const propertiesToInclude = [
     'tipoDocumento',
@@ -194,9 +174,8 @@ if(!exportA)return;
   ];
 
   // Agrega un título a la tabla
-  worksheet.mergeCells('A1:N1'); // Fusiona las celdas para el título
+ 
   const titleCell = worksheet.getCell('A1');
-  titleCell.value = 'Membresía IPUC'; // Título
   titleCell.font = { bold: true, size: 16 }; // Texto en negrita y tamaño
   titleCell.alignment = { horizontal: 'center' }; // Alineación centrada
 
@@ -264,6 +243,9 @@ const headerRow = worksheet.addRow(customHeaders);
       };
     });
   });
+
+  worksheet.mergeCells('A1:N1'); // Fusiona las celdas para el título
+  titleCell.value = 'Membresía IPUC'; // Título
   // Crea el archivo Excel
   workbook.xlsx.writeBuffer().then(buffer => {
     try {
@@ -279,26 +261,36 @@ const headerRow = worksheet.addRow(customHeaders);
   });
 };
 
-async function eliminarM(m){
-if(!confirm("Seguro que desea eliminar este registro?"))return;
 
-try {
-  await runTransaction(db, async (transaction) => {
-await setDoc(doc(db, "PapeleraMiembros", m.id), m);
-await deleteDoc(doc(db, "Membresia", m.id));
 
+
+
+async function eliminarM(m) {
+  const confirmacion = await swal({
+    title: '¿Seguro que desea eliminar este registro?',
+    text: 'Esta acción no se puede deshacer',
+    icon: 'warning',
+    buttons: ['Cancelar', 'Sí, eliminar'],
+    dangerMode: true,
   });
 
-  alert("Eliminacion exitosa");
+  if (!confirmacion) {
+    return;
+  }
 
-} catch (e) {
+  try {
+    await runTransaction(db, async (transaction) => {
+      await setDoc(doc(db, 'PapeleraMiembros', m.id), m);
+      await deleteDoc(doc(db, 'Membresia', m.id));
+    });
 
-  alert("Ocurrio un Error ", e);
+    swal('Eliminación exitosa', '', 'success');
+  } catch (e) {
+    swal('Ocurrió un error', `${e}`, 'error');
+  }
 }
 
 
-
-}
 
 </script>
 
