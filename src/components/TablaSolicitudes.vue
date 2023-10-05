@@ -248,6 +248,8 @@ async function aceptarSolicitud(id, ide, ids, sede) {
       await runTransaction(db, async (transaction) => {
         // Obtener el historial de traslados del miembro
         const historia = docSnap.data().historiaTraslados;
+      
+
 
         // Agregar un registro al historial
         historia.push({
@@ -256,11 +258,14 @@ async function aceptarSolicitud(id, ide, ids, sede) {
           Hora: new Date().toTimeString().split(" ")[0],
         });
 
+        
+
         // Actualizar los datos del miembro en Firestore
         await updateDoc(docRef, {
           sede: sede,
           historiaTraslados: historia,
           direccion: "",
+         
           timestamp: serverTimestamp(),
         });
 

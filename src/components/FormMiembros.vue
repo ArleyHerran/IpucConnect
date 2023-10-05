@@ -19,174 +19,181 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" @submit="saveMember">
-          <!-- Campos del formulario -->
-          <!-- Tipo documento -->
-          <v-select
-            v-model="formData.tipoDocumento"
-            :items="[
-              'Cedula de Ciudadania',
-              'Targeta de identidad',
-              'Registro Civil',
-              'Cedula Extrangera',
-            ]"
-            label="Tipo de documento"
-          ></v-select>
+      
+  <v-form ref="form" @submit="saveMember">
+    <!-- Información Personal -->
+    <section>
+      <h2>Información Personal</h2>
+      <v-select
+        v-model="formData.tipoDocumento"
+        :items="['Cedula de Ciudadania', 'Targeta de identidad', 'Registro Civil', 'Cedula Extrangera']"
+        label="Tipo de documento"
+      ></v-select>
 
-          <!-- Número de documento -->
+      <v-text-field
+        :disabled="estados.formMiembros.mode == 'edit'"
+        v-model="formData.numeroDocumento"
+        label="Número de documento"
+        type="number"
+        required
+      ></v-text-field>
+
+      <v-row>
+        <v-col cols="6">
           <v-text-field
-            :disabled="estados.formMiembros.mode == 'edit'"
-            v-model="formData.numeroDocumento"
-            label="Número de documento"
-            type="number"
-            required
+            v-model="formData.nombre"
+            label="Nombre"
           ></v-text-field>
-
-          <!-- Nombre y Apellido -->
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                v-model="formData.nombre"
-                label="Nombre"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                v-model="formData.apellido"
-                label="Apellido"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <!-- Rol -->
-          <v-select
-            v-model="formData.rol"
-            :items="['Pastor', 'Miembro']"
-            label="Rol"
-          ></v-select>
-
-          <!-- Fecha de nacimiento -->
-          <div class="date-input">
-            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-            <input
-              type="date"
-              v-model="formData.fechaNacimiento"
-              id="fechaNacimiento"
-            />
-          </div>
-          <!-- Celular -->
+        </v-col>
+        <v-col cols="6">
           <v-text-field
-            v-model="formData.celular"
-            label="Celular"
-            type="number"
+            v-model="formData.apellido"
+            label="Apellido"
           ></v-text-field>
+        </v-col>
+      </v-row>
+      
+      <v-select
+        v-model="formData.rol"
+        :items="['Pastor', 'Miembro']"
+        label="Rol"
+      ></v-select>
+      
+      <div class="date-input">
+        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input
+          type="date"
+          v-model="formData.fechaNacimiento"
+          id="fechaNacimiento"
+        />
+      </div>
+    </section>
+    
+    <!-- Contacto -->
+    <section>
+      <h2>Contacto</h2>
+      <v-text-field
+        v-model="formData.celular"
+        label="Celular"
+        type="number"
+      ></v-text-field>
 
-          <!-- Dirección -->
-          <v-text-field
-            v-model="formData.direccion"
-            label="Dirección"
-          ></v-text-field>
-          <v-select
-            v-model="formData.nivelAcademico"
-            :items="nivelesAcademicos"
-            label="Nivel académico"
-          ></v-select>
-          <v-radio-group
-            v-model="formData.discapacitado"
-            label="¿Tiene usted alguna discapacidad?"
+      <v-text-field
+        v-model="formData.direccion"
+        label="Dirección"
+      ></v-text-field>
+
+      
+    <!-- Cuestionario -->
+    <section>
+      <h2>Cuestionario</h2>
+      <v-select
+        v-model="formData.nivelAcademico"
+        :items="nivelesAcademicos"
+        label="Nivel académico"
+      ></v-select>
+
+      <v-radio-group
+        v-model="formData.discapacitado"
+        label="¿Tiene usted alguna discapacidad?"
+      >
+        <v-radio label="Sí" value="Sí"></v-radio>
+        <v-radio label="No" value="No"></v-radio>
+      </v-radio-group>
+
+      <v-select
+        v-if="formData.discapacitado === 'Sí'"
+        v-model="formData.discapacidad"
+        :items="tiposDiscapacidad"
+        label="Tipo de discapacidad"
+      ></v-select>
+
+      <v-text-field
+        v-if="formData.discapacidad === 'Otra'"
+        v-model="formData.descripcionDiscapacidad"
+        label="Descripcion de Discapacidad"
+      ></v-text-field>
+
+      <v-radio-group v-model="formData.sexo" label="Sexo">
+        <v-radio label="Hombre" value="Hombre"></v-radio>
+        <v-radio label="Mujer" value="Mujer"></v-radio>
+      </v-radio-group>
+      
+      <v-select
+        v-model="formData.estadoCivil"
+        :items="['Casado/a', 'Soltero/a', 'Viudo/a', 'Divorciado/a']"
+        label="Estado Civil"
+      ></v-select>
+    </section>
+   
+      <v-radio-group
+        v-model="formData.esBautizado"
+        label="¿Es usted bautizado/a?"
+      >
+        <v-radio label="Sí" value="Sí"></v-radio>
+        <v-radio label="No" value="No"></v-radio>
+      </v-radio-group>
+
+      <div class="date-input" v-if="formData.esBautizado === 'Sí'">
+        <label for="fechaBautismo">Fecha de bautismo:</label>
+        <input
+          type="date"
+          v-model="formData.fechaBautismo"
+          id="fechaBautismo"
+        />
+      </div>
+
+      <v-text-field
+        v-if="formData.esBautizado === 'Sí'"
+        v-model="formData.nombrePastorBautismo"
+        label="Nombre del pastor que lo bautizó"
+      ></v-text-field>
+
+      <v-radio-group
+        v-model="formData.espiritu"
+        label="¿Es usted sellado/a con el Espiritu Santo?"
+      >
+        <v-radio label="Sí" value="Sí"></v-radio>
+        <v-radio label="No" value="No"></v-radio>
+      </v-radio-group>
+    </section>
+    
+    <!-- Cargos -->
+    <section>
+      <h2>Cargos</h2>
+      <v-text-field v-model="cargo.text" label="Cargo" required>
+        <template #append>
+          <v-btn
+            :loading="isLoading"
+            class="flex-grow-1"
+            height="48"
+            variant="tonal"
+            @click="agregarCargo"
           >
-            <v-radio label="Sí" value="Sí"></v-radio>
-            <v-radio label="No" value="No"></v-radio>
-          </v-radio-group>
+            <v-icon icon="mdi-check"></v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
 
-          <v-select
-            v-if="formData.discapacitado === 'Sí'"
-            v-model="formData.discapacidad"
-            :items="tiposDiscapacidad"
-            label="Tipo de discapacidad"
-          ></v-select>
+      <v-chip-group filter>
+        <v-chip
+          v-for="(cargo, index) in formData.cargos"
+          :key="index"
+          :color="index === editedIndex ? editedColor : ''"
+        >
+          {{ cargo.text }}
+          <v-icon @click="eliminarCargo(index)">mdi-close</v-icon>
+        </v-chip>
+      </v-chip-group>
+    </section>
 
-          <v-text-field
-          v-if="formData.discapacidad === 'Otra'"
-            v-model="formData.descripcionDiscapacidad"
-            label="Descripcion de Discapacidad"
-          ></v-text-field>
+    <v-textarea
+      v-model="formData.referenciaPastoral"
+      label="Referencia Pastoral"
+    ></v-textarea>
+  </v-form>
 
-          <!-- Sexo -->
-          <v-radio-group v-model="formData.sexo" label="Sexo">
-            <v-radio label="Hombre" value="Hombre"></v-radio>
-            <v-radio label="Mujer" value="Mujer"></v-radio>
-          </v-radio-group>
 
-          <!-- Estado Civil -->
-          <v-select
-            v-model="formData.estadoCivil"
-            :items="['Casado/a', 'Soltero/a', 'Viudo/a', 'Divorciado/a']"
-            label="Estado Civil"
-          ></v-select>
-
-          <!-- ¿Es usted bautizado? -->
-          <v-radio-group
-            v-model="formData.esBautizado"
-            label="¿Es usted bautizado/a?"
-          >
-            <v-radio label="Sí" value="Sí"></v-radio>
-            <v-radio label="No" value="No"></v-radio>
-          </v-radio-group>
-
-          <!-- Si es bautizado (mostrar) -->
-
-          <div class="date-input" v-if="formData.esBautizado === 'Sí'">
-            <label for="fechaNacimiento">Fecha de bautismo:</label>
-            <input
-              type="date"
-              v-model="formData.fechaBautismo"
-              id="fechaNacimiento"
-            />
-          </div>
-          <v-text-field
-            v-if="formData.esBautizado === 'Sí'"
-            v-model="formData.nombrePastorBautismo"
-            label="Nombre del pastor que lo bautizó"
-          ></v-text-field>
-          <div>
-            <v-text-field v-model="formData.cargo" label="Cargo" required>
-              <template #append>
-                <v-btn
-                  :loading="isLoading"
-                  class="flex-grow-1"
-                  height="48"
-                  variant="tonal"
-                  @click="agregarCargo"
-                >
-                  <v-icon icon="mdi-check"></v-icon>
-                </v-btn>
-              </template>
-            </v-text-field>
-
-            <v-chip-group filter>
-              <v-chip
-                v-for="(pastor, index) in pastorList"
-                :key="index"
-                :color="index === editedIndex ? editedColor : ''"
-              >
-                {{ pastor }}
-                <v-icon @click="eliminarPastor(index)">mdi-close</v-icon>
-              </v-chip>
-            </v-chip-group>
-          </div>
-          <v-radio-group
-            v-model="formData.espiritu"
-            label="¿Es usted sellado/a con el Espiritu Santo?"
-          >
-            <v-radio label="Sí" value="Sí"></v-radio>
-            <v-radio label="No" value="No"></v-radio>
-          </v-radio-group>
-          <v-textarea
-            v-model="formData.referenciaPastoral"
-            label="Referencia Pastoral"
-          ></v-textarea>
-        </v-form>
       </v-card-text>
 
       <v-card-actions class="dialog-actions">
@@ -238,6 +245,8 @@ const dataDefault = reactive({
   historiaTraslados: [],
 });
 
+
+
 const formData = reactive({
   tipoDocumento: "",
   numeroDocumento: "",
@@ -254,9 +263,11 @@ const formData = reactive({
   sexo: "",
   estadoCivil: "",
   esBautizado: "",
-  cargo: [],
   fechaBautismo: "",
   nombrePastorBautismo: "",
+  espiritu:"",
+  cargos: [],
+  historiaCargos:[],
   referenciaPastoral: "",
 });
 
@@ -297,6 +308,7 @@ watch(
       const objet1 = estados.miembros.find(
         (objeto) => objeto.id === newData.id
       );
+      
       for (const prop in formData) {
         if (objet1.hasOwnProperty(prop)) {
           formData[prop] = objet1[prop];
@@ -358,6 +370,9 @@ async function guardarRegistro(d) {
 async function editar() {
   try {
     const miembro = doc(db, "Membresia", estados.formMiembros.id);
+ 
+
+//console.log(  {...formData})
     await updateDoc(miembro, formData);
     clearFormFields();
     estados.formMiembros = { display: false, mode: "", id: "" };
@@ -556,36 +571,34 @@ async function buscarV(n) {
   }
 }
 
-const pastorList = ref([]);
+var cargo = reactive({text:"",isDelet:true,color:"green",fecha:new Date()});
 const editedIndex = ref(-1); // Variable para controlar el índice editado
 const editedColor = "green"; // Color para la nueva chip
 
-/*
-const agregarPastor = () => {
-  if (formData.cargo.trim() !== "") {
-    pastorList.value.push(formData.cargo);
-    formData.cargo = ""; // Limpiar el campo después de agregar
-  }
-};*/
 
 const isLoading = ref(false);
 const agregarCargo = () => {
   isLoading.value = true; // Activar la carga al hacer clic en el icono
 
   setTimeout(() => {
-    if (formData.cargo.trim() !== "") {
-      const nuevoPastor = formData.cargo;
-      pastorList.value.unshift(nuevoPastor); // Agregar al principio del array
-      formData.cargo = ""; // Limpiar el campo después de agregar
-      editedIndex.value = 0; // Establecer el índice editado como 0 para que sea verde
+    if (cargo.text.trim() !== "") {
+      const nuevoCargo = { ...cargo }; // Crear una copia independiente de cargo
+  
+  formData.cargos.unshift(nuevoCargo); // Agregar al principio del array
+  
+  cargo.text = ""; // Limpiar el campo después de agregar
+  editedIndex.value = 0; // Establecer el índice editado como 0 para que sea verde
+
     }
 
     isLoading.value = false;
+
+   
   }, 1000); // 2 segundos
 };
 
-const eliminarPastor = (index) => {
-  pastorList.value.splice(index, 1);
+const eliminarCargo = (index) => {
+  formData.cargos.splice(index, 1);
 };
 </script>
 
