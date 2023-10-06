@@ -75,19 +75,19 @@
 
           <td>
             <v-btn
-              v-if="item.idE == estados.data.id"
+              v-if="item.userE == estados.data.user"
               color="#F35656"
               @click="cancelarSolicitud(item.docId)"
               >Cancelar solicitud</v-btn
             >
             <v-btn
-              v-if="item.idE !== estados.data.id"
+              v-if="item.userE !== estados.data.user"
               color="green"
-              @click="aceptarSolicitud(item.miembro.idDoc, item.idE, item.docId,item.sede)"
+              @click="aceptarSolicitud(item.miembro.idDoc, item.userE, item.docId,item.sede)"
               >Aceptar</v-btn
             >
             <v-btn
-              v-if="item.idE !== estados.data.id"
+              v-if="item.userE !== estados.data.user"
               color="#F35656"
               class="ml-1"
               @click="rechazarSolicitud(item.docId)"
@@ -154,12 +154,12 @@ const filteredDesserts = computed(() => {
 
   if(regex==="Recibidas"){
     return desserts.value.filter(
-    (item) => item.idR ===estados.data.id
+    (item) => item.userR ===estados.data.user
   );
 
   }
   return desserts.value.filter(
-    (item) => item.idE ===estados.data.id
+    (item) => item.userE ===estados.data.user
   );
 });
 

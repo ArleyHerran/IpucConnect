@@ -160,14 +160,16 @@
     
     <!-- Cargos -->
     <section>
-      <h2>Cargos</h2>
+      <h2>Infromacion pastoral</h2>
       <v-text-field v-model="cargo.text" label="Cargo" required>
         <template #append>
           <v-btn
             :loading="isLoading"
             class="flex-grow-1"
             height="48"
-            variant="tonal"
+           
+            
+            :color="cargo.text !== '' ? 'success' : ''"
             @click="agregarCargo"
           >
             <v-icon icon="mdi-check"></v-icon>
@@ -404,6 +406,7 @@ function clearFormFields() {
 }
 
 function validateForm(d) {
+
   const showError = (message) => {
     swal("Error!", message, "error");
     return false;
@@ -415,13 +418,13 @@ function validateForm(d) {
   };
 
   if (
-    !d.sede.id ||
-    !d.sede.distrito ||
-    !d.sede.zona ||
-    !d.sede.municipio ||
-    !d.sede.distrito
+    !d.sede
+ 
   ) {
-    return showError("Error desconocido.");
+ 
+
+
+    return showError("Error desconocido. aaaaaa");
   }
 
   if (!d.tipoDocumento || d.tipoDocumento.length > 30) {
@@ -594,7 +597,7 @@ const agregarCargo = () => {
     isLoading.value = false;
 
    
-  }, 1000); // 2 segundos
+  }, 500); // 2 segundos
 };
 
 const eliminarCargo = (index) => {

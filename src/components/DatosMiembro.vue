@@ -33,10 +33,7 @@
               <strong>Número de Documento:</strong>
               {{ formData.numeroDocumento }}
             </div>
-            <div class="my-3">
-              <strong>ID:</strong>
-              {{ formData.sede.id }}
-            </div>
+            
             <div class="my-3">
               <strong>Nombre:</strong> {{ formData.nombre }}
             </div>
@@ -65,6 +62,18 @@
             </div>
             <div class="my-3">
               <!-- Aplicar espaciado vertical -->
+              <strong>Departamento:</strong> {{ formData.sede.departamento }}
+            </div>
+            <div class="my-3">
+              <!-- Aplicar espaciado vertical -->
+              <strong>Municipio:</strong> {{ formData.sede.municipio}}
+            </div>
+            <div class="my-3">
+              <!-- Aplicar espaciado vertical -->
+              <strong>Sede:</strong> {{ formData.sede.nombre }}
+            </div>
+            <div class="my-3">
+              <!-- Aplicar espaciado vertical -->
               <strong>Dirección:</strong> {{ formData.direccion }}
             </div>
             <div class="my-3">
@@ -77,7 +86,7 @@
               <strong>Estado Civil:</strong> {{ formData.estadoCivil }}
             </div>
             <!-- Agrega más campos de información de contacto aquí -->
-            <div class="my-3" v-if="formData.sede.id !== estados.data.id">
+            <div class="my-3" v-if="formData.sede.user !== estados.data.user">
               <!-- Aplicar espaciado vertical -->
               <v-btn
                 :disabled="fil(formData.numeroDocumento)"
@@ -228,8 +237,8 @@ async function enviarSolicitud() {
   try {
     const docRef = await addDoc(collection(db, "Solicitudes"), {
       miembro: miembro.value,
-      idR: miembro.value.sede.id,
-      idE: estados.data.id,
+      userR: miembro.value.sede.user,
+      userE: estados.data.user,
       sede: estados.data,
       fecha: new Date().toISOString().split("T")[0],
       Hora: new Date().toTimeString().split(" ")[0],

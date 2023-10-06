@@ -18,22 +18,21 @@ export const useAppStore = defineStore("app", {
     //TRAE LOS DATOS DEL USUARIO EN SESION.
     async getDataUser() {
       if (this.data !== null) return;
-      const id = await auth.currentUser;
-      const unsub = onSnapshot(doc(db, "Congregaciones", id.uid), (doc) => {
+      const user = await auth.currentUser;
+      const unsub = onSnapshot(doc(db, "Congregaciones", user.email), (doc) => {
         this.data = doc.data();
-        this.data.id = id.uid;
-        //console.log(this.data);
       
-        this.getMiembros(id.uid);
-        this.getSolicitudes(id.uid);
+      
+       this.getMiembros(user.email);
+       this.getSolicitudes(user.email);
       });
     },
     //ME TRAE LA LISTA DE MIEMBROS DE CADA CONGREGACION 
-    async getMiembros(id) {
+    async getMiembros(email) {
    
       const q = query(
         collection(db, "Membresia"),
-        where("sede.id", "==", id)
+        where("sede.user", "==", email)
       );
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const miembros = [];
@@ -54,12 +53,12 @@ export const useAppStore = defineStore("app", {
       });
     },
     //ME TRAE LA LISTA DE SOLICITUDES ENVIADAS Y RECIVIDAS
-    async getSolicitudes(id) {
+    async getSolicitudes(email) {
       const q = query(
         collection(db, "Solicitudes"),
         or(
-          where("idE", "==",id),
-          where("idR", "==", id)
+          where("userE", "==",email),
+          where("userR", "==", email)
         )
       );
      
@@ -72,7 +71,7 @@ export const useAppStore = defineStore("app", {
           const data = doc.data();
           data.docId=doc.id;
           solicitudes.push(data);
-          if(data.idE!==this.data.id){this.notificaciones.solicitudes++;}
+          if(data.userE!==this.data.user){this.notificaciones.solicitudes++;}
          
         });
         this.notificaciones.value=this.notificaciones.solicitudes+this.notificaciones.informacion;

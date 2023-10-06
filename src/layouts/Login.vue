@@ -65,16 +65,7 @@
     class=" text-center d-flex flex-column "
     style="background: #292929; color: aliceblue"
   >
-    <div>
-      <v-btn
-        v-for="icon in icons"
-        :key="icon"
-        class="mx-1"
-        :icon="icon"
-        variant="text"
-      ></v-btn>
-    </div>
-
+    
     <div class="pt-0">
     Contacto:3134878371
     </div>
