@@ -52,6 +52,7 @@
 errorl.value=""
 
 const emails= email.value+"@jahd.com"
+
 signInWithEmailAndPassword(auth, emails, password.value)
   .then((userCredential) => {
     const user = userCredential.user;
@@ -65,6 +66,7 @@ signInWithEmailAndPassword(auth, emails, password.value)
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
+    console.log(errorCode)
     errorl.value=traducirErrorFirebase(errorCode);
   });
   };
@@ -77,22 +79,31 @@ signInWithEmailAndPassword(auth, emails, password.value)
   ////Lib
 
   function traducirErrorFirebase(codigoError) {
-  switch (codigoError) {
-    case "auth/user-not-found":
-      return "Usuario no encontrado. Verifica que el numero de usuario sea correcto o solicite un usuario.";
-    case "auth/wrong-password":
-      return "Contraseña incorrecta. Verifica la contraseña e inténtalo de nuevo.";
-    case "auth/invalid-email":
-      return "Usuario no válido. Asegúrate de que el formato del usuario sea correcto.";
-    case "auth/email-already-in-use":
-      return "El correo electrónico ya está en uso. Prueba con otro correo electrónico.";
-    case "auth/weak-password":
-      return "Contraseña débil. La contraseña debe tener al menos 6 caracteres.";
-    case "auth/network-request-failed":
-      return "Error de red. Comprueba tu conexión a Internet.";
-    default:
-      return "Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.";
-  }
+  switch (codigoError){
+  case "auth/user-not-found":
+    return "Usuario no encontrado. Verifica que el número de usuario sea correcto o solicita un usuario.";
+  case "auth/wrong-password":
+    return "Contraseña incorrecta. Verifica la contraseña e inténtalo de nuevo.";
+  case "auth/invalid-email":
+    return "Usuario no válido. Asegúrate de que el formato del usuario sea correcto.";
+  case "auth/email-already-in-use":
+    return "El correo electrónico ya está en uso. Prueba con otro correo electrónico.";
+  case "auth/weak-password":
+    return "Contraseña débil. La contraseña debe tener al menos 6 caracteres.";
+  case "auth/network-request-failed":
+    return "Error de red. Comprueba tu conexión a Internet.";
+  case "auth/invalid-login-credentials":
+    return "Credenciales de inicio de sesión inválidas. Verifica la información proporcionada.";
+  case "auth/too-many-requests":
+    return "Demasiados intentos. Por favor, espera un momento antes de intentarlo de nuevo.";
+  default:
+    return "Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.";
+}
+
+
+
+
+
 }
   </script>
   

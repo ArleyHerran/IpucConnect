@@ -32,7 +32,8 @@ export const useAppStore = defineStore("app", {
    
       const q = query(
         collection(db, "Membresia"),
-        where("sede.user", "==", email)
+        where("sede.user", "==", email),
+        where("estado", "==", "Activo")
       );
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const miembros = [];

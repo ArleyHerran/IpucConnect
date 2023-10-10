@@ -62,6 +62,9 @@ const items = ref([
   { title: "Adultos mayores", color: "brown", char:0,value: 0,icon:"mdi-human-cane" },
   { title: "Casados", color: "#385F73", value: 0,char:0,icon:"mdi-account-heart" },
   { title: "Solteros", color: "#1F7087", value: 0,char:0,icon:"mdi-heart-broken" },
+  { title: "Viudos", color: "131313", value: 0, char: 0, icon: "mdi-emoticon-sad" }, // Color negro (#000000)
+{ title: "Divorciados", color: "#515A61", value: 0, char: 0, icon: "mdi-heart-remove" } // Otro color, por ejemplo, naranja (#FF5733)
+
 ]);
 
 watch(
@@ -108,12 +111,16 @@ function getData(data) {
     }
 
     if (miembro.estadoCivil === "Casado/a") {
-      items.value[8].value++; // Hombres
+      items.value[8].value++; // Casados
     } else if (miembro.estadoCivil === "Soltero/a") {
-      items.value[9].value++; // Mujeres
+      items.value[9].value++; // Solteros
+    }else if (miembro.estadoCivil === "Viudo/a") {
+      items.value[10].value++; // Viudos
+    }else if (miembro.estadoCivil === "Divorciado/a") {
+      items.value[11].value++; // Divorciados
     }
   });
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 11; i++) {
   items.value[i].char = ((items.value[i].value / items.value[0].value) * 100).toFixed(1);
 }
  // (7 / 10) * 100 = 70%

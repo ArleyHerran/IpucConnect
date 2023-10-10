@@ -52,7 +52,7 @@
           gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
         ></v-img>
       </template>
-      <v-app-bar-title>IpucConnect</v-app-bar-title>
+      <v-app-bar-title>SgmIpuc</v-app-bar-title>
 
   </v-app-bar>
     <v-main class="mainApp">
@@ -73,7 +73,7 @@
     <v-divider></v-divider>
 
     <div>
-      {{ new Date().getFullYear() }} — <strong>IpucConnet</strong>
+      {{ new Date().getFullYear() }} — <strong>sgm-ipuc</strong>
     </div>
   </v-footer>
   </v-app>

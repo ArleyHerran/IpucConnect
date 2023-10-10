@@ -43,6 +43,7 @@
           <v-text-field
             v-model="formData.nombre"
             label="Nombre"
+        
           ></v-text-field>
         </v-col>
         <v-col cols="6">
@@ -53,11 +54,24 @@
         </v-col>
       </v-row>
       
-      <v-select
+     
+      <v-row>
+        <v-col cols="6">
+          <v-select
         v-model="formData.rol"
-        :items="['Pastor', 'Miembro']"
+        :items="['Pastor', 'Miembro/Simpatizante']"
         label="Rol"
       ></v-select>
+        </v-col>
+        <v-col cols="6">
+          <v-select
+        v-model="formData.estado"
+        :items="['Activo', 'Inhabilitado']"
+        label="Estado"
+        :disabled="estados.formMiembros.mode !== 'edit'"
+      ></v-select>
+        </v-col>
+      </v-row>
       
       <div class="date-input">
         <label for="fechaNacimiento">Fecha de Nacimiento:</label>
@@ -167,8 +181,6 @@
             :loading="isLoading"
             class="flex-grow-1"
             height="48"
-           
-            
             :color="cargo.text !== '' ? 'success' : ''"
             @click="agregarCargo"
           >
@@ -192,6 +204,7 @@
     <v-textarea
       v-model="formData.referenciaPastoral"
       label="Referencia Pastoral"
+      counter="500"
     ></v-textarea>
   </v-form>
 
@@ -247,9 +260,8 @@ const dataDefault = reactive({
   historiaTraslados: [],
 });
 
-
-
 const formData = reactive({
+  estado:"Activo",
   tipoDocumento: "",
   numeroDocumento: "",
   nombre: "",
@@ -318,6 +330,7 @@ watch(
       }
     } else {
       clearFormFields();
+      formData.estado='Activo'
     }
   }
 );
@@ -394,15 +407,21 @@ async function editar() {
 //FUNCIONES
 
 function clearFormFields() {
+
+
   for (const key in formData) {
-    if (Array.isArray(formData[key])) {
-      formData[key] = [];
-    } else if (typeof formData[key] === 'string') {
+  if (Array.isArray(formData[key])) {
+    formData[key] = [];
+  } else if (typeof formData[key] === 'string') {
+    // Mantener el valor actual si la clave es "estado"
+    if (key !== 'estado') {
       formData[key] = '';
-    } else if (typeof formData[key] === 'number') {
-      formData[key] = null;
     }
+  } else if (typeof formData[key] === 'number') {
+    formData[key] = null;
   }
+}
+
 }
 
 function validateForm(d) {
@@ -421,9 +440,6 @@ function validateForm(d) {
     !d.sede
  
   ) {
- 
-
-
     return showError("Error desconocido. aaaaaa");
   }
 
@@ -529,6 +545,13 @@ function validateForm(d) {
   if (!d.espiritu) {
     return showWarning("El campo ¿Es usted sellado/a con el Espiritu Santo? no puede quedar vacío.");
   }
+
+  console.log()
+  if (d.referenciaPastoral.length > 500) {
+      return showWarning(
+        "El campo referencia pastoral no puede  tener más de 400 caracteres."
+      );
+    }
 
   return true;
 }
@@ -646,4 +669,6 @@ const eliminarCargo = (index) => {
 .dialog-button {
   margin-right: 16px; /* Espaciado entre los botones */
 }
+
+
 </style>

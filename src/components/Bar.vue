@@ -14,7 +14,7 @@
         <v-app-bar-nav-icon @click="estados.drawerDisplay = !estados.drawerDisplay"></v-app-bar-nav-icon>
       </template>
 
-      <v-app-bar-title>IpucConnect</v-app-bar-title>
+      <v-app-bar-title>SgmIpuc</v-app-bar-title>
 
       <v-spacer></v-spacer>
 

@@ -86,8 +86,22 @@
               <strong>Estado Civil:</strong> {{ formData.estadoCivil }}
             </div>
             <!-- Agrega más campos de información de contacto aquí -->
+             <!-- Aplicar espaciado vertical -->
+             <v-btn
+             v-if="formData.sede.user === estados.data.user && formData.estado==='Inhabilitado'"
+                @click="load2(formData.idDoc)"
+                :loading="loading"
+                class="flex-grow-1"
+                height="48"
+                variant="flat"
+                color="success"
+                :disabled="loading"
+              >
+                <v-icon left>mdi-account-reactivate</v-icon> Activar persona
+              </v-btn>
             <div class="my-3" v-if="formData.sede.user !== estados.data.user">
-              <!-- Aplicar espaciado vertical -->
+
+             
               <v-btn
                 :disabled="fil(formData.numeroDocumento)"
                 @click="load"
@@ -126,8 +140,9 @@ import {
   getDocs,
   addDoc,
   onSnapshot,
+  doc,updateDoc 
 } from "firebase/firestore";
-import { auth, db } from "../ConfigFirebase";
+import { auth, db} from "../ConfigFirebase";
 import swal from "sweetalert";
 
 const estados = useAppStore();
@@ -144,6 +159,8 @@ const documentTypes = [
 ];
 
 const formData = reactive({
+  idDoc:"",
+  estado:'Activo',
   tipoDocumento: "314",
   numeroDocumento: "",
   nombre: "Juan",
@@ -184,6 +201,29 @@ async function load() {
   }
 }
 
+
+async function load2(doc) {
+  // Mostrar una confirmación con SweetAlert
+
+  const willSend = await swal({
+    title: "¿Estás seguro?",
+    text: "Esto habilitara la persona y sera visible en su base de datos.",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  });
+
+  // Verificar la respuesta de SweetAlert
+  if (willSend) {
+    loading.value = true;
+    setTimeout(() => {
+     activarPersona(doc);
+    }, 1500);
+  } else {
+    // El usuario canceló la confirmación
+    swal("Cancelado", "La activacion no se ha realizado.", "info");
+  }
+}
 function buscar() {
   if (searchNumber.value == "") {
     swal("Campo vacio !", "", "info");
@@ -252,6 +292,27 @@ async function enviarSolicitud() {
     swal(
       "Error",
       "Hubo un problema al enviar la solicitud de traslado.",
+      "error"
+    );
+  }
+}
+
+async function activarPersona(params) {
+  console.log(params)
+  try {
+    const miembro = doc(db, "Membresia", params);
+ 
+    await updateDoc(miembro, {estado:"Activo"});
+    // Muestra un mensaje de confirmación si se actualizó correctamente
+    swal("Éxito!", "Persona habilitada correctamente.", "success");
+    loading.value = false;
+  } catch (error) {
+    // Muestra un mensaje de error si hubo un problema al actualizar
+    console.log(error)
+    loading.value = false;
+    swal(
+      "Error!",
+      "Hubo un problema al habilitar la persona.",
       "error"
     );
   }

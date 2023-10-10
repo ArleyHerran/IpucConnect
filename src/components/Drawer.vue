@@ -11,7 +11,7 @@
       <div class="no-scrollbar">
         <!-- contenido de drawer aquí -->
         <v-list-item
-          style="background: #4e6374; color: aliceblue"
+          style="background:#4e6374; color: aliceblue"
           class="pa-6"
           prepend-avatar="../img/logo_ipuc.png"
           :title="estados.data !== null ? estados.data.nombre : ''"
