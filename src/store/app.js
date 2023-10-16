@@ -8,6 +8,7 @@ export const useAppStore = defineStore("app", {
     //
     drawerDisplay: false,
     formMiembros: { display: false,mode:"add", id:""},
+    progre:false,
     data: null,
     miembros: [],
     birthday:[],

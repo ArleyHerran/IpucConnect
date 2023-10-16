@@ -222,6 +222,7 @@
           color="primary"
           @click="saveMember"
           v-if="estados.formMiembros.mode !== 'view'"
+          :disabled="btnSave"
         >
           {{
             estados.formMiembros.mode === "add" ? "Guardar" : "Guardar Cambios"
@@ -248,7 +249,7 @@ import { auth, db } from "../ConfigFirebase";
 import swal from "sweetalert";
 const estados = useAppStore();
 
-const dialog = ref(false);
+const btnSave = ref(false);
 const editMode = ref(false);
 
 const dataDefault = reactive({
@@ -353,7 +354,8 @@ const saveMember = async () => {
   const miembro = { ...dataDefault, ...formData };
   //console.log(JSON.parse(JSON.stringify(miembro)));
   if (!validateForm(miembro)) return;
-
+   btnSave.value=true;
+   estados.progre=true;
   if (estados.formMiembros.mode === "add") {
     const resultado = await buscarV(miembro.numeroDocumento);
     if (resultado) return;
@@ -368,12 +370,17 @@ async function guardarRegistro(d) {
   try {
     const docRef = await addDoc(collection(db, "Membresia"), d);
     clearFormFields();
+    estados.progre=false;
+    btnSave.value=false;
     estados.formMiembros = { display: false, mode: "", id: "" };
     // Muestra un mensaje de confirmación si se guardó correctamente
     swal("Éxito!", "El registro se ha guardado correctamente.", "success");
+   
+   
   } catch (error) {
     // Muestra un mensaje de error si hubo un problema al guardar
-
+    estados.progre=false;
+    btnSave.value=false;
     swal(
       "Error!",
       "Hubo un problema al guardar el registro en Firebase." + error,
@@ -389,13 +396,16 @@ async function editar() {
 
 //console.log(  {...formData})
     await updateDoc(miembro, formData);
+    estados.progre=false;
+    btnSave.value=false;
     clearFormFields();
     estados.formMiembros = { display: false, mode: "", id: "" };
     // Muestra un mensaje de confirmación si se actualizó correctamente
     swal("Éxito!", "El registro se ha actualizado correctamente.", "success");
   } catch (error) {
     // Muestra un mensaje de error si hubo un problema al actualizar
-
+    estados.progre=false;
+    btnSave.value=false;
     swal(
       "Error!",
       "Hubo un problema al actualizar el registro en Firebase.",
@@ -587,13 +597,16 @@ async function buscarV(n) {
   if (querySnapshot.empty) {
     return false; // No se encontraron documentos
   } else {
+    estados.progre=false;
+    btnSave.value=false;
     swal(
       "Error!",
       "Ya existe un registro con este número de documento!",
       "error"
     );
-
+   
     return true; // Se encontró al menos un documento
+ 
   }
 }
 

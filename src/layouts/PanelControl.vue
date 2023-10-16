@@ -51,9 +51,10 @@
 
 <template>
   <v-app id="inspire">
+
     <Drawer :drawerOpen="drawerOpen"></Drawer>
     <Bar @toggleDrawer="toggleDrawer"></Bar>
-
+    <progre></progre>
     <v-main class="mainApp">
       <h4 class="route-name">{{ $route.name }}/</h4>
       <div class="main-content">
@@ -71,6 +72,7 @@ import { ref } from 'vue'
 import Drawer from '@/components/Drawer.vue'
 import Bar from '@/components/Bar.vue'
 import footerA from '@/components/footer.vue'
+import progre from '@/components/progre.vue';
 
 const drawerOpen = ref(false)
 const toggleDrawer = () => {

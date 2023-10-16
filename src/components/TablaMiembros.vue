@@ -274,18 +274,18 @@ async function eliminarM(m) {
     dangerMode: true,
   });
 
-  if (!confirmacion) {
-    return;
-  }
-
+  if (!confirmacion)return;
+  
+  estados.progre=true;
   try {
     await runTransaction(db, async (transaction) => {
       await setDoc(doc(db, 'PapeleraMiembros', m.id), m);
       await deleteDoc(doc(db, 'Membresia', m.id));
     });
-
+    estados.progre=false;
     swal('Eliminación exitosa', '', 'success');
   } catch (e) {
+    estados.progre=false;
     swal('Ocurrió un error', `${e}`, 'error');
   }
 }
