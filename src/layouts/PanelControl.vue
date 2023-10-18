@@ -54,7 +54,7 @@
 
     <Drawer :drawerOpen="drawerOpen"></Drawer>
     <Bar @toggleDrawer="toggleDrawer"></Bar>
-    <progre></progre>
+   
     <v-main class="mainApp">
       <h4 class="route-name">{{ $route.name }}/</h4>
       <div class="main-content">
@@ -68,15 +68,19 @@
 
 
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
+import { useAppStore } from "../store/app";
 import Drawer from '@/components/Drawer.vue'
 import Bar from '@/components/Bar.vue'
 import footerA from '@/components/footer.vue'
-import progre from '@/components/progre.vue';
+const estados = useAppStore();
 
 const drawerOpen = ref(false)
 const toggleDrawer = () => {
   drawerOpen.value = !drawerOpen.value
 }
 
+onMounted(() => {
+  estados.progre=false;
+});
 </script>

@@ -2,7 +2,7 @@
     
     <v-app-bar
       color="teal-darken-4"
-      image="https://picsum.photos/1920/1080?random"
+     
     >
       <template v-slot:image>
         <v-img

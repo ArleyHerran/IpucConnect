@@ -130,6 +130,7 @@
   ];
   
   function navigateTo(item) {
+    estados.progre=true;
     menuItems.forEach((i) => (i.active = false)); // establece active en false para todos los elementos
     item.active = true; // establece active en true para el elemento seleccionado
     router.push({ name: item.value });
