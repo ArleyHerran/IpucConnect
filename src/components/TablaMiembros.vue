@@ -11,6 +11,15 @@
   font-size: 14px; /* Establece el tamaño de fuente deseado */
 }
 
+
+
+@media (max-width: 767px) {
+  .hide-on-small-screen {
+    display: none !important;
+  }
+
+ 
+}
 </style>
 
 <template>
@@ -79,35 +88,19 @@
     >
       <thead>
         <tr>
-          <th class="text-left">No.</th>
-          <th class="text-left">Documento</th>
+          <th class="text-left hide-on-small-screen">No.</th>
+          <th class="text-left hide-on-small-screen ">Documento</th>
           <th class="text-left">Nombre</th>
           <th class="text-left">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in displayedItems" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ item.numeroDocumento }}</td>
-          <td>
-            {{
-              item.nombre
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")
-            }}
-            {{
-              item.apellido
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")
-            }}
+          <td class="hide-on-small-screen">{{ index + 1 }}</td>
+          <td class="hide-on-small-screen">{{ item.numeroDocumento }}</td>
+          <td class="max-14-chars">
+            {{formattedName(item)}}
+             
           </td>
 
           <td>
@@ -467,4 +460,41 @@ function calculateAge(f) {
   const edad = new Date().getFullYear() - fechaNacimiento.getFullYear();
   return edad;
 }
+
+
+function formattedName(item) {
+      const formattedFirstName = item.nombre
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+      const formattedLastName = item.apellido
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+      return formattedFirstName + " " + formattedLastName;
+    }
 </script>
+<style>
+.max-14-chars {
+  max-width: 25ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 654px) {
+
+  .max-14-chars {
+  max-width: 18ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+ 
+}
+</style>

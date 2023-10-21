@@ -239,6 +239,7 @@ import {
   collection,
   addDoc,
   doc,
+  setDoc,
   updateDoc,
   query,
   getDocs,
@@ -368,7 +369,8 @@ const saveMember = async () => {
 //Permite guardar el registro por primera vez en firebase
 async function guardarRegistro(d) {
   try {
-    const docRef = await addDoc(collection(db, "Membresia"), d);
+    
+    const docRef= await setDoc(doc(db, "Membresia", d.numeroDocumento), d);
     clearFormFields();
     estados.progre=false;
     btnSave.value=false;

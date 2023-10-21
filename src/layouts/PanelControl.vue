@@ -81,6 +81,9 @@ const toggleDrawer = () => {
 }
 
 onMounted(() => {
-  estados.progre=false;
+  setTimeout(()=>{
+    estados.progre=false;
+  },1000);
+ 
 });
 </script>

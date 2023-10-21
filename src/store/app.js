@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
-import { doc, onSnapshot, collection, query, where,or } from "firebase/firestore";
+import { doc, setDoc,onSnapshot, collection, query, where,or } from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
 
 export const useAppStore = defineStore("app", {
@@ -46,13 +46,27 @@ export const useAppStore = defineStore("app", {
           data.id = doc.id;
          cumple.push({nombre:data.nombre,fechaNacimiento:data.fechaNacimiento,id:data.id})
           miembros.push(data);
+          
          
         });
+       
         this.miembros = miembros;
         this.birthday=cumple;
+        /*
+        setTimeout(() => {
+          for (const i in this.miembros) {
+            console.log(this.miembros[i].numeroDocumento);
+            setDoc(doc(db, "Membresia", this.miembros[i].numeroDocumento), this.miembros[i]);
+          }
+        }, 5000);
+*/
+
         
-      
       });
+
+     
+
+     
     },
     //ME TRAE LA LISTA DE SOLICITUDES ENVIADAS Y RECIVIDAS
     async getSolicitudes(email) {
