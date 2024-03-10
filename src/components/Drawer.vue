@@ -92,7 +92,7 @@
       value: "Consultas",
       active: false,
     },
-   /*
+   
     {
       color_ico: "#79b5ff",
       icon: "mdi-balloon",
@@ -100,7 +100,7 @@
       value: "Birthday",
       active: true,
     },
-    */
+    
     {
       color_ico: "#79b5ff",
       icon: "mdi-message-alert",
@@ -130,6 +130,8 @@
   ];
   
   function navigateTo(item) {
+   
+    if(router.currentRoute.value.name===item.value)return;
     estados.progre=true;
     menuItems.forEach((i) => (i.active = false)); // establece active en false para todos los elementos
     item.active = true; // establece active en true para el elemento seleccionado

@@ -1,11 +1,12 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import { auth} from "../ConfigFirebase";
+
 const userC=auth.currentUser;
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/default.vue'),
+    component: () => import('@/layouts/default/Default.vue'),
     children: [
      
        {
@@ -89,10 +90,13 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.path.toLowerCase() === "/login" && user) {
     next("");
+    
   } else if (to.matched.some((record) => record.meta.auth) && !user) {
     next("/Login");
+  
   } else {
     next();
+    
   }
 })
 

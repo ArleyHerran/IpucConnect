@@ -26,13 +26,8 @@
 
 <template>
   <div>
-
-
-  <v-select  v-model="modo" label="Modo" :items="['Recibidas','Enviadas']" item-title="name">
-  
+  <v-select  v-model="modo" label="Modo" :items="['Recibidas','Enviadas']" item-title="name"> 
   </v-select>
-
-
     <v-table
       dense
       :sort-by="'Codigo'"
@@ -50,11 +45,11 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in displayedItems" :key="index">
-          <td>{{ item.idE === estados.data.id ? "Enviada" : "Recibida" }}</td>
-          <td>{{ item.miembro.numeroDocumento }}</td>
+          <td>{{ item.userEmisor === auth.currentUser.email ? "Enviada" : "Recibida" }}</td>
+          <td>{{ item.miembro}}</td>
           <td>
             {{
-              item.miembro.nombre
+              item.nombre
                 .split(" ")
                 .map(
                   (word) =>
@@ -62,35 +57,27 @@
                 )
                 .join(" ")
             }}
-            {{
-              item.miembro.apellido
-                .split(" ")
-                .map(
-                  (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )
-                .join(" ")
-            }}
+            
           </td>
 
           <td>
             <v-btn
-              v-if="item.userE == estados.data.user"
+              v-if="item.userEmisor == auth.currentUser.email"
               color="#F35656"
-              @click="cancelarSolicitud(item.docId)"
+              @click="cancelarSolicitud(item.miembro)"
               >Cancelar solicitud</v-btn
             >
             <v-btn
-              v-if="item.userE !== estados.data.user"
+              v-if="item.userEmisor !== auth.currentUser.email"
               color="green"
-              @click="aceptarSolicitud(item.miembro.idDoc, item.userE, item.docId,item.sede)"
+              @click="aceptarSolicitud(item)"
               >Aceptar</v-btn
             >
             <v-btn
-              v-if="item.userE !== estados.data.user"
+              v-if="item.userEmisor !== auth.currentUser.email"
               color="#F35656"
               class="ml-1"
-              @click="rechazarSolicitud(item.docId)"
+              @click="rechazarSolicitud(item.miembro)"
               >Rechazar</v-btn
             >
           </td>
@@ -137,10 +124,10 @@ const desserts = ref(estados.solicitudes);
 
 const sortedItems = computed(() => {
   return filteredDesserts.value.sort((a, b) => {
-    if (a.numeroDocumento < b.numeroDocumento) {
+    if (a.miembro < b.miembro) {
       return -1;
     }
-    if (a.numeroDocumento > b.numeroDocumento) {
+    if (a.miembro > b.miembro) {
       return 1;
     }
     return 0;
@@ -154,12 +141,12 @@ const filteredDesserts = computed(() => {
 
   if(regex==="Recibidas"){
     return desserts.value.filter(
-    (item) => item.userR ===estados.data.user
+    (item) => item.userReceptor ===auth.currentUser.email
   );
 
   }
   return desserts.value.filter(
-    (item) => item.userE ===estados.data.user
+    (item) => item.userEmisor ===auth.currentUser.email
   );
 });
 
@@ -185,6 +172,7 @@ watch(
   }
 );
 
+//CANCELA LA SOLICITUD EL EMISOR
 async function cancelarSolicitud(id) {
   const willCancel = await swal({
     title: "¿Seguro que desea cancelar la Solicitud?",
@@ -200,7 +188,7 @@ async function cancelarSolicitud(id) {
     swal("Operación Cancelada", "La solicitud no ha sido cancelada.", "info");
   }
 }
-
+//rECHAZA LA SOLICITUD EL RECEPTOR
 async function rechazarSolicitud(id) {
   const willReject = await swal({
     title: "¿Seguro que desea rechazar la Solicitud?",
@@ -218,14 +206,8 @@ async function rechazarSolicitud(id) {
 }
 
 
-async function eliminarSolicitud(id) {
-  return await deleteDoc(doc(db, "Solicitudes", id));
-}
-//id hace referencia al id del comento miembro,
-//ide Hace referencia alide del emisor de la solicitud
-//ids hace referencia al id de la solicitud para luego borrrarla
-//sede es la solicitante y sus datos
-async function aceptarSolicitud(id, ide, ids, sede) {
+///ACEPTAR LA SOLICITUD QUE NOS HA LLEGADO
+async function aceptarSolicitud(solicitud) {
   // Mostrar un mensaje de confirmación con SweetAlert
   const willAccept = await swal({
     title: "¿Seguro que desea aceptar esta Solicitud?",
@@ -237,8 +219,7 @@ async function aceptarSolicitud(id, ide, ids, sede) {
   // Si el usuario confirmó la acción
   if (willAccept) {
     // Obtener una referencia al documento de la membresía
-    const docRef = doc(db, "Membresia", id);
-
+    const docRef = doc(db, "Membresia", solicitud.miembro);
     // Obtener un snapshot del documento
     const docSnap = await getDoc(docRef);
 
@@ -248,29 +229,27 @@ async function aceptarSolicitud(id, ide, ids, sede) {
       await runTransaction(db, async (transaction) => {
         // Obtener el historial de traslados del miembro
         const historia = docSnap.data().historiaTraslados;
-      
-
 
         // Agregar un registro al historial
         historia.push({
           sede: estados.data,
-          fecha: new Date().toISOString().split("T")[0],
-          Hora: new Date().toTimeString().split(" ")[0],
+          fecha: new Date().toLocaleDateString(), // Obtiene la fecha actual formateada
+          hora: new Date().toLocaleTimeString(),
+          
         });
 
         
 
         // Actualizar los datos del miembro en Firestore
         await updateDoc(docRef, {
-          sede: sede,
+          sede: solicitud.userEmisor,
           historiaTraslados: historia,
           direccion: "",
-         
           timestamp: serverTimestamp(),
         });
 
         // Eliminar la solicitud
-        await eliminarSolicitud(ids);
+        await eliminarSolicitud(solicitud.miembro);
       });
 
       // Mostrar un mensaje de éxito con SweetAlert
@@ -284,6 +263,10 @@ async function aceptarSolicitud(id, ide, ids, sede) {
     // Si el usuario canceló la acción, mostrar un mensaje informativo con SweetAlert
     swal("Operación Cancelada", "La solicitud no ha sido aceptada.", "info");
   }
+}
+
+async function eliminarSolicitud(id) {
+  return await deleteDoc(doc(db, "Solicitudes", id));
 }
 
 </script>

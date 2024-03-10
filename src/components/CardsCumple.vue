@@ -1,91 +1,66 @@
 <template>
-    <div >
-     
-      <v-carousel v-model="model">
-      <v-carousel-item
-        v-for="(month, i) in months"
-        :key="month"
-        :value="i"
-      >
-        <v-sheet
-          :color="colors[i % colors.length]"
-          height="100%"
-          tile
-        >
-          <div class="floating-text">
-            <div class="text-h2">
-              {{ month }}
-            </div>
-            <ul>
-              <li v-for="person in getBirthdaysInMonth(i)" :key="person.nombre">
-                {{ person.nombre }}
-                <span v-if="isBirthdayToday(person.fechaNacimiento)"> (Hoy es su cumpleaños)</span>
-              </li>
-            </ul>
-          </div>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
-    </div>
-  </template>
-  
-  <script setup>
-import { ref,watch,reactive} from 'vue';
+  <v-card>
+ 
+    <div
+     style="display:flex; align-items: center; padding:8px;"
+        color="blue-grey-darken-4"
+        density="compact"
+        class="elevation-0">
+          <v-btn icon="mdi-arrow-left" @click="back()" class="mr-4" v-if="tab=='tab-2'"></v-btn>
+        <v-app-bar-title>Cumpleaños🎂​🥳​🎈​🎁​</v-app-bar-title>
+  </div>
+
+    <v-window v-model="tab" >
+      <v-window-item v-for="i in 2" :key="i" :value="'tab-' + i">
+        <!-- Importa y utiliza el componente según la pestaña -->
+        <component :is="getComponent(i)" />
+      </v-window-item>
+    </v-window>
+ 
+   <div class="pa-4" v-if="tab==='tab-1'">
+    <v-btn fab large color="blue-grey-darken-4" class="ma-0 w-100" @click="tab='tab-2'" variant="outlined">
+           
+           <span class="mr-2">Más Cumpleaños🎂</span>
+          
+         </v-btn>
+   </div>
+
+
+  </v-card>
+</template>
+
+<script setup>
+import { ref ,defineProps,onMounted,} from 'vue';
 import { useAppStore } from "../store/app";
 const estados = useAppStore();
-const currentMonth = new Date().getMonth();
-const months = [
-  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto',
-  'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-];
+import Birthday from '@/components/Birthday.vue';
+import MasBirthdays from '@/components/MasBirthdays.vue';
 
-var personas = [
-  
-  // Agrega más personas aquí...
-];
+const tab = ref('tab-1');
 
-const colors = ref([
-  'primary',
-  'secondary',
-  'yellow darken-2',
-  'red',
-  'orange',
-]);
-
-const model = ref(currentMonth);
-
-const prevMonth = () => {
-  model.value = (model.value - 1 + 12) % 12; // Circular decrement
+const { tabProps } = defineProps(['tab']);
+const getComponent = (index) => {
+  switch (index) {
+    case 1:
+      return Birthday;
+    case 2:
+      return MasBirthdays;
+    
+  }
 };
 
-const nextMonth = () => {
-  model.value = (model.value + 1) % 12; // Circular increment
-};
-
-const getBirthdaysInMonth = (monthIndex) => {
-  return estados.birthday.filter((person) => {
-    const [year, month, day] = person.fechaNacimiento.split('-').map(Number);
-    return month === monthIndex + 1;
-  });
-};
-
-const isBirthdayToday = (fechaNacimiento) => {
-  const [year, month, day] = fechaNacimiento.split('-').map(Number);
-  const today = new Date();
-  return today.getMonth() + 1 === month && today.getDate() === day;
+const back = () => {
+  if(tab.value==="tab-2"){
+    tab.value="tab-1";
+  }else if (tab.value==="tab-1") {
+    window.close();
+  } 
 };
 
 
 
+onMounted(() => {
+  estados.getDataUser();
+});
 
 </script>
-  <style scoped>
-  .floating-text {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 100%;
-  }
-  </style>

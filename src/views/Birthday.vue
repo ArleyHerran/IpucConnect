@@ -1,7 +1,6 @@
 <template>
     <PanelControl>
-
-      <CardsCumple />
+    <CardsCumple/>
     </PanelControl>
     
    </template>
