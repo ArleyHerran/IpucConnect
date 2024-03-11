@@ -2,7 +2,7 @@
     <v-container>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
-          <v-card>
+          <v-card color="#F2F2F2">
             <v-card-title class="text-center">
               <span class="headline">Iniciar sesión</span>
             </v-card-title>

@@ -1,26 +1,35 @@
 <template>
   <v-container>
-    <v-row>
+    <v-form validate-on="submit lazy" @submit.prevent="buscar">
+      <v-row>
       <v-col cols="12" md="4">
+        <div style="display: flex;">
         <v-text-field
           v-model="searchNumber"
+          :rules="rules"
           label="Número de Documento"
           type="number"
+          hide-spin-buttons
         ></v-text-field>
+        <v-btn
+        :loading="loadingb"
+        class="ml-2"
+        text="Buscar"
+        type="submit"
+        color="success"
+        height="56"
+      ></v-btn>
+    </div>
       </v-col>
 
       <v-col cols="12" md="4">
-        <v-btn
-          @click="buscar"
-          :loading="loadingb"
-          class="flex-grow-1"
-          height="48"
-          variant="flat"
-          color="success"
-          >Buscar</v-btn
-        >
+
+       
       </v-col>
+
     </v-row>
+    </v-form>
+    
     <v-row v-if="formData.numeroDocumento !== ''">
       <v-col cols="12" sm="6">
         <v-card max-height="auto">
@@ -102,12 +111,16 @@
             >
               <v-icon left>mdi-account-reactivate</v-icon> Activar persona
             </v-btn>
+            <p v-if=" formData.sede !== auth.currentUser.email && formData.estado === 'Inhabilitado'" style="color:#FF5252; font-size: 13px;">Persona inactiva por ({{ dataSede.nombre }}) por ende no se puede enviar una solicitud, para ser solicitado el miembro debe ser activado por la sede a la que pertenece.</p>
+
             <div
               class="my-3"
               v-if="formData.sede !== auth.currentUser.email"
             >
+            <p v-if="fil(formData.numeroDocumento)" style="color:#FF5252; font-size: 13px;">El botón se desactivó porque ya le envió una solicitud</p>
+            <p v-if="userRequerido " style="color:#FF5252; font-size: 13px;">El botón se desactivó porque otro usuario le envio una solicitud.</p>
               <v-btn
-                :disabled="userRequerido ||  fil(formData.numeroDocumento)"
+                :disabled="userRequerido ||  fil(formData.numeroDocumento) ||formData.estado === 'Inhabilitado'"
                 @click="load"
                 :loading="loading"
                 class="flex-grow-1"
@@ -117,13 +130,7 @@
               >
                 <v-icon left>mdi-send</v-icon> Solicitar Traslado
               </v-btn>
-              <!-- Tooltip para mostrar el mensaje -->
-
-              <span
-                v-if="userRequerido ||fil(formData.numeroDocumento)"
-                style="color: rgb(240, 103, 103)"
-                >El botón se desactivó porque ya le envió una solicitud o otro usuario le solicito.</span
-              >
+              
             </div>
           </v-card-text>
         </v-card>

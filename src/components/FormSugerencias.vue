@@ -1,8 +1,9 @@
 <template>
+
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card>
+        <v-card color="#F2F2F2">
           <v-card-title class="text-h5">Enviar Sugerencia o Reportar Error</v-card-title>
           <v-card-text>
             <v-form @submit.prevent="enviarSugerencia">
@@ -42,6 +43,7 @@
       </v-col>
     </v-row>
   </v-container>
+  
 </template>
 
 <script setup>

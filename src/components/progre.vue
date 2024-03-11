@@ -3,7 +3,7 @@
       <div class="loading-overlay">
         <v-card>
           <v-card-text>
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            <v-progress-circular  color="deep-orange-lighten-2" indeterminate  :width="2"></v-progress-circular>
             <span> Cargando...</span>
           </v-card-text>
         </v-card>

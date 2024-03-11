@@ -1,10 +1,10 @@
 <template>
   <PanelControl>
-    <div class="pl-10 pr-10">
+    <div class="pl-4 pr-4" style="text-align: justify;">
       <section class="about-section">
-        <h1 class="about-title">Acerca de la Aplicación de Gestión de Membresía SgmIpuc</h1>
+        <h1 class="about-title" style="text-align: left;">Acerca de la Aplicación de Gestión de Membresía SgmIpuc</h1>
         <div class="about-content">
-          <p>Bienvenidos a la Aplicación de Gestión de Membresía SgmIpuc de la Iglesia Pentecostal Unida de Colombia. Esta aplicación ha sido desarrollada por Arley Herran, un apasionado desarrollador de software con una sólida formación en el análisis y desarrollo de software, quien completó sus estudios en el programa del SENA el 26 de septiembre de 2023.</p>
+          <p >Bienvenidos a la Aplicación de Gestión de Membresía SgmIpuc de la Iglesia Pentecostal Unida de Colombia. Esta aplicación ha sido desarrollada por Arley Herran, un apasionado desarrollador de software con una sólida formación en el análisis y desarrollo de software, quien completó sus estudios en el programa del SENA el 26 de septiembre de 2023.</p>
         </div>
       </section>
 

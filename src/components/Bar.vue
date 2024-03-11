@@ -1,9 +1,6 @@
 <template>
     
-    <v-app-bar
-      color="blue-grey-darken-4"
-     
-    >
+    <v-app-bar color="#FFFFFF">
       <template v-slot:image>
       
       </template>
@@ -12,7 +9,7 @@
         <v-app-bar-nav-icon @click="estados.drawerDisplay = !estados.drawerDisplay"></v-app-bar-nav-icon>
       </template>
 
-      <v-app-bar-title  class="text-amber-darken-2">SgmIpuc</v-app-bar-title>
+      <v-app-bar-title  class="text-amber-darken-2 text-decoration-underline"  >Sgm<span class="text-blue-grey-darken-4">Ipuc</span></v-app-bar-title>
 
       <v-spacer></v-spacer>
 
@@ -25,11 +22,11 @@
       >
         <template v-slot:activator="{ props }" >
           <v-badge v-bind="props" :content="estados.notificaciones.value"   color="error"  v-if="estados.notificaciones.value >=1" class="mr-5">
-         <v-icon  class="icon" size="x-large">mdi-bell</v-icon>
+         <v-icon  class="icon"  color="#546E7A">mdi-bell-outline</v-icon>
       </v-badge>
 
       <v-btn    v-bind="props" icon v-if="estados.notificaciones.value===0">
-        <v-icon  class="icon" size="x-large">mdi-bell</v-icon>
+        <v-icon  class="icon" size="small" color="#546E7A">mdi-bell-outline</v-icon>
       </v-btn>
         </template>
 
@@ -37,7 +34,7 @@
           <v-list bg-color="black">
             <v-list-item>
               <template v-slot:prepend>
-                <v-icon class="icon" size="x-large">mdi-bell</v-icon>
+                <v-icon class="icon" size="small">mdi-bell</v-icon>
               </template>
 
               <v-list-item-title>Notificaciones</v-list-item-title>

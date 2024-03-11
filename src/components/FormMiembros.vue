@@ -208,9 +208,7 @@
     ></v-textarea>
   </v-form>
 
-
       </v-card-text>
-
       <v-card-actions class="dialog-actions">
         <v-spacer />
         <v-btn @click="estados.formMiembros.display = false">
@@ -254,7 +252,7 @@ const btnSave = ref(false);
 const editMode = ref(false);
 
 const dataDefault = reactive({
-  sede: {},
+  sede: "",
   datosRegistro: {
     timestamp: serverTimestamp(),
     sede: {},
@@ -285,6 +283,7 @@ const formData = reactive({
   cargos: [],
   historiaCargos:[],
   referenciaPastoral: "",
+  
 });
 
 const nivelesAcademicos = [
@@ -338,7 +337,7 @@ watch(
 );
 const actualizarFormData = (newData) => {
   if (newData) {
-    dataDefault.sede = newData;
+    dataDefault.sede = auth.currentUser.email;
     dataDefault.datosRegistro.sede = newData;
 
     // También puedes actualizar otras propiedades aquí si es necesario
@@ -419,8 +418,6 @@ async function editar() {
 //FUNCIONES
 
 function clearFormFields() {
-
-
   for (const key in formData) {
   if (Array.isArray(formData[key])) {
     formData[key] = [];
@@ -437,7 +434,6 @@ function clearFormFields() {
 }
 
 function validateForm(d) {
-
   const showError = (message) => {
     swal("Error!", message, "error");
     return false;
@@ -452,7 +448,7 @@ function validateForm(d) {
     !d.sede
  
   ) {
-    return showError("Error desconocido. aaaaaa");
+    return showError("Error desconocido.");
   }
 
   if (!d.tipoDocumento || d.tipoDocumento.length > 30) {

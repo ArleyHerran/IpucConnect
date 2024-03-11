@@ -45,14 +45,9 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar   color="teal-darken-4"
-      image="https://picsum.photos/1920/1080?random">
-      <template v-slot:image>
-        <v-img
-          gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
-        ></v-img>
-      </template>
-      <v-app-bar-title>SgmIpuc</v-app-bar-title>
+    <v-app-bar   color="#FFFFFF">
+      
+      <v-app-bar-title  class="text-amber-darken-2  text-decoration-underline" >Sgm<span class="text-blue-grey-darken-4">Ipuc</span></v-app-bar-title>
 
   </v-app-bar>
     <v-main class="mainApp">
@@ -63,7 +58,7 @@
     </v-main>
     <v-footer app
     class=" text-center d-flex flex-column "
-    style="background: #292929; color: aliceblue"
+    style=" color: black;"
   >
     
     <div class="pt-0">

@@ -21,7 +21,8 @@
   overflow-y: auto;
   padding: 10px;
 
-  border-top: 2px solid rgb(180, 177, 177);
+  border-top: 1px solid rgb(180, 177, 177);
+  border-bottom: 1px solid rgb(180, 177, 177);
 }
 
 
@@ -83,7 +84,7 @@ const toggleDrawer = () => {
 onMounted(() => {
   setTimeout(()=>{
     estados.progre=false;
-  },1000);
+  },500);
  
 });
 </script>

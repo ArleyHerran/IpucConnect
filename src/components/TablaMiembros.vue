@@ -60,6 +60,7 @@
         class="d-flex justify-start align-center flex-wrap"
       >
         <v-btn
+        size="small"
           color="primary"
           class="mb-2 mr-2"
           fab
@@ -70,7 +71,7 @@
           Agregar miembro
         </v-btn>
 
-        <v-btn @click="exportDataToExcel" color="success" class="mb-2 mr-2">
+        <v-btn @click="exportDataToExcel" color="success" class="mb-2 mr-2" size="small">
           <v-icon left>mdi-file-excel</v-icon> Exportar a Excel
         </v-btn>
       </v-col>
@@ -133,7 +134,7 @@
               >mdi-eye</v-icon
             >
             <v-icon
-              color="red"
+              color="#EF5350"
               title="Eliminar"
               style="cursor: pointer"
               @click="eliminarM(item)"

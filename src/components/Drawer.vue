@@ -1,17 +1,15 @@
 <template>
     <v-navigation-drawer
       v-model="estados.drawerDisplay"
-  
-     
       hide-overlay
       no-scrollbar
-      style="background: #292929; color: aliceblue ;max-height: 100vh;"
+      style="background:#CFD8DC; color:black ;max-height: 100vh;"
       
     >
       <div class="no-scrollbar">
         <!-- contenido de drawer aquí -->
         <v-list-item
-          style="background:#4e6374; color: aliceblue"
+          style=" color: black;box-shadow: 0 0 5px rgba(0, 0, 0, 1);"
           class="pa-6"
           prepend-avatar="../img/logo_ipuc.png"
           :title="estados.data !== null ? estados.data.nombre : ''"
@@ -50,7 +48,7 @@
       </div>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block @click=" cerrarSesion()" color="primary">
+          <v-btn  size="small" block @click=" cerrarSesion()" color="blue-grey-lighten-1">
             Cerrar sesion
           </v-btn>
         </div>
@@ -72,21 +70,21 @@
   
   const menuItems = [
     {
-      color_ico: "#79b5ff",
+      color_ico: "#FFA000",
       icon: "mdi-view-dashboard",
       title: "Dashboard ",
       value: "Dashboard",
       active: true,
     },
     {
-      color_ico: "#79b5ff",
+      color_ico: "#4CAF50",
       icon: "mdi-account-group",
       title: "Miembros",
       value: "Miembros",
       active: false,
     },
     {
-      color_ico: "#79b5ff",
+      color_ico: "#4A148C",
       icon: "mdi-magnify",
       title: "Consultas",
       value: "Consultas",
@@ -94,7 +92,7 @@
     },
    
     {
-      color_ico: "#79b5ff",
+      color_ico: "#E91E63",
       icon: "mdi-balloon",
       title: "Cumpleaños",
       value: "Birthday",
@@ -102,23 +100,23 @@
     },
     
     {
-      color_ico: "#79b5ff",
+      color_ico: "",
       icon: "mdi-message-alert",
       title: "Solicitudes",
       value: "Solicitudes",
       active: false,
     },
-  
+  /*
     {
-      color_ico: "#79b5ff",
+      color_ico: "#FF5722",
       icon: "mdi-lightbulb-on",
       title: "Sugerencias",
       value: "Sugerencias",
       active: false,
-    },
+    },*/
 
     {
-      color_ico: "#79b5ff",
+      color_ico: "#795548",
       icon: "mdi-information",
       title: "Acerca de..",
       value: "Informacion",
