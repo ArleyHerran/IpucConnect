@@ -3,15 +3,15 @@
       v-model="estados.drawerDisplay"
       hide-overlay
       no-scrollbar
-      style="background:#CFD8DC; color:black ;max-height: 100vh;"
+      style="background:#071a2b; color:#dcdddd;max-height: 100vh;"
       
     >
       <div class="no-scrollbar">
         <!-- contenido de drawer aquí -->
         <v-list-item
-          style=" color: black;box-shadow: 0 0 5px rgba(0, 0, 0, 1);"
+          style=" color: #dcdddd;box-shadow: 0 0 5px rgba(0, 0, 0, 1);"
           class="pa-6"
-          prepend-avatar="../img/logo_ipuc.png"
+          prepend-avatar="../img/icon-ipuc.png"
           :title="estados.data !== null ? estados.data.nombre : ''"
 
         >
@@ -48,7 +48,7 @@
       </div>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn  size="small" block @click=" cerrarSesion()" color="blue-grey-lighten-1">
+          <v-btn  size="small" block @click=" cerrarSesion()" color="primary">
             Cerrar sesion
           </v-btn>
         </div>
@@ -70,7 +70,7 @@
   
   const menuItems = [
     {
-      color_ico: "#FFA000",
+      color_ico: "#ffb002",
       icon: "mdi-view-dashboard",
       title: "Dashboard ",
       value: "Dashboard",
@@ -84,7 +84,7 @@
       active: false,
     },
     {
-      color_ico: "#4A148C",
+      color_ico: "#0fa7f3",
       icon: "mdi-magnify",
       title: "Consultas",
       value: "Consultas",
@@ -92,7 +92,7 @@
     },
    
     {
-      color_ico: "#E91E63",
+      color_ico: "#fd90ff",
       icon: "mdi-balloon",
       title: "Cumpleaños",
       value: "Birthday",
@@ -116,7 +116,7 @@
     },*/
 
     {
-      color_ico: "#795548",
+      color_ico: "#04f6dd",
       icon: "mdi-information",
       title: "Acerca de..",
       value: "Informacion",

@@ -68,14 +68,18 @@ export const useAppStore = defineStore("app", {
 
         this.miembros = miembros;
         this.birthday = cumple;
-        /*
-        setTimeout(() => {
-          for (const i in this.miembros) {
-            console.log(this.miembros[i].numeroDocumento);
-            setDoc(doc(db, "Membresia", this.miembros[i].numeroDocumento), this.miembros[i]);
-          }
-        }, 5000);
-*/
+        var personasList=[];
+        for (const i in miembros) {
+         personasList.push({
+          n:miembros[i].nombre+" "+miembros[i].apellido,
+          f:miembros[i].fechaNacimiento
+        });
+
+        }
+        
+        const datosJSON = JSON.stringify(personasList);
+        // Guarda los datos en localStorage
+         auxPersonas=datosJSON;
       });
     },
     //ME TRAE LA LISTA DE SOLICITUDES ENVIADAS Y RECIVIDAS

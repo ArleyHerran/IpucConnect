@@ -10,21 +10,18 @@
 
 .route-name {
   color: rgb(125, 125, 125);
-  padding-left: 30px;
+  padding-left: 10px;
   padding-right: 12px;
   width: 150px;
   margin-bottom: 0px;
 }
 
-.main-content {
+.main-content{
   max-height: 100%;
   overflow-y: auto;
-  padding: 10px;
-
   border-top: 1px solid rgb(180, 177, 177);
   border-bottom: 1px solid rgb(180, 177, 177);
 }
-
 
 /* Estilo personalizado para la barra de desplazamiento */
 .main-content::-webkit-scrollbar {
@@ -41,11 +38,7 @@
   border-radius: 3px; /* Bordes redondeados del riel */
 }
 
-/* Estilos para Firefox */
-.main-content {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
+
 
 
 </style>
@@ -57,8 +50,8 @@
     <Bar @toggleDrawer="toggleDrawer"></Bar>
    
     <v-main class="mainApp">
-      <h4 class="route-name">{{ $route.name }}/</h4>
-      <div class="main-content">
+      <h4 class="route-name bg-primary " style="width: 100%;">{{ $route.name }}/<span v-if="route.name==='Birthday'">🎁🎂​🥳​​</span></h4>
+      <div class="main-content" :style="{ padding: mainContentPadding }">
         <slot></slot>
       </div>
     </v-main>
@@ -69,12 +62,13 @@
 
 
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref,onMounted ,computed} from 'vue'
 import { useAppStore } from "../store/app";
 import Drawer from '@/components/Drawer.vue'
 import Bar from '@/components/Bar.vue'
 import footerA from '@/components/footer.vue'
 const estados = useAppStore();
+import { useRoute } from 'vue-router';
 
 const drawerOpen = ref(false)
 const toggleDrawer = () => {
@@ -86,5 +80,14 @@ onMounted(() => {
     estados.progre=false;
   },500);
  
+});
+const route = useRoute();
+const mainContentPadding = computed(() => {
+  // Lógica para determinar la clase basada en la ruta
+  if (route.name === 'Birthday') {
+    return '0px';
+  } else{
+ return '10px';
+  }
 });
 </script>

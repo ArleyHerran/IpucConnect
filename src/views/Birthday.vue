@@ -1,5 +1,5 @@
 <template>
-    <PanelControl>
+    <PanelControl style="background: #DBCDDD;">
     <CardsCumple/>
     </PanelControl>
     

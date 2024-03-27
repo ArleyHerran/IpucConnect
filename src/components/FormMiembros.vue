@@ -24,11 +24,15 @@
     <!-- Información Personal -->
     <section>
       <h2>Información Personal</h2>
-      <v-select
+      <v-row>
+        <v-col cols="12" sm="6">
+        <v-select
         v-model="formData.tipoDocumento"
         :items="['Cedula de Ciudadania', 'Targeta de identidad', 'Registro Civil', 'Cedula Extrangera']"
         label="Tipo de documento"
       ></v-select>
+    </v-col>
+      <v-col cols="12" sm="6">
 
       <v-text-field
         :disabled="estados.formMiembros.mode == 'edit'"
@@ -37,16 +41,19 @@
         type="number"
         required
       ></v-text-field>
+    </v-col>
+      </v-row>
+     
 
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-text-field
             v-model="formData.nombre"
             label="Nombre"
         
           ></v-text-field>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-text-field
             v-model="formData.apellido"
             label="Apellido"
@@ -56,14 +63,14 @@
       
      
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-select
         v-model="formData.rol"
         :items="['Pastor', 'Miembro/Simpatizante']"
         label="Rol"
       ></v-select>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12" sm="6">
           <v-select
         v-model="formData.estado"
         :items="['Activo', 'Inhabilitado']"

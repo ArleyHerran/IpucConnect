@@ -1,63 +1,62 @@
 <template>
-  <v-card class="mx-auto elevation-0" max-width="100%">
+  <v-card class="mx-auto elevation-0" max-width="100%"  color="transparent">
     <v-img
-      src="../img/img1.webp"
-      height="100px"
+      src="../img/bg-2.jpeg"
+      height="150px"
       class="align-end"
-      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+      gradient="to bottom, rgba(0, 0,0,.1), rgba(0, 0, 0,.3)"
       cover
+
     >
       <v-card-title class="text-white"><h2>{{ new Date().getDate() }} de {{ new Date().toLocaleString('default', { month: 'long' }) }}</h2></v-card-title>
     </v-img>
     <v-card-title v-if="birthdayToday.length >=1">Cumpleaños de hoy</v-card-title>
   </v-card>
-  <v-card class="mx-auto elevation-0" max-width="100%">
-    <v-list lines="one">
+  <v-card class="mx-auto elevation-0" max-width="100%"  color="transparent">
+    <v-list lines="one" style="background:transparent;">
       <v-list-item
         v-for="file in birthdayToday"
         :key="file.nombre"
         :title="file.nombre "
         :subtitle="file.edad"
-        class="bg-pink-lighten-4 mb-4"
-        
+        style=" border-radius: 10px ;  color:white; background:#ED9AF8;  margin-top: 8px; margin-left: 10px; margin-right: 10px;"
+        class=" elevation-2"
       >
         <template v-slot:prepend>
-          <v-avatar :color="file.color">
-            <v-icon color="white">{{ file.icon }}</v-icon>
+          <v-avatar color="#212F3C">
+            <v-icon :color="file.color">{{ file.icon }}</v-icon>
           </v-avatar>
         </template>
 
         <template v-slot:append>
-          <v-btn color="pink" icon="mdi-cake-variant-outline" variant="text"></v-btn>
+          <v-btn color="black" icon="mdi-cake-variant-outline" variant="text"></v-btn>
         </template>
       </v-list-item>
     </v-list>
   </v-card>
   <v-divider></v-divider>
-
-  <v-card class="mx-auto" max-width="100%" >
+  <v-card class="mx-auto" max-width="100%" color="transparent">
     <v-card-title> Próximos Cumpleaños </v-card-title>
 
-    <v-list lines="two">
+    <v-list lines="one" style="background:transparent;">
       <v-list-item
         v-for="cumple in nextBirthday"
         :key="cumple.nombre"
         :title="cumple.nombre"
         :subtitle="cumple.edad"
-         lines="three"
-        
-     
+        class=" elevation-2"
+        style=" border-radius: 10px ;  color:black; background:white;  margin-top: 8px; margin-left: 10px; margin-right: 10px;"
       >
         <template v-slot:prepend>
-          <v-avatar :color="cumple.color">
-            <v-icon color="white">{{ cumple.icon }}</v-icon>
+          <v-avatar color="#212F3C">
+            <v-icon :color="cumple.color">{{ cumple.icon }}</v-icon>
           </v-avatar>
         </template>
 
         <template v-slot:append>
-          <v-btn color="grey-lighten-1" icon="mdi-calendar-clock" variant="text"></v-btn>
+          <v-btn color="blue" icon="mdi-calendar-clock" variant="text"></v-btn>
         </template>
-        <v-divider ></v-divider>
+      
       </v-list-item>
     </v-list>
    
@@ -94,7 +93,7 @@ const isBirthdayToday = (fechaNacimiento,persona) => {
   if(today.getMonth() + 1 === month && today.getDate() === day){
     
     birthdayToday.value.push({
-        color: persona.sexo === 'Hombre' ? 'blue-grey' : '#385F73',
+        color: persona.sexo === 'Hombre' ? "#2ECC71" : "#F0B27A",
         icon: persona.sexo === 'Hombre' ? 'mdi-face-man' : 'mdi-face-woman',
         edad: calcularEdad(persona.fechaNacimiento)+' años',
         nombre: persona.nombre,
@@ -137,7 +136,7 @@ async function calcularCumpleañosProximos(personas) {
         nombre: persona.nombre,
         icon: persona.sexo === 'Hombre' ? 'mdi-face-man' : 'mdi-face-woman',
         edad: formatearFechaCumpleaños(persona.fechaNacimiento),
-        color: persona.sexo === 'Hombre' ? 'blue-grey-lighten-3' : 'pink-lighten-3'
+        color: persona.sexo === 'Hombre' ? "#2ECC71" : "#F0B27A"
       });
     }
   }
