@@ -19,7 +19,7 @@
                 ></v-text-field>
                 <v-alert v-if="errorl" type="error" class="mb-5">{{ errorl }} </v-alert>
                 <v-alert v-if="ms" type="success" class="mb-5">{{ ms }} </v-alert>
-                <v-btn type="submit" color="primary"  class="mx-auto" >Ingresar</v-btn>
+                <v-btn style="text-transform: none" type="submit" color="primary"  class="mx-auto" >Ingresar</v-btn>
               </v-form>
               
              

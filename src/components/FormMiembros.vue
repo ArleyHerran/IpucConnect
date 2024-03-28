@@ -218,7 +218,7 @@
       </v-card-text>
       <v-card-actions class="dialog-actions">
         <v-spacer />
-        <v-btn @click="estados.formMiembros.display = false">
+        <v-btn @click="estados.formMiembros.display = false" style="text-transform: none">
           {{
             estados.formMiembros.mode === "view" ? "Cerrar" : "Cancelar"
           }}</v-btn
@@ -228,6 +228,7 @@
           @click="saveMember"
           v-if="estados.formMiembros.mode !== 'view'"
           :disabled="btnSave"
+          style="text-transform: none"
         >
           {{
             estados.formMiembros.mode === "add" ? "Guardar" : "Guardar Cambios"

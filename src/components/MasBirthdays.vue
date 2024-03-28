@@ -1,7 +1,7 @@
 <template>
   <main>
   
-        <v-sheet elevation="6" class="py-4 px-1 overflow-x-auto" color="transparent">
+        <v-sheet  class="py-4 px-1 overflow-x-auto elevation-2" color="transparent">
           <v-chip-group
           mandatory
             filter
@@ -13,13 +13,14 @@
               :key="tag.value"
               @click="mesFil(tag.value)"
               :color="tag.color"
+              class=" elevation-2"
             >
               {{ tag.label }}
             </v-chip>
           </v-chip-group>
         </v-sheet>
     
-    <v-card class="mx-auto" max-width="100%" color="transparent">
+    <v-card class="mx-auto mb-7" max-width="100%" color="transparent">
       <v-card-title>
         {{
           meses[monthSelect]
@@ -32,10 +33,11 @@
           :key="per.nombre"
           :title="per.nombre"
           :subtitle="per.edad"
-          style=" border-radius: 10px ;  color:black; background:white;  margin-top: 8px; margin-left: 10px; margin-right: 10px;"
+          class=" elevation-5"
+          style="padding:10px;  border-radius: 10px ;  color:black; background:white;  margin-top: 12px; margin-left: 10px; margin-right: 10px;"
         >
           <template v-slot:prepend>
-            <v-avatar color="#212F3C">
+            <v-avatar color="#212F3C" class=" elevation-5">
               <v-icon :color="per.color">{{ per.icon }}</v-icon>
             </v-avatar>
           </template>
@@ -45,6 +47,7 @@
               color="blue"
               icon="mdi-calendar-clock"
               variant="text"
+              class=" elevation-2"
             ></v-btn>
           </template>
           

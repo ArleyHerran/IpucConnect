@@ -8,13 +8,12 @@
         sm="6"
         md="4"
       >
-        <v-card dark> </v-card>
-        <v-card :color="item.color" theme="dark">
+        
+        <v-card :color="item.color" theme="dark" class=" elevation-8">
           <div class="d-flex flex-no-wrap ">
             <!-- Agrega el componente v-icon con la clase y el icono adecuados -->
             <v-icon
-             
-              class="ma-3"
+              class="ma-3  pd-8"
               size="50"
               rounded="0"
               >{{ item.icon }}</v-icon

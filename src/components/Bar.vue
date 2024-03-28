@@ -25,7 +25,7 @@
          <v-icon  class="icon"  color="#546E7A">mdi-bell-outline</v-icon>
       </v-badge>
 
-      <v-btn    v-bind="props" icon v-if="estados.notificaciones.value===0">
+      <v-btn  class=" elevation-1"  v-bind="props" icon v-if="estados.notificaciones.value===0">
         <v-icon  class="icon" size="small" color="#546E7A">mdi-bell-outline</v-icon>
       </v-btn>
         </template>

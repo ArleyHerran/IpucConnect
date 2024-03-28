@@ -66,12 +66,13 @@
           fab
           dark
           @click="estados.formMiembros = { display: true, mode: 'add', id: '' }"
+          style="text-transform: none"
         >
           <v-icon>mdi-plus</v-icon>
           Agregar miembro
         </v-btn>
 
-        <v-btn @click="exportDataToExcel" color="success" class="mb-2 mr-2" size="small">
+        <v-btn @click="exportDataToExcel" color="success" class="mb-2 mr-2" size="small" style="text-transform: none">
           <v-icon left>mdi-file-excel</v-icon> Exportar a Excel
         </v-btn>
       </v-col>

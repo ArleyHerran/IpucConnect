@@ -12,6 +12,8 @@
   color: rgb(125, 125, 125);
   padding-left: 10px;
   padding-right: 12px;
+  padding-top:8px;
+  padding-bottom: 8px;
   width: 150px;
   margin-bottom: 0px;
 }

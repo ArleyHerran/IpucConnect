@@ -9,10 +9,11 @@
       <v-btn
         icon="mdi-arrow-left"
         @click="back()"
-        class="mr-4 ml-2 "
+        class="mr-4 ml-2  elevation-5 mt-2"
         v-if="tab == 'tab-2'"
         variant="text"
         size="x-small"
+        
       ></v-btn>
      
     </div>
@@ -29,7 +30,8 @@
         fab
         large
         color="blue"
-        class="ma-0 w-100"
+        class="ma-0 w-100 "
+        style="text-transform: none;"
         @click="tab = 'tab-2'"
         
       >

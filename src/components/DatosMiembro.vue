@@ -12,6 +12,7 @@
           hide-spin-buttons
         ></v-text-field>
         <v-btn
+        style="text-transform: none"
         :loading="loadingb"
         class="ml-2"
         text="Buscar"
@@ -108,6 +109,7 @@
               variant="flat"
               color="success"
               :disabled="loading"
+              style="text-transform: none"
             >
               <v-icon left>mdi-account-reactivate</v-icon> Activar persona
             </v-btn>
@@ -120,6 +122,7 @@
             <p v-if="fil(formData.numeroDocumento)" style="color:#FF5252; font-size: 13px;">El botón se desactivó porque ya le envió una solicitud</p>
             <p v-if="userRequerido " style="color:#FF5252; font-size: 13px;">El botón se desactivó porque otro usuario le envio una solicitud.</p>
               <v-btn
+              style="text-transform: none"
                 :disabled="userRequerido ||  fil(formData.numeroDocumento) ||formData.estado === 'Inhabilitado'"
                 @click="load"
                 :loading="loading"
