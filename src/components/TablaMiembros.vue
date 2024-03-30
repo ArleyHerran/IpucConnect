@@ -299,10 +299,10 @@ function changePage(page) {
 }
 
 function toggleFilter(title) {
-  if (this.filtro.includes(title)) {
-    this.filtro = this.filtro.filter((item) => item !== title);
+  if (filtro.value.includes(title)) {
+    filtro.value = filtro.value.filter((item) => item !== title);
   } else {
-    this.filtro.push(title);
+    filtro.value.push(title);
   }
 }
 
