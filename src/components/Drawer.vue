@@ -5,22 +5,30 @@
     no-scrollbar
     style="background: #071a2b; color: #dcdddd; max-height: 100vh"
   >
+    <v-card class="elevation-0 mt-2" color="transparent">
+      <div class=" justify-space-between">
+        <v-avatar class="ml-3" rounded="0" size="60">
+          <v-img src="../img/icon-ipuc.png"></v-img>
+        </v-avatar>
+        <div>
+          <v-card-title class="text-h6" style="margin-top: -0.2em; ">
+  {{ estados.data ? estados.data.nombre : "" }}
 
-  <v-card class="elevation-0 mt-2" color="transparent">
-    <v-list-item>
-        <v-list-item-avatar>
-            <v-img src="../img/icon-ipuc.png" alt="Avatar" width="60" height="60"></v-img>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>{{ estados.data ? estados.data.nombre : '' }}</v-list-item-title>
-            <v-list-item-subtitle>Usuario:{{ estados.data ? estados.data.user : '' }}</v-list-item-subtitle>
-         </v-list-item-content>
-    </v-list-item>
-</v-card>
+ 
+</v-card-title>
+<v-card-subtitle style="margin-top: -0.7em; margin-bottom: 1em;">
+  Usuario: {{ estados.data ? estados.data.user : "" }}
+</v-card-subtitle>
+         
+        </div>
+
+        
+      </div>
+    </v-card>
 
     <div class="no-scrollbar">
       <!-- contenido de drawer aquí -->
-    
+
       <v-divider></v-divider>
       <v-list density="compact" nav class="menu-list">
         <v-list-item
@@ -70,8 +78,6 @@ import { onMounted } from "vue";
 import { signOut } from "firebase/auth";
 import { auth } from "../ConfigFirebase";
 import swal from "sweetalert";
-//import config from '@/components/Config.vue'
-
 const estados = useAppStore();
 const router = useRouter();
 
@@ -169,9 +175,3 @@ onMounted(async () => {
   await estados.getDataUser();
 });
 </script>
-
-<style>
-.active {
-  background-color: #b81818;
-}
-</style>

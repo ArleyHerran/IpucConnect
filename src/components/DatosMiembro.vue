@@ -3,22 +3,32 @@
     <v-form validate-on="submit lazy" @submit.prevent="buscar">
       <v-row>
       <v-col cols="12" md="4">
-        <div style="display: flex;">
+        <div style="display:flex;">
+       
+
         <v-text-field
+        hide-spin-buttons
+          density="compact"
           v-model="searchNumber"
           :rules="rules"
-          label="Número de Documento"
+          label="No.Documento"
+          prepend-inner-icon="mdi-magnify"
+          variant="solo-filled"
+          flat
+          hide-details
+          single-line
+          class="mr-2"
           type="number"
-          hide-spin-buttons
+          style="max-width: 400px;"
         ></v-text-field>
         <v-btn
         style="text-transform: none"
         :loading="loadingb"
-        class="ml-2"
+        class="ml-1"
         text="Buscar"
         type="submit"
         color="success"
-        height="56"
+        height="43"
       ></v-btn>
     </div>
       </v-col>

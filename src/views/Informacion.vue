@@ -2,14 +2,14 @@
   <PanelControl>
     <div class="pl-4 pr-4" style="text-align: justify;">
       <section class="about-section">
-        <h1 class="about-title" style="text-align: left;">Acerca de la Aplicación de Gestión de Membresía SgmIpuc</h1>
+        <h1 class="about-title" style="text-align: left; color:#154360;">Acerca de la aplicación de gestión de membresía SgmIpuc</h1>
         <div class="about-content">
           <p >Bienvenidos a la Aplicación de Gestión de Membresía SgmIpuc de la Iglesia Pentecostal Unida de Colombia. Esta aplicación ha sido desarrollada por Arley Herran, un apasionado desarrollador de software con una sólida formación en el análisis y desarrollo de software, quien completó sus estudios en el programa del SENA el 26 de septiembre de 2023.</p>
         </div>
       </section>
 
       <section class="developer-section">
-        <h2 class="section-title">El Desarrollador</h2>
+        <h2 class="section-title" style="color:#154360;">El desarrollador</h2>
         <div class="developer-details">
           <p>Arley Herran es miembro activo de la Iglesia Pentecostal Unida de Colombia y un profesional experimentado en el campo del desarrollo de software. Con una amplia trayectoria empírica, ha perfeccionado sus habilidades y conocimientos en tecnología a lo largo de los años. Su dedicación y pasión por la programación lo llevaron a completar su educación formal en el programa "Análisis y Desarrollo de Software" del SENA.</p>
 
@@ -17,16 +17,16 @@
         </div>
 
         <div class="developer-contact">
-          <h3 class="contact-title">Contacto</h3>
+          <h3 class="contact-title" style="color: #154360;">Contacto</h3>
           <ul>
-            <li>Email: <a href="mailto:unicodecolombia@gmail.com">unicodecolombia@gmail.com</a></li>
-            <li>Teléfono celular: <a href="tel:3134878371">313-487-8371</a></li>
+            <li>Email: <a href="mailto:unicodecolombia@gmail.com" style="color: #5DADE2 ;">unicodecolombia@gmail.com</a></li>
+            <li>Teléfono celular: <a href="tel:3134878371" style="color: #5DADE2 ;">313-487-8371</a></li>
           </ul>
         </div>
       </section>
 
       <section class="app-section">
-        <h2 class="section-title">Sobre la Aplicación</h2>
+        <h2 class="section-title" style="color: #154360;">Sobre la Aplicación</h2>
         <div class="app-description">
           <p>Nuestra aplicación de gestión de membresía SgmIpuc está diseñada para brindar una experiencia completa y eficiente a la administración pastoral de modo individual por sedes de la Iglesia Pentecostal Unida de Colombia. Ofrecemos una gama de características avanzadas y una interfaz amigable que simplifica la administración de la membresía, el seguimiento de eventos como los traslados de personas, y la gestión estadística simplificada de la congregación Ipuc.</p>
 
@@ -35,7 +35,7 @@
       </section>
 
       <section class="thanks-section">
-        <h2 class="section-title">Agradecimientos</h2>
+        <h2 class="section-title" style="color: #154360;">Agradecimientos</h2>
         <div class="thanks-content">
           <p>Queremos expresar nuestro sincero agradecimiento por confiar en nuestra aplicación. La Iglesia Pentecostal Unida de Colombia es una parte fundamental de nuestra comunidad, y estamos dedicados a servirte de la mejor manera posible.</p>
 
