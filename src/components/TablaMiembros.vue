@@ -237,7 +237,6 @@ import { useAppStore } from "../store/app";
 import { exportDataToExcel } from "../scripts/exportExcel";
 import { filtrara, formattedName } from "../scripts/functions";
 import { eliminarM } from "../scripts/functionsFirebase";
-//import { saveAs } from "file-saver";
 import swal from "sweetalert";
 //import { useRouter } from "vue-router";
 

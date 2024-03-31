@@ -1,5 +1,6 @@
 import ExcelJS from "exceljs";
 import swal from "sweetalert";
+import { saveAs } from "file-saver";
 export async function exportDataToExcel(dataDb){
     const exportA = await swal({
       title: "¿ Estás seguro ?",
