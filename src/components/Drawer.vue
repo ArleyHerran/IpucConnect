@@ -3,7 +3,7 @@
     v-model="estados.drawerDisplay"
     hide-overlay
     no-scrollbar
-    style="background: #071a2b; color: #dcdddd; max-height: 100vh"
+    style="background: #373F52; color: #dcdddd; max-height: 100vh"
   >
     <v-card class="elevation-0 mt-2" color="transparent">
       <div class=" justify-space-between">

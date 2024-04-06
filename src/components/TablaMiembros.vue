@@ -41,103 +41,163 @@
 .custom-checkbox .v-label {
   font-size: 12px; /* ajusta el tamaño del texto */
 }
+
+
+.inputBox {
+  background: rgb(255, 255, 255);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-radius: 20px;
+  border: 1px solid #a1a1a1;
+  display: flex;
+  align-items: center;
+  width: 75%;
+  max-width: 360px; /* Ancho máximo del contenedor */
+}
+
+.inputBox label {
+margin-left: 10px;
+  
+}
+
+
+
+.conte1{
+  align-items: center;
+}
+.inputBox input {
+  background: none;
+  flex: 1; /* El campo de entrada se expandirá para ocupar el espacio disponible */
+  box-sizing: border-box; /* Incluir el tamaño del borde y el relleno en el ancho */
+  font-size: 0.9rem;
+  border-radius: 4px; /* Bordes redondeados */
+  outline: none; /* Eliminar el contorno al enfocar */
+  overflow: hidden; /* Ocultar el desbordamiento del input */
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Otros navegadores */
+}
+.inputBox input[type="number"]::-webkit-inner-spin-button,
+.inputBox input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Eliminar las flechas de incremento y decremento en Chrome/Safari */
+  margin: 0; /* Asegurar que no haya margen alrededor de las flechas */
+}
+.btnAdd{
+ background: #1866be;
+  display: flex;
+  padding: 6px;
+  padding-right: 8px;
+  padding-left: 8px;
+  
+  border-radius: 8px;
+  color:white;
+  
+}
+
+.btnAdd:hover{
+  background: #1865bedb;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+}
 </style>
 
 <template>
   <div>
-    <v-card flat>
-      <v-card-title class="d-flex align-center pe-2">
-        <v-text-field
-          density="compact"
-          v-model="search"
-          label="Buscar por nombre o número de documento"
-          prepend-inner-icon="mdi-magnify"
-          variant="solo-filled"
-          flat
-          hide-details
-          single-line
-          class="mr-2"
-          style="max-width: 400px; border: 1px solid #78909c"
-        ></v-text-field>
-
-        <v-menu v-model="menu" :close-on-content-click="false" location="end">
-          <template v-slot:activator="{ props }">
-            <v-badge
-              v-bind="props"
-              :content="filtro.length"
-              color="#546E7A"
-              v-if="filtro.length > 0"
-              class="mr-5 elevation-1"
+    <v-card flat color="transparent">
+      <v-card-text class="d-flex align-center conte1">
+        <div class="inputBox mr-2">
+          <label><v-icon icon="mdi-magnify" size="20"></v-icon></label>
+          <input
+            v-model="search"
+            type="number"
+            placeholder="Buscar por nombre o número de documento"
+            maxlength="5"
+          />
+          <label>
+           
+          </label>
+        </div>
+        <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              location="end"
             >
-              <v-icon class="icon" color="#546E7A">mdi-filter-outline</v-icon>
-            </v-badge>
-            <v-icon
-              class="icon mr-5 elevation-1"
-              color="#546E7A"
-              v-bind="props"
-              v-if="filtro.length === 0"
-              >mdi-filter</v-icon
-            >
-          </template>
-
-          <v-card min-width="auto">
-            <v-alert-title>Filtro</v-alert-title>
-            <v-divider></v-divider>
-
-            <v-list>
-              <v-list-item style="" v-for="(i, k) in filterItems" :key="k">
-                <input
-                  type="checkbox"
-                  :id="i.title"
-                  :value="i.title"
-                  :checked="filtro.includes(i.title)"
-                  @change="toggleFilter(i.title)"
-                />
-                <label
-                  :for="i.title"
-                  style="
-                    margin-left: 8px;
-                    width: 100%;
-                    text-decoration: underline blue; /* Línea roja */
-                    text-decoration-thickness: 1px; /* Grosor de la línea */
-                    text-decoration-style: underline; /* Estilo de la línea */
-                  "
-                  >{{ i.title }}</label
+              <template v-slot:activator="{ props }">
+                <v-badge
+                  v-bind="props"
+                  :content="displayedItems.length"
+                 
+                  v-if="filtro.length > 0"
+                  class="mr-8 elevation-1"
+                  color="#263238" 
                 >
-              </v-list-item>
-            </v-list>
-            <v-card-actions class="justify-center">
-              <v-btn
-                color="red-lighten-1"
-                prepend-icon="mdi-close"
-                variant="flat"
-                @click="
-                  filtro = [];
-                  menu = false;
-                "
-                size="small"
-                style="text-transform: none"
-              >
-                Limpiar
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+                  <v-icon class="icon" color="#546E7A"
+                    >mdi-filter-outline</v-icon
+                  >
+                </v-badge>
+                <v-icon
+                  class="icon mr-5 elevation-1 "
+                  color="#546E7A"
+                  v-bind="props"
+                  v-if="filtro.length === 0"
+                  >mdi-filter</v-icon
+                >
+              </template>
 
+              <v-card min-width="auto">
+                <v-alert-title>Filtro</v-alert-title>
+                <v-divider></v-divider>
+
+                <v-list>
+                  <v-list-item style="" v-for="(i, k) in filterItems" :key="k">
+                    <input
+                      type="checkbox"
+                      :id="i.title"
+                      :value="i.title"
+                      :checked="filtro.includes(i.title)"
+                      @change="toggleFilter(i.title)"
+                    />
+                    <label
+                      :for="i.title"
+                      style="
+                        margin-left: 8px;
+                        width: 100%;
+                        text-decoration: underline gray; /* Línea roja */
+                        text-decoration-thickness: 1px; /* Grosor de la línea */
+                        text-decoration-style: underline; /* Estilo de la línea */
+                      "
+                      >{{ i.title }}</label
+                    >
+                  </v-list-item>
+                </v-list>
+                <v-card-actions class="justify-center">
+                  <v-btn
+                    color="#78909C"
+                    prepend-icon="mdi-close"
+                    variant="flat"
+                    @click="
+                      filtro = [];
+                      menu = false;
+                    "
+                    size="small"
+                    style="text-transform: none"
+                  >
+                    Limpiar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
         <v-spacer class="d-none d-sm-flex"></v-spacer>
-        <v-btn
-          color="primary"
-          class="mb-2 mr-2"
-          fab
-          dark
-          @click="estados.formMiembros = { display: true, mode: 'add', id: '' }"
-          style="text-transform: none"
-        >
-          <v-icon>mdi-plus</v-icon>
-
+        <button  class="mb-2 mr-2  btnAdd elevation-1" color="primary"  @click="estados.formMiembros = { display: true, mode: 'add', id: '' }">  <v-icon>mdi-plus</v-icon>
           <span class="d-none d-sm-flex">Agregar miembro</span>
-        </v-btn>
-      </v-card-title>
+        </button>
+       
+       
+          
+      </v-card-text>
+      
 
       <v-divider></v-divider>
       <v-table

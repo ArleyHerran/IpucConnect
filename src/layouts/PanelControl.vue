@@ -1,9 +1,10 @@
 <style>
 
 
-.mainApp {
+.bodyHome {
   min-height: calc(100vh - 40px);
   max-height:calc(100vh - 64px);
+  background: #F1F4F4;
   
 }
 
@@ -49,15 +50,15 @@
   <v-app id="inspire">
 
     <Drawer :drawerOpen="drawerOpen"></Drawer>
-    <Bar @toggleDrawer="toggleDrawer"></Bar>
+    <Bar @toggleDrawer="toggleDrawer" color="#F1F4F4"></Bar>
    
-    <v-main class="mainApp">
+    <v-main class="bodyHome">
       <h4 class="route-name bg-primary " style="width: 100%;">{{ $route.name }}/<span v-if="route.name==='Birthday'">🎁🎂​🥳​​</span></h4>
       <div class="main-content" :style="{ padding: mainContentPadding }">
         <slot></slot>
       </div>
     </v-main>
-    <footerA />
+    <footerA color="#F1F4F4" />
   </v-app>
 </template>
 

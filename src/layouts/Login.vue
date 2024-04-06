@@ -2,10 +2,11 @@
 <style>
 
 
-.mainApp {
+.bodyLogin {
   min-height: calc(100vh - 40px);
   max-height:calc(100vh - 64px);
-  
+  background: radial-gradient(circle, #071a2bd6 0%, #092035 90%);
+    
 }
 
 
@@ -15,7 +16,7 @@
   overflow-y: auto;
   padding: 10px;
 
-  border-top: 2px solid rgb(180, 177, 177);
+  border-top: 1px solid rgb(107, 107, 107);
 }
 
 
@@ -39,26 +40,31 @@
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
 }
-
-
+.bar1{
+  background: #265c8b;
+}
+.footer{
+  background: #071a2b;
+  color:#dddddd;
+}
 </style>
 
 <template>
   <v-app id="inspire">
-    <v-app-bar   color="#FFFFFF">
+    <v-app-bar class="bar1" color="#144A7B">
       
-      <v-app-bar-title  class="text-amber-darken-2  text-decoration-underline" >Sgm<span class="text-blue-grey-darken-4">Ipuc</span></v-app-bar-title>
+      <v-app-bar-title  class="text-amber-darken-2 " ><span class="text-decoration-underline">Sgm</span><span class=" text-decoration-underline" style="color:#dddddd;">Ipuc</span></v-app-bar-title>
 
   </v-app-bar>
-    <v-main class="mainApp">
+    <v-main class="bodyLogin">
     
       <div class="main-content">
         <slot></slot>
       </div>
     </v-main>
     <v-footer app
-    class=" text-center d-flex flex-column "
-    style=" color: black;"
+    class=" text-center d-flex flex-column footer"
+    
   >
     
     <div class="pt-0">
