@@ -2,10 +2,11 @@
 
 
 .bodyHome {
-  min-height: calc(100vh - 40px);
-  max-height:calc(100vh - 64px);
+  min-height: calc(100vh - 30px);
+  max-height:calc(100vh - 50px);
   background: #F1F4F4;
-  
+ 
+  box-sizing: border-box;
 }
 
 
@@ -21,9 +22,12 @@
 
 .main-content{
   max-height: 100%;
+  min-height: 100%;
   overflow-y: auto;
   border-top: 1px solid rgb(180, 177, 177);
   border-bottom: 1px solid rgb(180, 177, 177);
+ 
+  padding-bottom: 200px;
 }
 
 /* Estilo personalizado para la barra de desplazamiento */

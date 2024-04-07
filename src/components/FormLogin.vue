@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align="center" justify="center">
-      <v-card color="#F2F2F2" max-width="300" style="border-radius:20px;">
+      <v-card color="#F2F2F2" max-width="100%" style="border-radius:20px;">
         <v-card-title class="text-center">
           <v-avatar image="../img/icon-ipuc.png" size="52"></v-avatar><br/>
           <span class="headline" style="color:#464646;">Iniciar sesión</span>
@@ -19,7 +19,7 @@
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Usuario"
+                placeholder="Contraseña"
                
               />
               <label
@@ -35,17 +35,21 @@
               >{{ errorl }}
             </v-alert>
             <v-alert v-if="ms" type="success" class="mb-5">{{ ms }} </v-alert>
-            <v-btn
+            <div style="display:flex; padding-top:10px;">
+             
+              <v-btn
               style="text-transform: none"
               type="submit"
               color="#265c8b"
               class="mx-auto"
               >Ingresar</v-btn
             >
+            </div>
+            
           </v-form>
 
           <v-divider class="mb-4 mt-4"></v-divider>
-          <h4 style="color: #168ad6">Olvido la contraseña?</h4>
+          <h4 style="color: #168ad6">¿Olvido la contraseña?</h4>
         </v-card-text>
       </v-card>
     </v-row>
@@ -120,8 +124,8 @@ function traducirErrorFirebase(codigoError) {
 <style scoped>
 .inputBox{
   background: transparent;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom:20px;
   padding: 10px;
   border-radius: 5px;
   border:1px solid rgb(161, 161, 161);

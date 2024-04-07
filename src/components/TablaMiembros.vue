@@ -97,21 +97,40 @@ margin-left: 10px;
   
 }
 
+
+
 .btnAdd:hover{
   background: #1865bedb;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.btnExcel{
+ background: #19a05b;
+  display: flex;
+  padding: 6px;
+  padding-right: 8px;
+  padding-left: 8px;
+  
+  border-radius: 8px;
+  color:white;
+  
+}
+
+.btnExcel:hover{
+  background: #19a05ad5;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
 }
 </style>
 
 <template>
   <div>
-    <v-card flat color="transparent">
+    <v-card flat color="transparent" >
       <v-card-text class="d-flex align-center conte1">
         <div class="inputBox mr-2">
           <label><v-icon icon="mdi-magnify" size="20"></v-icon></label>
           <input
             v-model="search"
-            type="number"
+            type="text"
             placeholder="Buscar por nombre o número de documento"
             maxlength="5"
           />
@@ -190,7 +209,14 @@ margin-left: 10px;
               </v-card>
             </v-menu>
         <v-spacer class="d-none d-sm-flex"></v-spacer>
-        <button  class="mb-2 mr-2  btnAdd elevation-1" color="primary"  @click="estados.formMiembros = { display: true, mode: 'add', id: '' }">  <v-icon>mdi-plus</v-icon>
+       
+       
+
+      <button  class="mb-2 mr-2   btnExcel elevation-1  d-none d-sm-flex" color="success"   @click="exportDataToExcel(displayedItems)">  <v-icon>mdi-file-excel</v-icon>
+          <span >Exportar a Excel</span>
+        </button>
+
+        <button  class="mb-2 mr-2   btnAdd elevation-1" color="primary"  @click="estados.formMiembros = { display: true, mode: 'add', id: '' }">  <v-icon>mdi-plus</v-icon>
           <span class="d-none d-sm-flex">Agregar miembro</span>
         </button>
        
@@ -279,14 +305,7 @@ margin-left: 10px;
         next-icon="mdi-menu-right"
         style="border: 1px solid #767575; color: rgb(0, 0, 0)"
       />
-      <v-btn
-        @click="exportDataToExcel(displayedItems)"
-        color="success"
-        class="mb-2 mr-2 mt-2"
-        style="text-transform: none"
-      >
-        <v-icon left>mdi-file-excel</v-icon> Exportar a Excel
-      </v-btn>
+      
     </v-card>
   </div>
 </template>
