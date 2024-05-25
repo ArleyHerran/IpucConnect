@@ -1,10 +1,10 @@
 <template>
     <PanelControl>
-      <TablaSolicitudes/>
+  <Cards/>
     </PanelControl>
    </template>
    
    <script setup>
      import PanelControl from '@/layouts/PanelControl.vue'
-     import TablaSolicitudes from '@/components/TablaSolicitudes.vue'
+     import Cards from '@/components/CardsSolicitudes.vue'
    </script>

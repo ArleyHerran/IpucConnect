@@ -55,11 +55,10 @@ export const useAppStore = defineStore("app", {
           const data = doc.data();
 
           // Agrega el ID del documento a los datos
-          data.id = doc.id;
           cumple.push({
             nombre: data.nombre + " " + data.apellido,
             fechaNacimiento: data.fechaNacimiento,
-            id: data.id,
+            id: doc.id,
             sexo: data.sexo,
           });
           // this.actualizar(data.id,data.sede.user)

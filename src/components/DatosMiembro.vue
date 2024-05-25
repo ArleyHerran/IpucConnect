@@ -191,7 +191,6 @@
     <!-- Puedes agregar más secciones para la información adicional si es necesario -->
   </v-container>
 </template>
-
 <script setup>
 import { ref, reactive, watch } from "vue";
 import { useAppStore } from "../store/app";
@@ -316,14 +315,14 @@ async function getFirebase() {
   const unsubscribe = await onSnapshot(q, (querySnapshot) => {
     let documentoEncontrado = false;
     querySnapshot.forEach((doc) => {
-      documentoEncontrado = true; // Se encontró al menos un documento
-      const docData = doc.data();
-      docData.idDoc = doc.id;
-      miembro.value = docData;
-      getSede(docData.sede);
+      documentoEncontrado = true; // Se encontró al menos un documento  
+      miembro.value = doc.data();
+      console.log(miembro.value);
+      getSede(doc.data().sede);
+      
       for (const key in formData) {
-        if (docData.hasOwnProperty(key)) {
-          formData[key] = docData[key]; // Asigna el valor de doc.data() a formData si existe el campo correspondiente
+        if (doc.data().hasOwnProperty(key)) {
+          formData[key] = doc.data()[key]; // Asigna el valor de doc.data() a formData si existe el campo correspondiente
         }
       }
     });
@@ -366,8 +365,11 @@ async function getDocument(d) {
 //CREA UNA SOLISITUD
 async function enviarSolicitud() {
   try {
-    const docRef = await setDoc(doc(db, "Solicitudes", miembro.value.id), {
-      miembro: miembro.value.id,
+   
+    var nDoc=miembro.value.numeroDocumento;
+    console.log(nDoc);
+    const docRef = await setDoc(doc(db, "Solicitudes",nDoc ), {
+      miembro:nDoc,
       nombre: miembro.value.nombre + " " + miembro.value.apellido,
       userReceptor: miembro.value.sede,
       userEmisor: auth.currentUser.email,

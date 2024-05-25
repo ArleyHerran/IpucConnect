@@ -2,8 +2,8 @@
 import { doc, deleteDoc, setDoc, runTransaction } from "firebase/firestore";
 import { auth, db } from "../ConfigFirebase";
 import swal from "sweetalert";
-
-
+import { useAppStore } from "../store/app";
+const estados = useAppStore();
 export async function eliminarM(m) {
     console.log(m)
     const confirmacion = await swal({
@@ -19,8 +19,8 @@ export async function eliminarM(m) {
     estados.progre = true;
     try {
       await runTransaction(db, async (transaction) => {
-        await setDoc(doc(db, "PapeleraMiembros", m.id), m);
-        await deleteDoc(doc(db, "Membresia", m.id));
+        await setDoc(doc(db, "PapeleraMiembros", m.numeroDocumento), m);
+        await deleteDoc(doc(db, "Membresia", m.numeroDocumento));
       });
       estados.progre = false;
       swal("Eliminación exitosa", "", "success");
