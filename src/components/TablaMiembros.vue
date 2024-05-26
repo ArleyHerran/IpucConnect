@@ -11,6 +11,26 @@
   font-size: 14px; /* Establece el tamaño de fuente deseado */
 }
 
+.column-divider {
+  border: 0.1px solid #bdbbbb;
+}
+
+.selectFila:hover {
+  background: #ede7f6;
+}
+
+
+/* Para mostrar en dispositivos pequeños */
+.show-on-small-screen {
+    display: none; /* Oculta por defecto */
+}
+
+@media only screen and (max-width: 768px) {
+    .show-on-small-screen {
+        display: block; /* Muestra en dispositivos pequeños */
+    }
+}
+
 @media (max-width: 767px) {
   .hide-on-small-screen {
     display: none !important;
@@ -42,7 +62,6 @@
   font-size: 12px; /* ajusta el tamaño del texto */
 }
 
-
 .inputBox {
   background: rgb(255, 255, 255);
   margin-top: 10px;
@@ -60,13 +79,10 @@
 }
 
 .inputBox label {
-margin-left: 10px;
-  
+  margin-left: 10px;
 }
 
-
-
-.conte1{
+.conte1 {
   align-items: center;
 }
 .inputBox input {
@@ -85,38 +101,34 @@ margin-left: 10px;
   -webkit-appearance: none; /* Eliminar las flechas de incremento y decremento en Chrome/Safari */
   margin: 0; /* Asegurar que no haya margen alrededor de las flechas */
 }
-.btnAdd{
- background: #1866be;
+.btnAdd {
+  background: #1866be;
   display: flex;
   padding: 6px;
   padding-right: 8px;
   padding-left: 8px;
-  
+
   border-radius: 8px;
-  color:white;
-  
+  color: white;
 }
 
-
-
-.btnAdd:hover{
+.btnAdd:hover {
   background: #1865bedb;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-.btnExcel{
- background: #19a05b;
+.btnExcel {
+  background: #19a05b;
   display: flex;
   padding: 6px;
   padding-right: 8px;
   padding-left: 8px;
-  
+
   border-radius: 8px;
-  color:white;
-  
+  color: white;
 }
 
-.btnExcel:hover{
+.btnExcel:hover {
   background: #19a05ad5;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
 }
@@ -124,7 +136,7 @@ margin-left: 10px;
 
 <template>
   <div>
-    <v-card flat color="transparent" >
+    <v-card flat color="transparent">
       <v-card-text class="d-flex align-center conte1">
         <div class="inputBox mr-2">
           <label><v-icon icon="mdi-magnify" size="20"></v-icon></label>
@@ -134,96 +146,91 @@ margin-left: 10px;
             placeholder="Buscar por nombre o número de documento"
             maxlength="5"
           />
-          <label>
-           
-          </label>
+          <label> </label>
         </div>
-        <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              location="end"
+        <v-menu v-model="menu" :close-on-content-click="false" location="end">
+          <template v-slot:activator="{ props }">
+            <v-badge
+              v-bind="props"
+              :content="displayedItems.length"
+              v-if="filtro.length > 0"
+              class="mr-8 elevation-1"
+              color="#263238"
             >
-              <template v-slot:activator="{ props }">
-                <v-badge
-                  v-bind="props"
-                  :content="displayedItems.length"
-                 
-                  v-if="filtro.length > 0"
-                  class="mr-8 elevation-1"
-                  color="#263238" 
-                >
-                  <v-icon class="icon" color="#546E7A"
-                    >mdi-filter-outline</v-icon
-                  >
-                </v-badge>
-                <v-icon
-                  class="icon mr-5 elevation-1 "
-                  color="#546E7A"
-                  v-bind="props"
-                  v-if="filtro.length === 0"
-                  >mdi-filter</v-icon
-                >
-              </template>
+              <v-icon class="icon" color="#546E7A">mdi-filter-outline</v-icon>
+            </v-badge>
+            <v-icon
+              class="icon mr-5 elevation-1"
+              color="#546E7A"
+              v-bind="props"
+              v-if="filtro.length === 0"
+              >mdi-filter</v-icon
+            >
+          </template>
 
-              <v-card min-width="auto">
-                <v-alert-title>Filtro</v-alert-title>
-                <v-divider></v-divider>
+          <v-card min-width="auto">
+            <v-alert-title>Filtro</v-alert-title>
+            <v-divider></v-divider>
 
-                <v-list>
-                  <v-list-item style="" v-for="(i, k) in filterItems" :key="k">
-                    <input
-                      type="checkbox"
-                      :id="i.title"
-                      :value="i.title"
-                      :checked="filtro.includes(i.title)"
-                      @change="toggleFilter(i.title)"
-                    />
-                    <label
-                      :for="i.title"
-                      style="
-                        margin-left: 8px;
-                        width: 100%;
-                        text-decoration: underline gray; /* Línea roja */
-                        text-decoration-thickness: 1px; /* Grosor de la línea */
-                        text-decoration-style: underline; /* Estilo de la línea */
-                      "
-                      >{{ i.title }}</label
-                    >
-                  </v-list-item>
-                </v-list>
-                <v-card-actions class="justify-center">
-                  <v-btn
-                    color="#78909C"
-                    prepend-icon="mdi-close"
-                    variant="flat"
-                    @click="
-                      filtro = [];
-                      menu = false;
-                    "
-                    size="small"
-                    style="text-transform: none"
-                  >
-                    Limpiar
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-menu>
+            <v-list>
+              <v-list-item style="" v-for="(i, k) in filterItems" :key="k">
+                <input
+                  type="checkbox"
+                  :id="i.title"
+                  :value="i.title"
+                  :checked="filtro.includes(i.title)"
+                  @change="toggleFilter(i.title)"
+                />
+                <label
+                  :for="i.title"
+                  style="
+                    margin-left: 8px;
+                    width: 100%;
+                    text-decoration: underline gray; /* Línea roja */
+                    text-decoration-thickness: 1px; /* Grosor de la línea */
+                    text-decoration-style: underline; /* Estilo de la línea */
+                  "
+                  >{{ i.title }}</label
+                >
+              </v-list-item>
+            </v-list>
+            <v-card-actions class="justify-center">
+              <v-btn
+                color="#78909C"
+                prepend-icon="mdi-close"
+                variant="flat"
+                @click="
+                  filtro = [];
+                  menu = false;
+                "
+                size="small"
+                style="text-transform: none"
+              >
+                Limpiar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
         <v-spacer class="d-none d-sm-flex"></v-spacer>
-       
-       
 
-      <button  class="mb-2 mr-2   btnExcel elevation-1  d-none d-sm-flex" color="success"   @click="exportDataToExcel(displayedItems)">  <v-icon>mdi-file-excel</v-icon>
-          <span >Exportar a Excel</span>
+        <button
+          class="mb-2 mr-2 btnExcel elevation-1 d-none d-sm-flex"
+          color="success"
+          @click="exportDataToExcel(displayedItems)"
+        >
+          <v-icon>mdi-file-excel</v-icon>
+          <span>Exportar a Excel</span>
         </button>
 
-        <button  class="mb-2 mr-2   btnAdd elevation-1" color="primary"  @click="estados.formMiembros = { display: true, mode: 'add', id: '' }">  <v-icon>mdi-plus</v-icon>
+        <button
+          class="mb-2 mr-2 btnAdd elevation-1"
+          color="primary"
+          @click="estados.formMiembros = { display: true, mode: 'add', id: '' }"
+        >
+          <v-icon>mdi-plus</v-icon>
           <span class="d-none d-sm-flex">Agregar miembro</span>
         </button>
-       
-       
-          
       </v-card-text>
-      
 
       <v-divider></v-divider>
       <v-table
@@ -232,27 +239,35 @@ margin-left: 10px;
         :sort-by="'Codigo'"
         :sort-desc="false"
         class="small-font-table"
-        style="border: 1px solid #767575; border-bottom: 0px"
-        height="250px"
-        show-col-dividers
+        style="border: 0px solid #767575; border-bottom: 0px"
+        height="500px"
       >
         <thead>
           <tr>
-            <th class="text-left hide-on-small-screen">No.</th>
-            <th class="text-left hide-on-small-screen">Documento</th>
-            <th class="text-left">Nombre</th>
-            <th class="text-left">Acciones</th>
+            <th class="text-left hide-on-small-screen column-divider">No.</th>
+            <th class="text-left hide-on-small-screen column-divider">
+              Documento
+            </th>
+            <th class="text-left column-divider hide-on-small-screen">Nombre</th>
+            <th class="text-center column-divider hide-on-small-screen">Acciones</th>
+            <th class="text-center column-divider  show-on-small-screen">Personas</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in displayedItems" :key="index">
-            <td class="hide-on-small-screen">{{ index + 1 }}</td>
-            <td class="hide-on-small-screen">{{ item.numeroDocumento }}</td>
-            <td class="max-14-chars">
+          <tr
+            v-for="(item, index) in displayedItems"
+            :key="index"
+            class="selectFila"
+          >
+            <td class="hide-on-small-screen column-divider">{{ index + 1 }}</td>
+            <td class="hide-on-small-screen column-divider ">
+              {{ item.numeroDocumento }}
+            </td>
+            <td class="max-14-chars column-divider hide-on-small-screen">
               {{ formattedName(item) }}
             </td>
 
-            <td>
+            <td class="text-center column-divider hide-on-small-screen">
               <v-icon
                 class="mr-2 elevation-1"
                 color="blue"
@@ -290,6 +305,58 @@ margin-left: 10px;
                 >mdi-delete</v-icon
               >
             </td>
+            <td class="column-divider show-on-small-screen" style="height: auto;">
+              <div>
+                <v-card-title> ID:{{ index + 1 }} </v-card-title>
+
+                <v-card-text style="margin-top: -15px">
+                  Nombre:{{ formattedName(item) }}
+                </v-card-text>
+                <v-card-subtitle style="margin-top: -15px">
+                  Documento:{{ item.numeroDocumento }}
+                </v-card-subtitle>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-icon
+                    class="mr-2 elevation-1"
+                    color="blue"
+                    title="Editar"
+                    style="cursor: pointer"
+                    @click="
+                      estados.formMiembros = {
+                        display: true,
+                        mode: 'edit',
+                        id: item.id,
+                      }
+                    "
+                    >mdi-pencil</v-icon
+                  >
+                  <v-icon
+                    class="mr-2 elevation-1"
+                    color="green"
+                    title="Ver"
+                    style="cursor: pointer"
+                    @click="
+                      estados.formMiembros = {
+                        display: true,
+                        mode: 'view',
+                        id: item.id,
+                      }
+                    "
+                    >mdi-eye</v-icon
+                  >
+                  <v-icon
+                    class="elevation-1"
+                    color="#EF5350"
+                    title="Eliminar"
+                    style="cursor: pointer"
+                    @click="eliminarM(item)"
+                    >mdi-delete</v-icon
+                  >
+                </v-card-actions>
+              </div>
+            </td>
           </tr>
         </tbody>
       </v-table>
@@ -305,7 +372,6 @@ margin-left: 10px;
         next-icon="mdi-menu-right"
         style="border: 1px solid #767575; color: rgb(0, 0, 0)"
       />
-      
     </v-card>
   </div>
 </template>
