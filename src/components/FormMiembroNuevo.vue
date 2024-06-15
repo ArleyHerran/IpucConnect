@@ -368,13 +368,16 @@ watch(
 watch(
   () => estados.formMiembros,
   (newData) => {
+    
+    
+  
     if (
       newData.mode == "view" ||
       (newData.mode == "edit" && newData.id != "")
     ) {
       // Utiliza el método find para buscar el objeto por su ID
       const objet1 = estados.miembros.find(
-        (objeto) => objeto.id === newData.id
+        (objeto) => objeto.numeroDocumento === newData.id
       );
 
       for (const prop in formData) {

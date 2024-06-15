@@ -16,8 +16,6 @@
 .heart {
   animation: 2.5s ease 0s infinite beat;
 }
-
-
 </style>
 
 <template>
@@ -56,9 +54,9 @@
           margin-left: 10px;
           margin-right: 10px;
           overflow: hidden;
-        z-index: 0;
+          z-index: 0;
         "
-        class="elevation-5 "
+        class="elevation-5"
       >
         <template v-slot:prepend>
           <v-avatar color="#212F3C" class="elevation-10">
@@ -105,12 +103,24 @@
         </template>
 
         <template v-slot:append>
-          <v-btn
+          <v-menu open-on-hover open-on-click>
+            <template v-slot:activator="{ props }">
+             
+              <v-btn
             class="elevation-2"
             color="blue"
             icon="mdi-calendar-clock"
             variant="text"
-          ></v-btn>
+            v-bind="props"
+          >
+          </v-btn>
+            </template>
+
+            <v-card style="margin-right: 20px; min-width: 150px;"
+        :text="cumple.edad2"
+        title="Edad Actual"
+      ></v-card>
+          </v-menu>
         </template>
       </v-list-item>
     </v-list>
@@ -200,6 +210,7 @@ async function calcularCumpleañosProximos(personas) {
         icon: persona.sexo === "Hombre" ? "mdi-face-man" : "mdi-face-woman",
         edad: formatearFechaCumpleaños(persona.fechaNacimiento),
         color: persona.sexo === "Hombre" ? "#2ECC71" : "#F0B27A",
+        edad2:calcularEdad(persona.fechaNacimiento) + " años",
       });
     }
   }

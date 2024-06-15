@@ -244,7 +244,7 @@
       >
         <thead>
           <tr>
-            <th class="text-left hide-on-small-screen column-divider">No.</th>
+           
             <th class="text-left hide-on-small-screen column-divider">
               Documento
             </th>
@@ -259,7 +259,7 @@
             :key="index"
             class="selectFila"
           >
-            <td class="hide-on-small-screen column-divider">{{ index + 1 }}</td>
+            
             <td class="hide-on-small-screen column-divider ">
               {{ item.numeroDocumento }}
             </td>
@@ -269,7 +269,7 @@
 
             <td class="text-center column-divider hide-on-small-screen">
               <v-icon
-                class="mr-2 elevation-1"
+                class="mr-2 "
                 color="blue"
                 title="Editar"
                 style="cursor: pointer"
@@ -277,13 +277,13 @@
                   estados.formMiembros = {
                     display: true,
                     mode: 'edit',
-                    id: item.id,
+                    id: item.numeroDocumento,
                   }
                 "
                 >mdi-pencil</v-icon
               >
               <v-icon
-                class="mr-2 elevation-1"
+                class="mr-2 "
                 color="green"
                 title="Ver"
                 style="cursor: pointer"
@@ -291,13 +291,13 @@
                   estados.formMiembros = {
                     display: true,
                     mode: 'view',
-                    id: item.id,
+                    id: item.numeroDocumento,
                   }
                 "
                 >mdi-eye</v-icon
               >
               <v-icon
-                class="elevation-1"
+                class=""
                 color="#EF5350"
                 title="Eliminar"
                 style="cursor: pointer"
@@ -319,7 +319,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-icon
-                    class="mr-2 elevation-1"
+                    class="mr-2 "
                     color="blue"
                     title="Editar"
                     style="cursor: pointer"
@@ -327,13 +327,13 @@
                       estados.formMiembros = {
                         display: true,
                         mode: 'edit',
-                        id: item.id,
+                        id: item.numeroDocumento,
                       }
                     "
                     >mdi-pencil</v-icon
                   >
                   <v-icon
-                    class="mr-2 elevation-1"
+                    class="mr-2 "
                     color="green"
                     title="Ver"
                     style="cursor: pointer"
@@ -341,13 +341,13 @@
                       estados.formMiembros = {
                         display: true,
                         mode: 'view',
-                        id: item.id,
+                        id: item.numeroDocumento,
                       }
                     "
                     >mdi-eye</v-icon
                   >
                   <v-icon
-                    class="elevation-1"
+                    class=""
                     color="#EF5350"
                     title="Eliminar"
                     style="cursor: pointer"

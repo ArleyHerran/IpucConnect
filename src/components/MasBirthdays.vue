@@ -43,12 +43,24 @@
           </template>
 
           <template v-slot:append>
-            <v-btn
-              color="blue"
-              icon="mdi-calendar-clock"
-              variant="text"
-              class=" elevation-2"
-            ></v-btn>
+            <v-menu  open-on-hover open-on-click>
+            <template v-slot:activator="{ props }">
+             
+              <v-btn
+            class="elevation-2"
+            color="blue"
+            icon="mdi-calendar-clock"
+            variant="text"
+            v-bind="props"
+          >
+          </v-btn>
+            </template>
+
+            <v-card style="margin-right: 20px; min-width: 150px;"
+        :text="per.edad2"
+        title="Edad Actual"
+      ></v-card>
+          </v-menu>
           </template>
           
         </v-list-item>
@@ -118,8 +130,8 @@ function mesFil(month) {
       nombre: persona.nombre,
       icon: persona.sexo === "Hombre" ? "mdi-face-man" : "mdi-face-woman",
       edad: formatearFechaCumpleaños(persona.fechaNacimiento),
-      color:
-        persona.sexo === "Hombre" ? "#2ECC71" : "#F0B27A",
+      color:persona.sexo === "Hombre" ? "#2ECC71" : "#F0B27A",
+      edad2:calcularEdad(persona.fechaNacimiento) + " años",
     });
   }
 
@@ -148,6 +160,31 @@ function convertirFecha(fecha) {
 
   return new Date(añoActual, mesNumero, dia);
 }
+const calcularEdad = (fn) => {
+  const fechaNacimientoArray = fn.split("-");
+  const anioNacimiento = parseInt(fechaNacimientoArray[0]);
+  const mesNacimiento = parseInt(fechaNacimientoArray[1]) - 1; // Meses en JavaScript son de 0 a 11
+  const diaNacimiento = parseInt(fechaNacimientoArray[2]);
+
+  const hoy = new Date();
+  const fechaNacimientoDate = new Date(
+    anioNacimiento,
+    mesNacimiento,
+    diaNacimiento
+  );
+
+  let edad = hoy.getFullYear() - anioNacimiento;
+
+  if (
+    hoy.getMonth() < mesNacimiento ||
+    (hoy.getMonth() === mesNacimiento && hoy.getDate() < diaNacimiento)
+  ) {
+    edad--;
+  }
+
+  return edad;
+};
+
 
 onMounted(() => {
   mesFil(new Date().getMonth() + 1);
