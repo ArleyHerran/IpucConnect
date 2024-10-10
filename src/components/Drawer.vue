@@ -85,8 +85,8 @@ const menuItems = [
   {
     color_ico: "#ffb002",
     icon: "mdi-view-dashboard",
-    title: "Dashboard ",
-    value: "Dashboard",
+    title: "MENU",
+    value: "MENU",
     active: true,
   },
   {
