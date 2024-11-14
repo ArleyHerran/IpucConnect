@@ -361,6 +361,7 @@ onMounted(() => {
 const saveMember = async () => {
   const miembro = { ...dataDefault, ...formData };
   //console.log(JSON.parse(JSON.stringify(miembro)));
+  alert("voy")
   if (!validateForm(miembro)) return;
    btnSave.value=true;
    estados.progre=true;
@@ -562,7 +563,7 @@ function validateForm(d) {
     return showWarning("El campo ¿Es usted sellado/a con el Espiritu Santo? no puede quedar vacío.");
   }
 
-  console.log()
+  //console.log()
   if (d.referenciaPastoral.length > 500) {
       return showWarning(
         "El campo referencia pastoral no puede  tener más de 400 caracteres."

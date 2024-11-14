@@ -143,74 +143,12 @@
           <input
             v-model="search"
             type="text"
-            placeholder="Buscar: nombre o No.documento"
+            placeholder="Buscar por nombre "
             maxlength="5"
           />
           <label> </label>
         </div>
-        <v-menu v-model="menu" :close-on-content-click="false" location="end">
-          <template v-slot:activator="{ props }">
-            <v-badge
-              v-bind="props"
-              :content="displayedItems.length"
-              v-if="filtro.length > 0"
-              class="mr-8 elevation-1"
-              color="#263238"
-            >
-              <v-icon class="icon" color="#546E7A">mdi-filter-outline</v-icon>
-            </v-badge>
-            <v-icon
-              class="icon mr-5 elevation-1"
-              color="#546E7A"
-              v-bind="props"
-              v-if="filtro.length === 0"
-              >mdi-filter</v-icon
-            >
-          </template>
-
-          <v-card min-width="auto">
-            <v-alert-title>Filtro</v-alert-title>
-            <v-divider></v-divider>
-
-            <v-list>
-              <v-list-item style="" v-for="(i, k) in filterItems" :key="k">
-                <input
-                  type="checkbox"
-                  :id="i.title"
-                  :value="i.title"
-                  :checked="filtro.includes(i.title)"
-                  @change="toggleFilter(i.title)"
-                />
-                <label
-                  :for="i.title"
-                  style="
-                    margin-left: 8px;
-                    width: 100%;
-                    text-decoration: underline gray; /* Línea roja */
-                    text-decoration-thickness: 1px; /* Grosor de la línea */
-                    text-decoration-style: underline; /* Estilo de la línea */
-                  "
-                  >{{ i.title }}</label
-                >
-              </v-list-item>
-            </v-list>
-            <v-card-actions class="justify-center">
-              <v-btn
-                color="#78909C"
-                prepend-icon="mdi-close"
-                variant="flat"
-                @click="
-                  filtro = [];
-                  menu = false;
-                "
-                size="small"
-                style="text-transform: none"
-              >
-                Limpiar
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+       
         <v-spacer class="d-none d-sm-flex"></v-spacer>
 
         <button
@@ -225,10 +163,10 @@
         <button
           class="mb-2 mr-2 btnAdd elevation-1"
           color="primary"
-          @click="estados.formMiembros = { display: true, mode: 'add', id: '' }"
+          @click="estados.formAmigos = { display: true, mode: 'add', id: '' }"
         >
           <v-icon>mdi-plus</v-icon>
-          <span class="d-none d-sm-flex">Agregar miembro</span>
+          <span class="d-none d-sm-flex">Agregar amigo</span>
         </button>
       </v-card-text>
 
@@ -246,11 +184,11 @@
           <tr>
            
             <th class="text-left hide-on-small-screen column-divider">
-              Documento
+             Nombre
             </th>
-            <th class="text-left column-divider hide-on-small-screen">Nombre</th>
+            <th class="text-left column-divider hide-on-small-screen">Celular</th>
             <th class="text-center column-divider hide-on-small-screen">Acciones</th>
-            <th class="text-center column-divider  show-on-small-screen"><h2>Miembros</h2></th>
+            <th class="text-center column-divider  show-on-small-screen"><h2>Amigos</h2></th>
           </tr>
         </thead>
         <tbody>
@@ -260,11 +198,12 @@
             class="selectFila"
           >
             
-            <td class="hide-on-small-screen column-divider ">
-              {{ item.numeroDocumento }}
-            </td>
+           
             <td class="max-14-chars column-divider hide-on-small-screen">
               {{ formattedName(item) }}
+            </td>
+            <td class="hide-on-small-screen column-divider ">
+              {{ item.celular }}
             </td>
 
             <td class="text-center column-divider hide-on-small-screen">
@@ -274,10 +213,10 @@
                 title="Editar"
                 style="cursor: pointer"
                 @click="
-                  estados.formMiembros = {
+                  estados.formAmigos = {
                     display: true,
                     mode: 'edit',
-                    id: item.numeroDocumento,
+                    id: item.id,
                   }
                 "
                 >mdi-pencil</v-icon
@@ -288,10 +227,10 @@
                 title="Ver"
                 style="cursor: pointer"
                 @click="
-                  estados.formMiembros = {
+                  estados.formAmigos = {
                     display: true,
                     mode: 'view',
-                    id: item.numeroDocumento,
+                    id: item.id,
                   }
                 "
                 >mdi-eye</v-icon
@@ -301,20 +240,19 @@
                 color="#EF5350"
                 title="Eliminar"
                 style="cursor: pointer"
-                @click="eliminarM(item)"
+                @click="eliminarA(item)"
                 >mdi-delete</v-icon
               >
             </td>
             <td class="column-divider show-on-small-screen" style="height: auto;">
               <div>
-         
+                <v-card-title>{{ formattedName(item)}} </v-card-title>
 
-                <v-card-text style="margin-top: 0px">
-                  Nombre:{{ formattedName(item)  }}
-                </v-card-text>
-                <v-card-subtitle style="margin-top: -15px">
-                  Documento:{{ item.numeroDocumento }}
+               
+                <v-card-subtitle style="margin-top: -5px">
+                  Celular:{{ item.celular}}
                 </v-card-subtitle>
+              
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -324,10 +262,10 @@
                     title="Editar"
                     style="cursor: pointer"
                     @click="
-                      estados.formMiembros = {
+                      estados.formAmigos = {
                         display: true,
                         mode: 'edit',
-                        id: item.numeroDocumento,
+                        id: item.id,
                       }
                     "
                     >mdi-pencil</v-icon
@@ -338,10 +276,10 @@
                     title="Ver"
                     style="cursor: pointer"
                     @click="
-                      estados.formMiembros = {
+                      estados.formAmigos = {
                         display: true,
                         mode: 'view',
-                        id: item.numeroDocumento,
+                        id: item.id,
                       }
                     "
                     >mdi-eye</v-icon
@@ -351,7 +289,7 @@
                     color="#EF5350"
                     title="Eliminar"
                     style="cursor: pointer"
-                    @click="eliminarM(item)"
+                    @click="eliminarA(item)"
                     >mdi-delete</v-icon
                   >
                 </v-card-actions>
@@ -381,7 +319,7 @@ import { ref, computed, watch } from "vue";
 import { useAppStore } from "../store/app";
 import { exportDataToExcel } from "../scripts/exportExcel";
 import { filtrara, formattedName } from "../scripts/functions";
-import { eliminarM } from "../scripts/functionsFirebase";
+import { eliminarA } from "../scripts/functionsFirebase";
 import swal from "sweetalert";
 //import { useRouter } from "vue-router";
 
@@ -389,24 +327,15 @@ const estados = useAppStore();
 const currentPage = ref(1);
 const itemsPerPage = ref(20);
 const search = ref("");
-const personas = ref(estados.miembros);
+const personas = ref(estados.amigos);
 const filtro = ref([]);
-const menu = ref(false);
-const filterItems = ref([
-  { title: "Hombres" },
-  { title: "Mujeres" },
-  { title: "Ancianos" },
-  { title: "Adultos" },
-  { title: "Jovenes" },
-  { title: "Adolecentes" },
-  { title: "Niños" },
-]);
+
 const sortedItems = computed(() => {
   return filteredDesserts.value.sort((a, b) => {
-    if (a.numeroDocumento < b.numeroDocumento) {
+    if (a.id < b.id) {
       return -1;
     }
-    if (a.numeroDocumento > b.numeroDocumento) {
+    if (a.id > b.id) {
       return 1;
     }
     return 0;
@@ -422,7 +351,6 @@ const filteredDesserts = computed(() => {
   return fil.filter(
     (item) =>
       regex.test(item.nombre) ||
-      regex.test(item.numeroDocumento) ||
       regex.test(item.apellido)
   );
 });
@@ -451,7 +379,7 @@ function toggleFilter(title) {
 }
 
 watch(
-  () => estados.miembros,
+  () => estados.amigos,
   (newVal, oldVal) => {
     personas.value = newVal;
   }

@@ -18,9 +18,11 @@ export const useAppStore = defineStore("app", {
     //
     drawerDisplay: false,
     formMiembros: { display: false, mode: "add", id: "" },
+    formAmigos: { display: false, mode: "add", id: "" },
     progre: false,
     data: null,
     miembros: [],
+    amigos:[],
     birthday: [],
     solicitudes: [],
     notificaciones: { value: 0, solicitudes: 0, informacion: 0 },
@@ -38,6 +40,7 @@ export const useAppStore = defineStore("app", {
           return;
         }
         this.getMiembros(user.email);
+        this.getAmigos(user.email);
         this.getSolicitudes(user.email);
       });
     },
@@ -79,6 +82,24 @@ export const useAppStore = defineStore("app", {
         const datosJSON = JSON.stringify(personasList);
         // Guarda los datos en localStorage
          auxPersonas=datosJSON;
+      });
+    },
+    //ME TRAE LA LISTA DE AMIGOS
+    async getAmigos(email) {
+      const q = query(
+        collection(db, "Amigos"),
+        where("sede", "==", email)
+      );
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const amigos = [];
+        
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          amigos.push(data);
+        });
+
+        this.amigos = amigos;
+    
       });
     },
     //ME TRAE LA LISTA DE SOLICITUDES ENVIADAS Y RECIVIDAS

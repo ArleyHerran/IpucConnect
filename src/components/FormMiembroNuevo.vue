@@ -80,8 +80,9 @@
                 <v-col cols="12" md="3" sm="4">
                   <v-select
                     v-model="formData.rol"
-                    :items="['Pastor', 'Miembro/Simpatizante']"
+                    :items="['Pastor', 'Miembro','Converso']"
                     label="Rol"
+                    :rules="[value => value !== 'Miembro/Simpatizante' || '⚠️ Actualizar campo']"
                   ></v-select>
                 </v-col>
                 <v-col cols="12" md="3" sm="4">
@@ -386,11 +387,13 @@ watch(
         }
       }
     } else {
-      clearFormFields();
+   clearFormFields();
       formData.estado = "Activo";
     }
   }
 );
+
+
 const actualizarFormData = (newData) => {
   if (newData) {
     dataDefault.sede = auth.currentUser.email;
@@ -409,7 +412,9 @@ onMounted(() => {
 const saveMember = async () => {
   const miembro = { ...dataDefault, ...formData };
   //console.log(JSON.parse(JSON.stringify(miembro)));
+ 
   if (!validateForm(miembro)) return;
+
   btnSave.value = true;
   estados.progre = true;
   if (estados.formMiembros.mode === "add") {
@@ -484,113 +489,121 @@ function clearFormFields() {
   }
 }
 
+
+
 function validateForm(d) {
-  const showError = (message) => {
-    swal("Error!", message, "error");
+  // Función para mostrar mensajes de error con emojis
+  const showAlert = (type, message) => {
+    const icons = {
+      error: "❌ Error: ",
+      warning: "⚠️ Advertencia: ",
+      info: "ℹ️ Información: ",
+    };
+    alert(`${icons[type] || icons.info}${message}`);
     return false;
   };
 
-  const showWarning = (message) => {
-    swal("Informacion!", message, "warning");
-    return false;
-  };
-
+  // Validaciones
   if (!d.sede) {
-    return showError("Error desconocido.");
+    return showAlert("error", "Error desconocido.");
   }
 
   if (!d.tipoDocumento || d.tipoDocumento.length > 30) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo Tipo de documento no puede quedar vacío o tener más de 30 caracteres."
     );
   }
 
   if (!d.numeroDocumento || d.numeroDocumento.length > 30) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo número de documento no puede quedar vacío o tener más de 30 caracteres."
     );
   }
 
   if (!d.nombre || d.nombre.length > 40) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo nombre no puede quedar vacío o tener más de 40 caracteres."
     );
   }
 
   if (!d.apellido || d.apellido.length > 40) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo apellido no puede quedar vacío o tener más de 40 caracteres."
     );
   }
 
   if (!d.rol || d.rol.length > 40) {
-    return showWarning("El campo rol no puede quedar vacío.");
+    return showAlert("warning", "El campo rol no puede quedar vacío.");
   }
 
   if (!d.fechaNacimiento) {
-    return showWarning("El campo fecha de nacimiento no puede quedar vacío.");
+    return showAlert("warning", "El campo fecha de nacimiento no puede quedar vacío.");
   }
 
   if (!d.celular || d.celular.length > 16) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo celular no puede quedar vacío o tener más de 16 caracteres."
     );
   }
 
   if (!d.direccion || d.direccion.length > 60) {
-    return showWarning(
+    return showAlert(
+      "warning",
       "El campo dirección no puede quedar vacío o tener más de 60 caracteres."
     );
   }
+
   if (!d.nivelAcademico) {
-    return showWarning("El campo nivel academico debe ser completado");
+    return showAlert("warning", "El campo nivel académico debe ser completado.");
+  }
+  if (!d.estadoCivil) {
+    return showAlert("warning", "El campo estado civil no puede quedar vacío.");
   }
 
   if (!d.discapacitado) {
-    return showWarning(
-      "El campo ¿Tiene usted alguna discapacidad? debe ser completado"
+    return showAlert(
+      "warning",
+      "El campo ¿Tiene usted alguna discapacidad? debe ser completado."
     );
   }
 
   if (d.discapacitado === "Sí") {
     if (!d.discapacidad) {
-      return showWarning(
-        "El campo Tipo de discapacidad no puede quedar vacío."
-      );
+      return showAlert("warning", "El campo Tipo de discapacidad no puede quedar vacío.");
     }
 
     if (d.discapacidad === "Otra") {
-      if (
-        !d.descripcionDiscapacidad ||
-        d.descripcionDiscapacidad.length > 100
-      ) {
-        return showWarning(
-          "El campo Descripcion de discapacidad no puede quedar vacío o tener más de 10 caracteres."
+      if (!d.descripcionDiscapacidad || d.descripcionDiscapacidad.length > 100) {
+        return showAlert(
+          "warning",
+          "El campo Descripción de discapacidad no puede quedar vacío o tener más de 100 caracteres."
         );
       }
     }
-  } else {
   }
 
   if (!d.sexo) {
-    return showWarning("El campo sexo no puede quedar vacío.");
+    return showAlert("warning", "El campo sexo no puede quedar vacío.");
   }
 
-  if (!d.estadoCivil) {
-    return showWarning("El campo estado civil no puede quedar vacío.");
-  }
-
+  
   if (!d.esBautizado) {
-    return showWarning("El campo ¿Es usted bautizado? no puede quedar vacío.");
+    return showAlert("warning", "El campo ¿Es usted bautizado? no puede quedar vacío.");
   }
 
   if (d.esBautizado === "Sí") {
     if (!d.fechaBautismo) {
-      return showWarning("El campo fecha bautismo no puede quedar vacío.");
+      return showAlert("warning", "El campo fecha bautismo no puede quedar vacío.");
     }
 
     if (!d.nombrePastorBautismo || d.nombrePastorBautismo.length > 50) {
-      return showWarning(
+      return showAlert(
+        "warning",
         "El campo nombre del pastor que le bautizó no puede quedar vacío o tener más de 50 caracteres."
       );
     }
@@ -600,18 +613,20 @@ function validateForm(d) {
   }
 
   if (!d.espiritu) {
-    return showWarning(
-      "El campo ¿Es usted sellado/a con el Espiritu Santo? no puede quedar vacío."
+    return showAlert(
+      "warning",
+      "El campo ¿Es usted sellado/a con el Espíritu Santo? no puede quedar vacío."
     );
   }
 
-  console.log();
-  if (d.referenciaPastoral.length > 500) {
-    return showWarning(
-      "El campo referencia pastoral no puede  tener más de 400 caracteres."
+  if (d.referenciaPastoral && d.referenciaPastoral.length > 500) {
+    return showAlert(
+      "warning",
+      "El campo referencia pastoral no puede tener más de 500 caracteres."
     );
   }
 
+  // Si todas las validaciones son correctas
   return true;
 }
 

@@ -85,15 +85,22 @@ const menuItems = [
   {
     color_ico: "#ffb002",
     icon: "mdi-view-dashboard",
-    title: "MENU",
-    value: "MENU",
+    title: "Dashboard",
+    value: "Dashboard",
     active: true,
+  },
+  {
+    color_ico: "#ff4949 ",
+    icon: "mdi-account-network",
+    title: "Miembros",
+    value: "Miembros",
+    active: false,
   },
   {
     color_ico: "#4CAF50",
     icon: "mdi-account-group",
-    title: "Miembros",
-    value: "Miembros",
+    title: "Amigos",
+    value: "Amigos",
     active: false,
   },
   {
