@@ -114,3 +114,110 @@ export async function exportDataToExcel(dataDb){
       }
     });
   };
+  export async function exportDataAmigosToExcel(dataDb){
+    const exportA = await swal({
+      title: "¿ Estás seguro ?",
+      text: "Esto exportara a excel la lista de todos los amigos de la congregacion",
+      icon: "info",
+  
+      buttons: true,
+      dangerMode: true,
+    });
+  
+    if (!exportA) return;
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Amigos");
+
+    // Define las propiedades (columnas) que deseas incluir en la exportación
+    const propertiesToInclude = [
+  
+      "nombre",
+      "apellido",
+      "fechaNacimiento",
+      "celular",
+      "tieneWhatsapp",
+     "direccion",
+      "descripcion",
+    ];
+  
+    // Agrega un título a la tabla
+    const titleCell = worksheet.getCell("A1");
+    titleCell.font = { bold: true, size: 16 }; // Texto en negrita y tamaño
+    titleCell.alignment = { horizontal: "center" }; // Alineación centrada
+    // Configura los encabezados personalizados
+    const customHeaders = [
+      "Nombre",
+      "Apellido",
+      "Fecha/nacimiento",
+      "Celular",
+      "Whatsapp",
+     "Dirección",
+      "Descripción",
+    ];
+    // Agrega las columnas personalizadas a la hoja de cálculo
+    worksheet.columns = propertiesToInclude.map((prop, index) => ({
+      header: customHeaders[index], // Nombre del encabezado personalizado
+      key: prop, // Propiedad de los datos
+      width: 20, // Ancho de la columna
+    }));
+  
+    // Mapea los datos de prueba para incluir solo las propiedades deseadas
+    const data = dataDb;
+    const filteredData = data.map((item) => {
+      const filteredItem = {};
+      for (const prop of propertiesToInclude) {
+        filteredItem[prop] = item[prop];
+      }
+      return filteredItem;
+    });
+
+
+    filteredData.forEach((obj) => {
+      obj.tieneWhatsapp = obj.tieneWhatsapp ? "Sí" : "No";
+    });
+    
+    console.log(filteredData);
+    // Agrega los encabezados en la segunda fila con negrita y formato
+    const headerRow = worksheet.addRow(customHeaders);
+    headerRow.eachCell({ includeEmpty: true }, (cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "2291A3" }, // Fondo azul
+      };
+      cell.font = {
+        bold: true, // Negrita
+        color: { argb: "FFFFFF" }, // Letra blanca
+      };
+    });
+  
+    // Agrega los datos filtrados a la hoja de cálculo
+    worksheet.addRows(filteredData);
+    // Aplicar bordes a todas las celdas de la tabla
+    worksheet.eachRow((row, rowNumber) => {
+      row.eachCell((cell, colNumber) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    });
+  
+    worksheet.mergeCells("A1:N1"); // Fusiona las celdas para el título
+    titleCell.value = "Amigos ipuc"; // Título
+    // Crea el archivo Excel
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      try {
+        if (buffer && buffer.length > 0) {
+          // Descarga el archivo Excel en el navegador
+          saveAs(new Blob([buffer]), "AmigosIpuc.xlsx");
+        } else {
+          console.error("El archivo Excel está vacío.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    });
+  };

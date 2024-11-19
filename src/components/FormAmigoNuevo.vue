@@ -29,17 +29,36 @@
               clearable
             />
             <v-text-field
+  label="Fecha de nacimiento"
+  v-model="form.fechaNacimiento"
+  type="date"
+  outlined
+  clearable
+  hint="La fecha nacimiento es opcional"
+  persistent-hint
+  style="margin-bottom: 12px;"
+/>
+            <v-text-field
               label="Celular"
               v-model="form.celular"
               :rules="[rules.required, rules.isNumber, rules.maxLength(15)]"
+              type="number"
               outlined
               clearable
             />
+          
             <v-checkbox label="Tiene WhatsApp" v-model="form.tieneWhatsapp" />
+            <v-text-field
+              label="Dirección"
+              v-model="form.direccion"
+              :rules="[rules.required, rules.maxLength(150)]"
+              outlined
+              clearable
+            />
             <v-textarea
               label="Descripción"
               v-model="form.descripcion"
-              :rules="[rules.required, rules.maxLength(150)]"
+              :rules="[rules.required, rules.maxLength(500)]"
               outlined
               clearable
             />
@@ -95,8 +114,10 @@ import swal from "sweetalert";
     fechaR:'',
     nombre: '',
     apellido: '',
+    fechaNacimiento:'',
     celular: '',
     tieneWhatsapp: false,
+    direccion:'',
     descripcion: '',
   });
  
@@ -139,7 +160,8 @@ import swal from "sweetalert";
       const objet1 = estados.amigos.find(
         (objeto) => objeto.id === newData.id
       );
-
+      form.direccion="";
+      form.fechaNacimiento="";
       for (const prop in form) {
         if (objet1.hasOwnProperty(prop)) {
           form[prop] = objet1[prop];

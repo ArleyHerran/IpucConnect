@@ -143,7 +143,7 @@
           <input
             v-model="search"
             type="text"
-            placeholder="Buscar: nombre o No.documento"
+            placeholder="Nombre o No.documento"
             maxlength="5"
           />
           <label> </label>

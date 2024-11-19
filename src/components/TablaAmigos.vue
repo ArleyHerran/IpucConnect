@@ -154,7 +154,7 @@
         <button
           class="mb-2 mr-2 btnExcel elevation-1 d-none d-sm-flex"
           color="success"
-          @click="exportDataToExcel(displayedItems)"
+          @click="exportDataAmigosToExcel(displayedItems)"
         >
           <v-icon>mdi-file-excel</v-icon>
           <span>Exportar a Excel</span>
@@ -317,7 +317,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useAppStore } from "../store/app";
-import { exportDataToExcel } from "../scripts/exportExcel";
+import { exportDataAmigosToExcel } from "../scripts/exportExcel";
 import { filtrara, formattedName } from "../scripts/functions";
 import { eliminarA } from "../scripts/functionsFirebase";
 import swal from "sweetalert";
