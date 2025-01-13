@@ -1,5 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
+import defaultImg from '@/assets/defaultImg.png';
 import {
   doc,
   setDoc,
@@ -17,8 +18,11 @@ export const useAppStore = defineStore("app", {
   state: () => ({
     //
     drawerDisplay: false,
-    formMiembros: { display: false, mode: "add", id: "" },
+    formMiembros:{display: false, mode: "add", id: ""},
+    viewRegistro: {display: false, id: "" },
     formAmigos: { display: false, mode: "add", id: "" },
+    selectImg:{display:false,img:null,urlImg:defaultImg},
+    tomarFoto:false,
     progre: false,
     data: null,
     miembros: [],

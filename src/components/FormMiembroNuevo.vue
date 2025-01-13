@@ -4,45 +4,119 @@
       v-model="estados.formMiembros.display"
       transition="dialog-bottom-transition"
       fullscreen
+      persistent
     >
-
       <v-card>
-        
-
-        <v-card-title class="dialog-title" style=" background: #ECEFF1;">
-            <div style="display: flex; ">
-                <h2>
-                    {{
-            estados.formMiembros.mode == "add"
-              ? "Registrar Miembro"
-              : estados.formMiembros.mode == "edit"
-              ? "Editar Miembro"
-              : estados.formMiembros.mode == "view"
-              ? "Vista"
-              : "Texto por defecto"
-          }}
-                </h2>
-                <v-spacer></v-spacer>
-          <v-btn
-            @click="estados.formMiembros.display = false"
-            append-icon="mdi-close"
-            variant="text"
-            class="text-none"
-          >
-            Cerrar
-          </v-btn>
-            </div>
-          
-
-
+        <v-card-title
+          class="dialog-title elevation-4"
+          style="background: #eceff1"
+        >
+          <div style="display: flex">
+            <h2>
+              {{ estados.formMiembros.mode === "add" ? "Registro" : "Editar" }}
+            </h2>
+            <v-spacer></v-spacer>
+            <v-btn
+              @click="estados.formMiembros.display = false"
+              append-icon="mdi-close"
+              variant="text"
+              class="text-none"
+            >
+              Cerrar
+            </v-btn>
+          </div>
         </v-card-title>
         <v-card-text>
-          <v-form ref="form" @submit="saveMember">
+          <v-form ref="form1" @submit="saveMember">
             <!-- Información Personal -->
+            <section
+              class="sectionA d-flex flex-column align-center justify-center"
+              style="width: 250px; margin: auto; margin-bottom: 26px"
+            >
+              <h2 class="mb-4">Fotografía</h2>
+
+              <v-badge
+                v-if="estados.selectImg.img !== null"
+                overlap
+                color="error"
+              >
+                <template #badge>
+                  <v-icon
+                    icon="mdi-close"
+                    size="small"
+                    @click="eliminarImg"
+                    style="cursor: pointer"
+                  ></v-icon>
+                </template>
+                <!-- Imagen que se amplía al hacer clic -->
+                <v-avatar
+                  :image="estados.selectImg.urlImg"
+                  size="120"
+                  style="cursor: pointer"
+                  @click="ampliarImagen = true"
+                ></v-avatar>
+              </v-badge>
+              <v-avatar
+                v-if="estados.selectImg.img == null"
+                :image="estados.selectImg.urlImg"
+                size="120"
+                style="cursor: pointer"
+                @click="ampliarImagen = true"
+              ></v-avatar>
+
+              <div class="d-flex justify-space-between align-center">
+                <div class="text-center mx-2">
+                  <v-btn
+                    size="x-small"
+                    class="mt-2"
+                    icon
+                    @click="estados.selectImg.display = true"
+                  >
+                    <v-icon>mdi-folder-image</v-icon>
+                    <!-- Ícono para "Seleccionar foto" -->
+                  </v-btn>
+                  <div style="font-size: 10px; margin-top: 2px; color: gray">
+                    Seleccionar archivo
+                  </div>
+                </div>
+
+                <div class="text-center mx-2">
+                  <v-btn
+                    size="x-small"
+                    class="mt-2"
+                    icon
+                    @click="estados.tomarFoto = true"
+                  >
+                    <v-icon>mdi-camera</v-icon>
+                    <!-- Ícono para "Tomar foto" -->
+                  </v-btn>
+                  <div style="font-size: 10px; margin-top: 2px; color: gray">
+                    Tomar foto
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal para la imagen ampliada -->
+              <v-dialog v-model="ampliarImagen" max-width="300px">
+                <v-card>
+                  <v-img
+                    :src="estados.selectImg.urlImg"
+                    aspect-ratio="1"
+                  ></v-img>
+                  <v-card-actions>
+                    <v-btn text color="primary" @click="ampliarImagen = false">
+                      Cerrar
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </section>
+
+            <!-- Informacion personal -->
             <section class="sectionA">
               <h2>Información Personal</h2>
               <v-row>
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-select
                     v-model="formData.tipoDocumento"
                     :items="[
@@ -52,171 +126,421 @@
                       'Cedula Extrangera',
                     ]"
                     label="Tipo de documento"
+                    :rules="createValidationRules(true, 30)"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-text-field
                     :disabled="estados.formMiembros.mode == 'edit'"
                     v-model="formData.numeroDocumento"
                     label="Número de documento"
                     type="number"
-                    required
+                    :rules="[
+    ...createValidationRules(true, 30),
+    value => /^\d*$/.test(value) || 'Solo se permiten números del 0 al 9. sin puntos ni comas'
+  ]"
                   ></v-text-field>
                 </v-col>
 
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-text-field
                     v-model="formData.nombre"
                     label="Nombre"
+                    :rules="createValidationRules(true, 30)"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-text-field
                     v-model="formData.apellido"
                     label="Apellido"
+                    :rules="createValidationRules(true, 30)"
                   ></v-text-field>
                 </v-col>
 
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-select
                     v-model="formData.rol"
-                    :items="['Pastor', 'Miembro','Converso']"
+                    :items="['Pastor', 'Miembro', 'Converso']"
                     label="Rol"
-                    :rules="[value => value !== 'Miembro/Simpatizante' || '⚠️ Actualizar campo']"
+                    :rules="createValidationRules(true, 30)"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-select
                     v-model="formData.estado"
                     :items="['Activo', 'Inhabilitado']"
                     label="Estado"
-                    :disabled="estados.formMiembros.mode !== 'edit'"
+                    :disabled="true"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" md="3" sm="4">
-                  <div class="date-input" cols="12" md="3" sm="4">
-                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                    <input
-                      type="date"
-                      v-model="formData.fechaNacimiento"
-                      id="fechaNacimiento"
-                    />
-                  </div>
+                <v-col cols="12" md="4" sm="6">
+                  <v-text-field
+                    v-model="formData.fechaNacimiento"
+                    label="Fecha de Nacimiento"
+                    type="date"
+                    :rules="createValidationRules(true, 30)"
+                    outlined
+                    dense
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-text-field
+                    v-model="formData.lugarNacimineto"
+                    label="Lugar de nacimiento"
+                    :rules="createValidationRules(true, 30)"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </section>
-
             <!-- Contacto -->
             <section class="sectionA">
               <h2>Contacto</h2>
 
               <v-row>
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
                   <v-text-field
                     v-model="formData.celular"
                     label="Celular"
                     type="number"
+                    :rules="createValidationRules(true, 12, false)"
                   ></v-text-field>
                 </v-col>
-
-                <v-col cols="12" md="3" sm="4">
+                <v-col cols="12" md="4" sm="6">
+                  <v-text-field
+                    v-model="formData.email"
+                    label="Correo"
+                    type="email"
+                    :rules="[
+    value => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Ingrese un correo electrónico válido.'
+  ]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
                   <v-text-field
                     v-model="formData.direccion"
                     label="Dirección"
+                    :rules="createValidationRules(false, 50, false)"
                   ></v-text-field>
                 </v-col>
               </v-row>
             </section>
-              <!-- Cuestionario -->
-              <section class="sectionA">
-                <h2>Cuestionario</h2>
+            <!-- Cuestionario -->
+            <section class="sectionA">
+              <h2>Cuestionario</h2>
+              <v-row>
+                <v-col cols="12" md="4" sm="6">
+                  <v-select
+                    v-model="formData.nivelAcademico"
+                    :items="nivelesAcademicos"
+                    label="Nivel académico"
+                    :rules="createValidationRules(true, 50, false)"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-text-field
+                    v-model="formData.ocupacion"
+                    label="Ocupación"
+                    type="txt"
+                    :rules="createValidationRules(true, 70, false)"
+                  ></v-text-field>
+                </v-col>
 
-                <v-row>
-                  <v-col cols="12" md="3" sm="4">
-                    <v-select
-                      v-model="formData.nivelAcademico"
-                      :items="nivelesAcademicos"
-                      label="Nivel académico"
-                    ></v-select>
-                  </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-select
+                    v-model="formData.estadoCivil"
+                    :items="[
+                      'Casado/a',
+                      'Soltero/a',
+                      'Union libre',
+                      'Viudo/a',
+                      'Divorciado/a',
+                    ]"
+                    label="Estado Civil"
+                    :rules="createValidationRules(true, 30, false)"
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="4" sm="6"
+                  v-if="
+                    formData.estadoCivil === 'Casado/a' ||
+                    formData.estadoCivil === 'Union libre'
+                  "
+                >
+                  <v-text-field
+                    v-model="formData.nombreConyuge"
+                    label="Nombre del conyuge"
+                    type="txt"
+                    :rules="
+                      formData.estadoCivil === 'Casado/a' ||
+                      formData.estadoCivil === 'Union libre'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  ></v-text-field>
+                </v-col>
 
-                  <v-col cols="12" md="3" sm="4">
-                    <v-select
-                  v-model="formData.estadoCivil"
-                  :items="['Casado/a', 'Soltero/a', 'Viudo/a', 'Divorciado/a']"
-                  label="Estado Civil"
-                ></v-select>
-                  </v-col>
-                </v-row>
+                <v-col cols="12" md="4" sm="6">
+                  <v-text-field
+                    v-model="hijo.text"
+                    label="Nombre de hijos"
+                    required
+                  >
+                    <template #append>
+                      <v-btn
+                        :loading="isLoading"
+                        class="flex-grow-1"
+                        height="48"
+                        :color="hijo.text !== '' ? 'success' : ''"
+                        @click="agregarHijo"
+                      >
+                        <v-icon icon="mdi-check"></v-icon>
+                      </v-btn>
+                    </template>
+                  </v-text-field>
+                  <v-chip-group filter>
+                    <v-chip
+                      v-for="(hijo, index) in formData.listaHijos"
+                      :key="index"
+                      :color="index === editedIndex ? editedColor : ''"
+                    >
+                      {{ hijo.text }}
+                      <v-icon @click="eliminarHijo(index)">mdi-close</v-icon>
+                    </v-chip>
+                  </v-chip-group>
+                </v-col>
 
-                <v-row>
-                  <v-col cols="12" md="3" sm="4">
-                    <v-radio-group
-                  v-model="formData.discapacitado">
-                  <p>¿Tiene usted alguna discapacidad?</p>
-                  <v-radio label="Sí" value="Sí"></v-radio>
-                  <v-radio label="No" value="No"></v-radio>
-                </v-radio-group>
-                  </v-col>
-
-                  <v-col cols="12" md="3" sm="4"> </v-col>
-                </v-row>
-               
-
-                <v-select
-                  v-if="formData.discapacitado === 'Sí'"
-                  v-model="formData.discapacidad"
-                  :items="tiposDiscapacidad"
-                  label="Tipo de discapacidad"
-                ></v-select>
-
+                <v-col
+                  cols="12"
+                  md="4" sm="6"
+                  v-if="formData.estadoCivil === 'Casado/a'"
+                >
+                  <v-select
+                    v-model="formData.enteMatrimonial"
+                    :items="['Por Notaria', 'Por la IPUC']"
+                    label="Ente matrimonial"
+                    :rules="
+                      formData.estadoCivil === 'Casado/a'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="4" sm="6"
+                  v-if="formData.estadoCivil === 'Divorciado/a'"
+                >
+                  <v-radio-group
+                    v-model="formData.tribunalEclesiastico"
+                    inline
+                    :rules="
+                      formData.estadoCivil === 'Divorciado/a'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  >
+                    <p>¿Pasó por Tribunal Eclesiástico de la Ipuc?</p>
+                    <div style="display: flex">
+                      <v-radio label="Sí" value="Sí"></v-radio>
+                      <v-radio label="No" value="No"></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="4" sm="6"
+                  v-if="formData.tribunalEclesiastico === 'Sí'"
+                >
+                  <v-radio-group
+                    v-model="formData.conceptoTribunal"
+                    inline
+                    :rules="
+                      formData.tribunalEclesiastico === 'Sí'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  >
+                    <p>¿Cual es el concepto del tribunal Eclesiástico</p>
+                    <div style="display: flex">
+                      <v-radio label="Favorable" value="Favorable"></v-radio>
+                      <v-radio
+                        label="Desfavorable"
+                        value="Desfavorable"
+                      ></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="4" sm="6"
+                  v-if="formData.tribunalEclesiastico === 'Sí'"
+                >
                 <v-text-field
+                v-if="estados.formMiembros.modo === 'edit'"
+                    label="Soporte actual"
+                    accept=".pdf"
+                    v-model="soporteTribunaln"
+                    outlined
+                    dense
+                    disabled
+                  ></v-text-field>
+                  <v-file-input
+                  :label="formData.soporteTribunal ? 'Cambiar soporte' : 'Adjuntar soporte Eclesiástico'"
+                    accept=".pdf"
+                    v-model="soporteTribunal"
+                    outlined
+                    dense
+                  ></v-file-input>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-radio-group
+                    v-model="formData.discapacitado"
+                    inline
+                    :rules="createValidationRules(true, 30, false)"
+                  >
+                    <p>¿Tiene usted alguna discapacidad?</p>
+                    <div style="display: flex">
+                      <v-radio label="Sí" value="Sí"></v-radio>
+                      <v-radio label="No" value="No"></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
+                  v-if="formData.discapacitado === 'Sí'"
+                >
+                  <v-select
+                    v-model="formData.discapacidad"
+                    :items="tiposDiscapacidad"
+                    label="Tipo de discapacidad"
+                    :rules="
+                      formData.discapacitado === 'Sí'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  ></v-select>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
                   v-if="formData.discapacidad === 'Otra'"
-                  v-model="formData.descripcionDiscapacidad"
-                  label="Descripcion de Discapacidad"
-                ></v-text-field>
-                
-                <v-radio-group v-model="formData.sexo" label="Sexo">
-                  <v-radio label="Hombre" value="Hombre"></v-radio>
-                  <v-radio label="Mujer" value="Mujer"></v-radio>
-                </v-radio-group>
+                >
+                  <v-text-field
+                    v-model="formData.descripcionDiscapacidad"
+                    label="Descripcion de Discapacidad"
+                    :rules="
+                      formData.discapacidad === 'Otra'
+                        ? createValidationRules(true, 130)
+                        : []
+                    "
+                  ></v-text-field>
+                </v-col>
 
-               
-              
-
-              <v-radio-group
-                v-model="formData.esBautizado"
-                
-              >
-              <p>¿Es usted bautizado/a?</p>
-                <v-radio label="Sí" value="Sí"></v-radio>
-                <v-radio label="No" value="No"></v-radio>
-              </v-radio-group>
-
-              <div class="date-input" v-if="formData.esBautizado === 'Sí'">
-                <label for="fechaBautismo">Fecha de bautismo:</label>
-                <input
-                  type="date"
-                  v-model="formData.fechaBautismo"
-                  id="fechaBautismo"
-                />
-              </div>
-
-              <v-text-field
-                v-if="formData.esBautizado === 'Sí'"
-                v-model="formData.nombrePastorBautismo"
-                label="Nombre del pastor que lo bautizó"
-              ></v-text-field>
-
-              <v-radio-group
-              style="white-space: normal; overflow-wrap: break-word; "
-                v-model="formData.espiritu"
-            
-              >
-              <p>¿Es usted sellado/a con el Espiritu Santo?</p>
-                <v-radio label="Sí" value="Sí"></v-radio>
-                <v-radio label="No" value="No"></v-radio>
-              </v-radio-group>
+                <v-col cols="12" md="4" sm="6">
+                  <v-radio-group
+                    v-model="formData.sexo"
+                    inline
+                    :rules="createValidationRules(true, 30, false)"
+                  >
+                    <p class="mb-2">¿Cual es el sexo?</p>
+                    <div style="display: flex">
+                      <v-radio label="Hombre" value="Hombre"></v-radio>
+                      <v-radio label="Mujer" value="Mujer"></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-radio-group
+                    v-model="formData.esBautizado"
+                    inline
+                    :rules="createValidationRules(true, 30, false)"
+                  >
+                    <p>¿Es usted bautizado/a?</p>
+                    <div style="display: flex">
+                      <v-radio label="Sí" value="Sí"></v-radio>
+                      <v-radio label="No" value="No"></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
+                  v-if="formData.esBautizado === 'Sí'"
+                >
+                  <v-text-field
+                    v-model="formData.nombrePastorBautismo"
+                    label="Nombre del pastor que lo bautizó"
+                    :rules="
+                      formData.esBautizado === 'Sí'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
+                  v-if="formData.esBautizado === 'Sí'"
+                >
+                  <v-text-field
+                    v-model="formData.fechaBautismo"
+                    label="Fecha de Bautizmo"
+                    type="date"
+                    :rules="
+                      formData.esBautizado === 'Sí'
+                        ? createValidationRules(true, 30)
+                        : []
+                    "
+                    outlined
+                    dense
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
+                  v-if="formData.esBautizado === 'Sí'"
+                >
+                  <v-text-field
+                    v-model="formData.lugarBautismo"
+                    label="Lugar de  bautismo"
+                    :rules="
+                      formData.esBautizado === 'Sí'
+                        ? createValidationRules(true, 50)
+                        : []
+                    "
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" sm="6">
+                  <v-radio-group
+                    v-model="formData.espiritu"
+                    inline
+                    :rules="createValidationRules(true, 30, false)"
+                  >
+                    <p>¿Es usted sellado/a con el Espiritu Santo?</p>
+                    <div style="display: flex">
+                      <v-radio label="Sí" value="Sí"></v-radio>
+                      <v-radio label="No" value="No"></v-radio>
+                    </div>
+                  </v-radio-group>
+                </v-col>
+                <v-col
+                  cols="12" md="4" sm="6"
+                  v-if="formData.espiritu === 'Sí'"
+                >
+                  <v-text-field
+                    v-model="formData.fechaEspiritu"
+                    label="Fecha de Recepción Espíritu Santo"
+                    type="date"
+                    :rules="
+                      formData.espiritu === 'Sí'
+                        ? createValidationRules(true, 30)
+                        : []
+                    "
+                    outlined
+                    dense
+                    clearable
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </section>
 
             <!-- Cargos -->
@@ -248,13 +572,11 @@
               </v-chip-group>
 
               <v-textarea
-              v-model="formData.referenciaPastoral"
-              label="Referencia Pastoral"
-              counter="500"
-            ></v-textarea>
+                v-model="formData.referenciaPastoral"
+                label="Referencia Pastoral"
+                counter="500"
+              ></v-textarea>
             </section>
-
-            
           </v-form>
         </v-card-text>
         <v-card-actions class="dialog-actions">
@@ -270,15 +592,20 @@
           <v-btn
             color="primary"
             @click="saveMember"
-            v-if="estados.formMiembros.mode !== 'view'"
+            v-if="estados.formMiembros.mode === 'add'"
             :disabled="btnSave"
             style="text-transform: none"
           >
-            {{
-              estados.formMiembros.mode === "add"
-                ? "Guardar"
-                : "Guardar Cambios"
-            }}
+            Guardar
+          </v-btn>
+          <v-btn
+            color="primary"
+            @click="saveMember"
+            v-if="estados.formMiembros.mode === 'edit'"
+            :disabled=" JSON.stringify(registroSelected) === JSON.stringify(formData)"
+            style="text-transform: none"
+          >
+            Guardar cambios
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -286,7 +613,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch, onMounted, computed  } from "vue";
 import { useAppStore } from "../store/app";
 import {
   collection,
@@ -299,23 +626,44 @@ import {
   where,
   serverTimestamp,
 } from "firebase/firestore";
+import { uploadFile } from "../scripts/subirFiles.js";
+import defaultImg from "@/assets/defaultImg.png";
 import { auth, db } from "../ConfigFirebase";
 import swal from "sweetalert";
 const estados = useAppStore();
-
 const btnSave = ref(false);
 const editMode = ref(false);
+const ampliarImagen = ref(false); // Controla la visibilidad del modal
+const form1 = ref(null);
+const soporteTribunal = ref(null);
 
+// Propiedad computada para obtener el nombre del archivo
+const soporteTribunaln = computed(() => {
+  if (formData.soporteTribunal) {
+    // Extraer solo el nombre del archivo de la URL
+    const parts = formData.soporteTribunal.split("/");
+    return parts[parts.length - 1].split("?")[0]; // Eliminar parámetros como `?alt=media`
+  }
+  return "No se ha cargado ningún archivo"; // Mensaje por defecto
+});
+var registroSelected = reactive({});
 const dataDefault = reactive({
-  sede: "",
-  datosRegistro: {
-    timestamp: serverTimestamp(),
-    sede: {},
-  },
-  historiaTraslados: [],
+  
 });
 
 const formData = reactive({
+  //Datos por defecto
+  historiaCargos: [],
+  sede: "",
+  datosRegistro: {
+    timestamp: null,
+    sede: {},
+  },
+  historiaTraslados: [],
+
+//formulario
+
+  foto: "", // Ruta o URL del avatar
   estado: "Activo",
   tipoDocumento: "",
   numeroDocumento: "",
@@ -323,20 +671,30 @@ const formData = reactive({
   apellido: "",
   rol: "",
   fechaNacimiento: "",
+  lugarNacimineto: "", //nuevo campo
   celular: "",
+  email: "", //nuevo campo
   direccion: "",
   nivelAcademico: "",
+  ocupacion: "", //Nuevo campo
   discapacitado: "",
   discapacidad: "",
   descripcionDiscapacidad: "",
   sexo: "",
   estadoCivil: "",
-  esBautizado: "",
+  enteMatrimonial: "", ///N
+  tribunalEclesiastico: "", //N
+  conceptoTribunal: "", //N
+  soporteTribunal: null, //N
+  nombreConyuge: "",
+  listaHijos: [], //N
+  esBautizado: false,
   fechaBautismo: "",
+  lugarBautismo: "", //N
   nombrePastorBautismo: "",
   espiritu: "",
+  fechaEspiritu: "", //N
   cargos: [],
-  historiaCargos: [],
   referenciaPastoral: "",
 });
 
@@ -358,72 +716,144 @@ const tiposDiscapacidad = [
   "Intelectual",
   "Otra",
 ];
-// Usamos watch para observar cambios en estados.data y actualizar formData
-watch(
-  () => estados.data,
-  (newData) => {
-    actualizarFormData(newData);
-  }
-);
 
-watch(
+
+//Escuchar variable de estado del formulario
+ watch(
   () => estados.formMiembros,
   (newData) => {
-    
-    
-  
-    if (
-      newData.mode == "view" ||
-      (newData.mode == "edit" && newData.id != "")
-    ) {
-      // Utiliza el método find para buscar el objeto por su ID
-      const objet1 = estados.miembros.find(
-        (objeto) => objeto.numeroDocumento === newData.id
-      );
-
-      for (const prop in formData) {
-        if (objet1.hasOwnProperty(prop)) {
-          formData[prop] = objet1[prop];
-        }
-      }
-    } else {
-   clearFormFields();
+      eliminarImg();
+      clearFormFields();
       formData.estado = "Activo";
+   
+     
+    if (newData.mode === "edit") {
+     
+      const registro = estados.miembros.find(
+        (item) => item.numeroDocumento === newData.id
+      );
+     
+      // Asignar los valores de objetoA a objetoB solo para las propiedades comunes
+      Object.keys(registro).forEach((key) => {
+        if (formData.hasOwnProperty(key)) {
+          formData[key] = registro[key]; // Asigna el valor solo si la propiedad existe en objetoB
+        }
+      });
+
+      if(formData.foto===""){ estados.selectImg.urlImg=defaultImg}else{
+      estados.selectImg.urlImg=formData.foto;}
+     
     }
   }
 );
 
-
-const actualizarFormData = (newData) => {
-  if (newData) {
-    dataDefault.sede = auth.currentUser.email;
-    dataDefault.datosRegistro.sede = newData;
-
-    // También puedes actualizar otras propiedades aquí si es necesario
-  }
-};
-
 // Ejecutar cuando el componente se monta
 onMounted(() => {
-  actualizarFormData(estados.data);
+  if (estados.data) {
+  }
 });
-// Definimos una función para actualizar dataDefault
 
 const saveMember = async () => {
-  const miembro = { ...dataDefault, ...formData };
-  //console.log(JSON.parse(JSON.stringify(miembro)));
- 
-  if (!validateForm(miembro)) return;
+  // Realiza la validación
+  const isValid = await form1.value.validate();
+  if (!isValid.valid) {
+    swal(
+      "Validación requerida",
+      "Hay uno o más campos vacíos. Por favor, revisa el formulario.",
+      "error"
+    );
 
+    return; // Si no es válido, no continua
+  }
+
+  // Habilitar el botón de guardar y mostrar el progreso
   btnSave.value = true;
   estados.progre = true;
-  if (estados.formMiembros.mode === "add") {
-    const resultado = await buscarV(miembro.numeroDocumento);
-    if (resultado) return;
-    guardarRegistro(miembro);
-  } else {
-    editar();
+  // Actualiza el timestamp antes de guardar
+
+ 
+ 
+
+  // Verifica si se seleccionó una imagen para subir
+  if (estados.selectImg.img != null) {
+    const fileUP = estados.selectImg.img;
+    const customName = formData.numeroDocumento + ".jpg"; // Nombre para el archivo
+    const path = "FotosMiembros/" + customName; // Carpeta en Firebase Storage
+    const newImg = new File([fileUP], customName, { type: fileUP.type });
+
+    // Espera a que la imagen se suba antes de continuar
+    const [uploadSuccess, downloadURLOrError] = await uploadFile(path, newImg);
+
+    if (!uploadSuccess) {
+      //console.error("Error al subir la imagen:", downloadURLOrError);
+      swal(
+        "Error",
+        "Hubo un problema al subir la imagen. Inténtalo de nuevo.",
+        "error"
+      );
+      return; // Detiene la función si la subida de la imagen falla
+    }
+
+    // Si la subida fue exitosa, se guarda la URL de la imagen
+    formData.foto = downloadURLOrError;
   }
+
+  if (soporteTribunal.value != null) {
+    const file = soporteTribunal.value[0];
+    // Validar que el archivo sea Word (.docx) o PDF (.pdf)
+    const allowedExtensions = [".pdf"];
+    const fileExtension = file.name
+      .slice(file.name.lastIndexOf("."))
+      .toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      swal(
+        "Tipo de archivo no permitido",
+        "Solo se permiten archivos Word (.docx) o PDF (.pdf).",
+        "error"
+      );
+      return; // Si el archivo no es válido, no continúa
+    }
+
+    const customName = formData.numeroDocumento + fileExtension; // Nombre para el archivo con la extensión correcta
+    const path = "SoportesTribunal/" + customName; // Carpeta en Firebase Storage
+    const newImg = new File([file], customName, { type: file.type });
+
+    // Espera a que el archivo se suba antes de continuar
+    const [uploadSuccess, downloadURLOrError] = await uploadFile(path, newImg);
+
+    if (!uploadSuccess) {
+      console.error("Error al subir el archivo:", downloadURLOrError);
+      swal(
+        "Error",
+        "Hubo un problema al subir el archivo. Inténtalo de nuevo.",
+        "error"
+      );
+      return; // Detiene la función si la subida del archivo falla
+    }
+
+    // Si la subida fue exitosa, se guarda la URL del archivo
+   formData.soporteTribunal = downloadURLOrError;
+  }
+  
+
+
+
+  if(estados.formMiembros.mode==="add"){
+   formData.datosRegistro.timestamp = serverTimestamp();
+    formData.sede = auth.currentUser.email;
+      formData.datosRegistro.sede = estados.data;
+    //console.log(formData);
+    const resultado = await buscarV(miembro.numeroDocumento);
+  if (resultado) return; // Si ya existe, no continua
+  guardarRegistro(miembro);
+  }else{
+  
+  // console.log(formData);
+    editar() ;
+  }
+ 
+ 
 };
 
 //Permite guardar el registro por primera vez en firebase
@@ -447,7 +877,7 @@ async function guardarRegistro(d) {
     );
   }
 }
-//Permite guardar modificacion de cualquier miembro
+
 async function editar() {
   try {
     const miembro = doc(db, "Membresia", estados.formMiembros.id);
@@ -489,166 +919,56 @@ function clearFormFields() {
   }
 }
 
-
-
-function validateForm(d) {
-  // Función para mostrar mensajes de error con emojis
-  const showAlert = (type, message) => {
-    const icons = {
-      error: "❌ Error: ",
-      warning: "⚠️ Advertencia: ",
-      info: "ℹ️ Información: ",
-    };
-    alert(`${icons[type] || icons.info}${message}`);
-    return false;
-  };
-
-  // Validaciones
-  if (!d.sede) {
-    return showAlert("error", "Error desconocido.");
-  }
-
-  if (!d.tipoDocumento || d.tipoDocumento.length > 30) {
-    return showAlert(
-      "warning",
-      "El campo Tipo de documento no puede quedar vacío o tener más de 30 caracteres."
-    );
-  }
-
-  if (!d.numeroDocumento || d.numeroDocumento.length > 30) {
-    return showAlert(
-      "warning",
-      "El campo número de documento no puede quedar vacío o tener más de 30 caracteres."
-    );
-  }
-
-  if (!d.nombre || d.nombre.length > 40) {
-    return showAlert(
-      "warning",
-      "El campo nombre no puede quedar vacío o tener más de 40 caracteres."
-    );
-  }
-
-  if (!d.apellido || d.apellido.length > 40) {
-    return showAlert(
-      "warning",
-      "El campo apellido no puede quedar vacío o tener más de 40 caracteres."
-    );
-  }
-
-  if (!d.rol || d.rol.length > 40) {
-    return showAlert("warning", "El campo rol no puede quedar vacío.");
-  }
-
-  if (!d.fechaNacimiento) {
-    return showAlert("warning", "El campo fecha de nacimiento no puede quedar vacío.");
-  }
-
-  if (!d.celular || d.celular.length > 16) {
-    return showAlert(
-      "warning",
-      "El campo celular no puede quedar vacío o tener más de 16 caracteres."
-    );
-  }
-
-  if (!d.direccion || d.direccion.length > 60) {
-    return showAlert(
-      "warning",
-      "El campo dirección no puede quedar vacío o tener más de 60 caracteres."
-    );
-  }
-
-  if (!d.nivelAcademico) {
-    return showAlert("warning", "El campo nivel académico debe ser completado.");
-  }
-  if (!d.estadoCivil) {
-    return showAlert("warning", "El campo estado civil no puede quedar vacío.");
-  }
-
-  if (!d.discapacitado) {
-    return showAlert(
-      "warning",
-      "El campo ¿Tiene usted alguna discapacidad? debe ser completado."
-    );
-  }
-
-  if (d.discapacitado === "Sí") {
-    if (!d.discapacidad) {
-      return showAlert("warning", "El campo Tipo de discapacidad no puede quedar vacío.");
-    }
-
-    if (d.discapacidad === "Otra") {
-      if (!d.descripcionDiscapacidad || d.descripcionDiscapacidad.length > 100) {
-        return showAlert(
-          "warning",
-          "El campo Descripción de discapacidad no puede quedar vacío o tener más de 100 caracteres."
-        );
-      }
-    }
-  }
-
-  if (!d.sexo) {
-    return showAlert("warning", "El campo sexo no puede quedar vacío.");
-  }
-
-  
-  if (!d.esBautizado) {
-    return showAlert("warning", "El campo ¿Es usted bautizado? no puede quedar vacío.");
-  }
-
-  if (d.esBautizado === "Sí") {
-    if (!d.fechaBautismo) {
-      return showAlert("warning", "El campo fecha bautismo no puede quedar vacío.");
-    }
-
-    if (!d.nombrePastorBautismo || d.nombrePastorBautismo.length > 50) {
-      return showAlert(
-        "warning",
-        "El campo nombre del pastor que le bautizó no puede quedar vacío o tener más de 50 caracteres."
-      );
-    }
-  } else {
-    d.fechaBautismo = "";
-    d.nombrePastorBautismo = "";
-  }
-
-  if (!d.espiritu) {
-    return showAlert(
-      "warning",
-      "El campo ¿Es usted sellado/a con el Espíritu Santo? no puede quedar vacío."
-    );
-  }
-
-  if (d.referenciaPastoral && d.referenciaPastoral.length > 500) {
-    return showAlert(
-      "warning",
-      "El campo referencia pastoral no puede tener más de 500 caracteres."
-    );
-  }
-
-  // Si todas las validaciones son correctas
-  return true;
-}
-
+//Ecucha cambios en el formulario
 watch(
   () => formData,
   (newData) => {
+    // Limpiar valores relacionados con la discapacidad
     if (newData.discapacitado === "No") {
-      formData.discapacidad = "";
-      formData.descripcionDiscapacidad = "";
+      formData.discapacidad = null;
+      formData.descripcionDiscapacidad = null;
     }
 
     if (newData.discapacidad !== "Otra") {
-      formData.descripcionDiscapacidad = "";
+      formData.descripcionDiscapacidad = null;
     }
 
+    // Limpiar valores relacionados con el bautismo
     if (newData.esBautizado === "No") {
       formData.fechaBautismo = null;
-      formData.nombrePastorBautismo = "";
+      formData.nombrePastorBautismo = null;
+      formData.lugarBautismo = null;
+    }
+
+    // Limpiar valores relacionados con el Tribunal Eclesiástico
+    if (newData.tribunalEclesiastico !== "Sí") {
+      formData.conceptoTribunal = null;
+      formData.soporteTribunal = null;
+    }
+
+    // Limpiar valores relacionados con el estado civil
+    if (
+      newData.estadoCivil !== "Casado/a" &&
+      newData.estadoCivil !== "Union libre"
+    ) {
+      formData.nombreConyuge = null;
+      formData.enteMatrimonial = null;
+    }
+
+    if (newData.estadoCivil !== "Divorciado/a") {
+      formData.tribunalEclesiastico = null;
+      formData.conceptoTribunal = null;
+    }
+
+    // Limpiar valores relacionados con el Espíritu Santo
+    if (newData.espiritu !== "Sí") {
+      formData.fechaEspiritu = null;
     }
   },
-  { deep: true } // Utiliza el option 'deep' para rastrear cambios en propiedades internas
+  { deep: true } // Necesario para observar cambios dentro de un objeto anidado
 );
+
+//HAce una busqueda para verificar que no esiste un registro con ese documento
 async function buscarV(n) {
   const q = query(
     collection(db, "Membresia"),
@@ -677,6 +997,11 @@ var cargo = reactive({
   color: "green",
   fecha: new Date(),
 });
+var hijo = reactive({
+  text: "",
+  isDelet: true,
+  color: "green",
+});
 const editedIndex = ref(-1); // Variable para controlar el índice editado
 const editedColor = "green"; // Color para la nueva chip
 
@@ -697,10 +1022,61 @@ const agregarCargo = () => {
     isLoading.value = false;
   }, 500); // 2 segundos
 };
+const agregarHijo = () => {
+  isLoading.value = true; // Activar la carga al hacer clic en el icono
 
+  setTimeout(() => {
+    if (hijo.text.trim() !== "") {
+      const nuevoHijo = { ...hijo }; // Crear una copia independiente de cargo
+
+      formData.listaHijos.unshift(nuevoHijo); // Agregar al principio del array
+
+      hijo.text = ""; // Limpiar el campo después de agregar
+      editedIndex.value = 0; // Establecer el índice editado como 0 para que sea verde
+    }
+
+    isLoading.value = false;
+  }, 500); // 2 segundos
+};
 const eliminarCargo = (index) => {
   formData.cargos.splice(index, 1);
 };
+const eliminarHijo = (index) => {
+  formData.listaHijos.splice(index, 1);
+};
+
+//////////ZONA DE PRUEBAS///////
+function eliminarImg(params) {
+  estados.selectImg.img = null;
+  estados.selectImg.urlImg = defaultImg;
+}
+
+//REGLAS DE VALIDACION
+function createValidationRules(required, maxLength, esEmail) {
+  const rules = [];
+
+  if (required) {
+    rules.push((value) => !!value || "Este campo no puede estar vacío.");
+  }
+
+  if (maxLength !== null) {
+    rules.push(
+      (value) =>
+        value.length <= maxLength ||
+        `Este campo no puede tener más de ${maxLength} caracteres.`
+    );
+  }
+
+  if (esEmail) {
+    rules.push(
+      (value) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+        "Ingrese un correo electrónico válido."
+    );
+  }
+
+  return rules;
+}
 </script>
 
 <style scoped>
@@ -745,15 +1121,13 @@ const eliminarCargo = (index) => {
   margin-right: 16px; /* Espaciado entre los botones */
 }
 
-
-.sectionA{
-
-    border: 1px solid rgb(175, 173, 173);
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    -webkit-box-shadow: 3px 8px 5px -7px rgba(0,0,0,0.75);
--moz-box-shadow: 3px 8px 5px -7px rgba(0,0,0,0.75);
-box-shadow: 3px 8px 5px -7px rgba(0,0,0,0.75);
+.sectionA {
+  border: 1px solid rgb(175, 173, 173);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  -webkit-box-shadow: 3px 8px 5px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 8px 5px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 8px 5px -7px rgba(0, 0, 0, 0.75);
 }
 </style>

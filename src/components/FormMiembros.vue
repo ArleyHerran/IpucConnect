@@ -403,7 +403,6 @@ async function editar() {
   try {
     const miembro = doc(db, "Membresia", estados.formMiembros.id);
  
-
 //console.log(  {...formData})
     await updateDoc(miembro, formData);
     estados.progre=false;

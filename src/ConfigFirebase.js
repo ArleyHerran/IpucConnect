@@ -10,7 +10,8 @@ const firebaseConfig = {
   apiKey: "AIzaSyBX3pGNFs0PIRbC-6Y-xNOd4nSk00W4WdQ",
   authDomain: "sgm-pentecostal.firebaseapp.com",
   projectId: "sgm-pentecostal",
-  storageBucket: "sgm-pentecostal.appspot.com",
+  //storageBucket: "sgm-pentecostal.appspot.com",
+storageBucket: "sgm-pentecostal.firebasestorage.app",
   messagingSenderId: "940394996461",
   appId: "1:940394996461:web:b341efd6e9bdd831e7e2e4"
 };

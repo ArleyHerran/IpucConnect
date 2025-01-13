@@ -275,10 +275,10 @@
                 style="cursor: pointer"
                 @click="
                   estados.formMiembros = {
-                    display: true,
-                    mode: 'edit',
-                    id: item.numeroDocumento,
-                  }
+                        display: true,
+                        mode: 'edit',
+                        id: item.numeroDocumento,
+                      }
                 "
                 >mdi-pencil</v-icon
               >
@@ -288,9 +288,8 @@
                 title="Ver"
                 style="cursor: pointer"
                 @click="
-                  estados.formMiembros = {
+                  estados.viewRegistro = {
                     display: true,
-                    mode: 'view',
                     id: item.numeroDocumento,
                   }
                 "
@@ -330,22 +329,19 @@
                         id: item.numeroDocumento,
                       }
                     "
-                    >mdi-pencil</v-icon
-                  >
+                    >mdi-pencil</v-icon>
                   <v-icon
                     class="mr-2 "
                     color="green"
                     title="Ver"
                     style="cursor: pointer"
                     @click="
-                      estados.formMiembros = {
-                        display: true,
-                        mode: 'view',
-                        id: item.numeroDocumento,
-                      }
+                    estados.viewRegistro = {
+                    display: true,
+                    id: item.numeroDocumento,
+                  }
                     "
-                    >mdi-eye</v-icon
-                  >
+                    >mdi-eye</v-icon>
                   <v-icon
                     class=""
                     color="#EF5350"
