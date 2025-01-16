@@ -3,7 +3,7 @@
     <v-row align="center" justify="center">
       <v-card color="#F2F2F2" max-width="100%" style="border-radius:20px;">
         <v-card-title class="text-center">
-          <v-avatar image="../img/icon-ipuc.png" size="52"></v-avatar><br/>
+          <v-avatar image="../img/icon-ipuc.png" size="100"></v-avatar><br/>
           <span class="headline" style="color:#464646;">Iniciar sesión</span>
         </v-card-title>
         <v-card-text>

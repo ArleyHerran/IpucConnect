@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "cropperjs": "^1.6.2",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "firebase": "^10.3.1",

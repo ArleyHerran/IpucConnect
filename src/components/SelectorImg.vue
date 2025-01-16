@@ -40,32 +40,16 @@
 
 <script setup>
 import { ref, nextTick, onMounted } from "vue";
+import Cropper from "cropperjs"; // Importar Cropper.js desde npm
+import "cropperjs/dist/cropper.css"; // Importar los estilos desde npm
 import { useAppStore } from "../store/app";
-import {comprimirImagen} from "@/scripts/comprimirImg";// Asegúrate de importar tu función de compresión.
+import { comprimirImagen } from "@/scripts/comprimirImg"; // Asegúrate de importar tu función de compresión.
 
 const estados = useAppStore();
 // Variables reactivas
-
 const selectedImage = ref(null);
 const imageSrc = ref(null);
 let cropper = null;
-
-// Cargar la biblioteca de Cropper.js desde la CDN en onMounted
-onMounted(() => {
-  const script = document.createElement("script");
-  script.src =
-    "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js";
-  script.onload = () => {
-    //console.log("Cropper.js cargado");
-  };
-  document.head.appendChild(script);
-
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
-  document.head.appendChild(link);
-});
 
 // Métodos
 const handleFileChange = () => {
@@ -82,10 +66,10 @@ const handleFileChange = () => {
           cropper = null;
         }
 
-        // Esperar a que la imagen cargue antes de inicializar CropperJS
+        // Esperar a que la imagen cargue antes de inicializar Cropper.js
         nextTick(() => {
           const imageElement = document.querySelector(".cropper-container img");
-          cropper = new window.Cropper(imageElement, {
+          cropper = new Cropper(imageElement, {
             aspectRatio: 1, // Cuadrado
             viewMode: 1, // Ajustar la imagen al contenedor
             dragMode: "move", // Modo de arrastre para mover la imagen
@@ -115,9 +99,9 @@ const handleFileChange = () => {
   }
 };
 
-
 const cropImage = async () => {
   if (cropper) {
+   
     try {
       const canvas = cropper.getCroppedCanvas({
         width: 500, // Resolución 500x500
@@ -141,22 +125,21 @@ const cropImage = async () => {
 
         // Comprimir la imagen si es necesario
         const compressedImage = await comprimirImagen(fileWithMetadata);
-        //console.log(compressedImage.size);
+
         // Guardar el archivo en estados
         estados.selectImg.img = compressedImage;
+
         // Crear una URL para el archivo comprimido y asignarla al estado
         estados.selectImg.urlImg = URL.createObjectURL(compressedImage);
+
         // Cerrar el diálogo
         closeDialog();
       }
     } catch (error) {
       console.error("Error al recortar y comprimir la imagen:", error);
-    } finally {
-      // Limpiar o realizar cualquier acción adicional si es necesario
     }
   }
 };
-
 
 const closeDialog = () => {
   estados.selectImg.display = false;
@@ -169,6 +152,7 @@ const closeDialog = () => {
   }
 };
 </script>
+
 
 <style scoped>
 /* Estilos para el contenedor de la imagen */

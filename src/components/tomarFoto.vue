@@ -27,12 +27,15 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick, watch } from "vue";
+import Cropper from "cropperjs";
+import "cropperjs/dist/cropper.css"; // Importar estilos locales
 import { useAppStore } from "../store/app";
-import {comprimirImagen} from "@/scripts/comprimirImg";
+import { comprimirImagen } from "@/scripts/comprimirImg";
+
 const estados = useAppStore();
+
 // Variables para manejar el estado de la cámara y la foto
 const dialog = ref(false);
 const photoCaptured = ref(false);
@@ -57,14 +60,14 @@ const initCamera = async () => {
     }
 
     videoStream.value = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" },  // Utiliza la cámara trasera en dispositivos móviles
+      video: { facingMode: "environment" }, // Utiliza la cámara trasera en dispositivos móviles
     });
 
     video.value.srcObject = videoStream.value;
   } catch (error) {
-    if (error.name === 'NotAllowedError') {
+    if (error.name === "NotAllowedError") {
       alert("Permiso de cámara denegado. Asegúrate de habilitar el acceso a la cámara en la configuración de tu navegador.");
-    } else if (error.name === 'NotFoundError') {
+    } else if (error.name === "NotFoundError") {
       alert("No se encontró una cámara disponible.");
     } else {
       alert("Error al acceder a la cámara: " + error.message);
@@ -125,7 +128,6 @@ const confirmPhoto = async () => {
       estados.selectImg.img = await comprimirImagen(fileWithMetadata);
       // Crear una URL temporal para el Blob comprimido y asignarla a imageUrl
       estados.selectImg.urlImg = URL.createObjectURL(estados.selectImg.img);
-
     } catch (error) {
       console.error("Error al confirmar y comprimir la imagen:", error);
     } finally {
@@ -138,7 +140,6 @@ const confirmPhoto = async () => {
     }
   }
 };
-
 
 // Verificar el estado del diálogo y gestionar la cámara
 onMounted(() => {
@@ -160,24 +161,8 @@ onBeforeUnmount(() => {
     cropper.value.destroy();
   }
 });
-
-// Cargar el script y estilo de Cropper.js desde la CDN
-onMounted(() => {
-  const script = document.createElement("script");
-  script.src =
-    "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js";
-  script.onload = () => {
-    //console.log("Cropper.js cargado");
-  };
-  document.head.appendChild(script);
-
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
-  document.head.appendChild(link);
-});
 </script>
+
 
 <style scoped>
 .camera-view {

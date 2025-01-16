@@ -64,12 +64,7 @@ const routes = [
         component: () => import('@/views/Login.vue'),
         meta:{auth:false}
       },
-      {
-        path: '/Form',
-        name: 'Form',
-        component: () => import('@/views/FormMiembros.vue'),
-        meta:{auth:false}
-      },
+     
       {
         // Ruta catch-all para manejar errores 404
         path: '/:catchAll(.*)',

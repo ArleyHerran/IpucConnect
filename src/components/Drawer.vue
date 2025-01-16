@@ -7,7 +7,7 @@
   >
     <v-card class="elevation-0 mt-2" color="transparent">
       <div class=" justify-space-between">
-        <v-avatar class="ml-3" rounded="0" size="60">
+        <v-avatar class="ml-3" rounded="0" size="80">
           <v-img src="../img/icon-ipuc.png"></v-img>
         </v-avatar>
         <div>
